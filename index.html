@@ -228,11 +228,11 @@
   <div class="hero__sticky">
     <div class="stage">
       <video id="v0" muted playsinline preload="auto" class="is-active"
-        src="https://d8j0ntlcm91z4.cloudfront.net/user_34CKYpu5orTJopXnDrR8mh1BlSL/hf_20260723_152521_83235bc2-2d2b-4482-90a1-65551e9d41be.mp4"></video>
+        src="videos/seg1-liveaction.mp4"></video>
       <video id="v1" muted playsinline preload="auto"
-        src="https://d8j0ntlcm91z4.cloudfront.net/user_34CKYpu5orTJopXnDrR8mh1BlSL/hf_20260723_153818_e1bbb216-748e-4b4f-8670-4b9b52edb50f.mp4"></video>
+        src="videos/seg2-morph.mp4"></video>
       <video id="v2" muted playsinline preload="auto"
-        src="https://d8j0ntlcm91z4.cloudfront.net/user_34CKYpu5orTJopXnDrR8mh1BlSL/hf_20260723_154616_75d0c549-333c-4322-aa6c-591c58085dd0.mp4"></video>
+        src="videos/seg3-photography.mp4"></video>
     </div>
 
     <div class="overlay">
@@ -280,9 +280,15 @@
   var header = document.getElementById('header');
   var hero   = document.getElementById('hero');
   var videos = [document.getElementById('v0'), document.getElementById('v1'), document.getElementById('v2')];
-  var durations = [5, 4, 8];               // seconds per clip
+  var durations = [5, 4, 8];               // fallback until real metadata loads
   var starts = [0, 5, 9];
   var total = 17;
+  function recompute(){
+    starts = []; var acc = 0;
+    for(var i=0;i<durations.length;i++){ starts[i]=acc; acc+=durations[i]; }
+    total = acc;
+  }
+  recompute();
   var swap = document.getElementById('swap');
   var sub = document.getElementById('sub');
   var quote = document.getElementById('quote');
@@ -308,7 +314,10 @@
   var lastTime = [-1,-1,-1];
   var ready = [false,false,false];
   videos.forEach(function(v,i){
-    v.addEventListener('loadedmetadata', function(){ ready[i]=true; });
+    v.addEventListener('loadedmetadata', function(){
+      ready[i]=true;
+      if(isFinite(v.duration) && v.duration>0){ durations[i]=v.duration; recompute(); onScroll(); }
+    });
     // nudge load
     v.load();
   });
