@@ -1,16 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Pearldrop — Head-turning</title>
+<!--
+  ============================================================================
+  PEARLDROP HERO  —  paste this ENTIRE block into an Elementor "HTML" widget.
+  ============================================================================
+
+  STEP 1 — Upload your 4 assets to the WordPress Media Library, then replace the
+  4 placeholder tokens below with each file's "File URL" (Media → click file →
+  copy "File URL", right-hand panel):
+
+      __LOGO_URL__   ->  pearldrop-logo.png   (white wordmark, transparent PNG)
+      __SEG1_URL__   ->  seg1-liveaction.mp4
+      __SEG2_URL__   ->  seg2-morph.mp4
+      __SEG3_URL__   ->  seg3-photography.mp4
+
+  (Tip: use Find & Replace in a text editor before pasting — each token appears once.)
+
+  STEP 2 — On this page, HIDE Elementor's own header/nav. This block includes its
+  own fixed menu bar, so you'd otherwise get two navs.
+
+  STEP 3 — Do NOT enable Elementor "Motion Effects" / transform / sticky on the
+  section or column holding this widget. A transformed ancestor breaks the fixed
+  menu bar (CSS: position:fixed needs an untransformed ancestor). A plain section
+  is perfect — the block manages its own scroll rig.
+
+  Everything is scoped under #pd-hero and prefixed .pd-* so it can't collide with
+  your theme or Elementor styles.
+  ============================================================================
+-->
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-<style>
-  /* full-page preview only — not part of the Elementor widget */
-  html,body{margin:0;padding:0;background:#050b1f}
-</style>
+
 <style>
   /* ================= PEARLDROP HERO (scoped to #pd-hero) ================= */
   #pd-hero{
@@ -99,32 +119,30 @@
     #pd-hero .pd-quote{right:auto; left:clamp(22px,5vw,72px); bottom:120px; width:min(80vw,420px)}
   }
 </style>
-</head>
-<body>
 
 <div id="pd-hero">
   <header class="pd-header">
-    <a class="pd-brand" href="#" aria-label="Pearldrop home">
-      <img class="pd-brand__logo" src="pearldrop-logo.png" alt="pearldrop"
+    <a class="pd-brand" href="/" aria-label="Pearldrop home">
+      <img class="pd-brand__logo" src="__LOGO_URL__" alt="pearldrop"
            onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" />
       <span class="pd-word" style="display:none">pearldrop</span>
     </a>
     <nav class="pd-nav">
-      <a href="#">About us</a>
-      <a href="#">Services</a>
-      <a href="#">Portfolio</a>
-      <a href="#">Case Studies</a>
-      <a href="#">Blog</a>
-      <a href="#" class="pd-cta">Contact</a>
+      <a href="/about-us/">About us</a>
+      <a href="/services/">Services</a>
+      <a href="/portfolio/">Portfolio</a>
+      <a href="/case-studies/">Case Studies</a>
+      <a href="/blog/">Blog</a>
+      <a href="/contact/" class="pd-cta">Contact</a>
     </nav>
   </header>
 
   <section class="pd-heroScroll">
     <div class="pd-sticky">
       <div class="pd-stage">
-        <video class="pd-v is-active" muted playsinline preload="auto" src="videos/seg1-liveaction.mp4?v=2"></video>
-        <video class="pd-v" muted playsinline preload="auto" src="videos/seg2-morph.mp4?v=2"></video>
-        <video class="pd-v" muted playsinline preload="auto" src="videos/seg3-photography.mp4?v=2"></video>
+        <video class="pd-v is-active" muted playsinline preload="auto" src="__SEG1_URL__"></video>
+        <video class="pd-v" muted playsinline preload="auto" src="__SEG2_URL__"></video>
+        <video class="pd-v" muted playsinline preload="auto" src="__SEG3_URL__"></video>
       </div>
 
       <div class="pd-overlay">
@@ -248,5 +266,3 @@
   if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); } else { init(); }
 })();
 </script>
-</body>
-</html>
