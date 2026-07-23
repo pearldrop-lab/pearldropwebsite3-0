@@ -36,19 +36,16 @@
     position:fixed; top:0; left:0; right:0; z-index:50;
     display:flex; align-items:center; justify-content:space-between;
     gap:24px;
-    padding:18px clamp(20px,4vw,54px);
-    backdrop-filter:blur(14px);
-    background:linear-gradient(180deg, rgba(5,11,31,.72), rgba(5,11,31,.18));
-    border-bottom:1px solid rgba(79,228,255,.12);
-    transition:background .3s ease, border-color .3s ease;
+    padding:22px clamp(20px,4vw,54px);
+    background:transparent;
+    transition:background .35s ease;
   }
+  /* stays essentially transparent; a whisper of scrim once scrolled for legibility */
   header.scrolled{
-    background:rgba(5,11,31,.86);
-    border-bottom:1px solid rgba(255,46,166,.28);
-    box-shadow:0 6px 30px -18px rgba(255,46,166,.6);
+    background:linear-gradient(180deg, rgba(4,10,26,.55), rgba(4,10,26,0));
   }
   .brand{display:flex; align-items:center; gap:13px; text-decoration:none; flex:0 0 auto}
-  .brand svg{display:block; filter:drop-shadow(0 0 10px rgba(31,150,255,.55))}
+  .brand__logo{height:40px; width:auto; display:block; filter:drop-shadow(0 2px 12px rgba(0,0,0,.4))}
   .brand .word{
     font-family:'Space Grotesk',sans-serif;
     font-weight:700; font-size:26px; letter-spacing:-.5px;
@@ -58,7 +55,8 @@
   nav a{
     position:relative; text-decoration:none; color:var(--ink);
     font-weight:500; font-size:15px; letter-spacing:.2px; padding:6px 2px;
-    opacity:.86; transition:opacity .2s, color .2s, text-shadow .2s; white-space:nowrap;
+    opacity:.92; transition:opacity .2s, color .2s, text-shadow .2s; white-space:nowrap;
+    text-shadow:0 1px 16px rgba(0,0,0,.55);
   }
   nav a::after{
     content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px;
@@ -98,8 +96,15 @@
 
   /* ---------- Overlays ---------- */
   .overlay{position:absolute; inset:0; z-index:5; pointer-events:none}
+  /* legibility gradient: darkens lower-left (headline) and the base of the frame */
+  .scrim{
+    position:absolute; inset:0; pointer-events:none;
+    background:
+      linear-gradient(95deg, rgba(3,8,24,.80) 0%, rgba(3,8,24,.42) 22%, rgba(3,8,24,0) 50%),
+      linear-gradient(0deg, rgba(3,8,24,.70) 0%, rgba(3,8,24,.18) 24%, rgba(3,8,24,0) 46%);
+  }
   .headline{
-    position:absolute; left:clamp(22px,5vw,72px); top:50%; transform:translateY(-54%);
+    position:absolute; left:clamp(22px,5vw,72px); top:61%; transform:translateY(-50%);
     max-width:44vw;
   }
   .headline .kicker{
@@ -197,22 +202,9 @@
 
 <header id="header">
   <a class="brand" href="#" aria-label="Pearldrop home">
-    <svg width="42" height="42" viewBox="0 0 100 100" role="img" aria-hidden="true">
-      <defs>
-        <radialGradient id="pd" cx="42%" cy="40%" r="70%">
-          <stop offset="0%" stop-color="#7fefff"/>
-          <stop offset="45%" stop-color="#12b0ff"/>
-          <stop offset="100%" stop-color="#0a3aa8"/>
-        </radialGradient>
-      </defs>
-      <circle cx="50" cy="50" r="46" fill="url(#pd)"/>
-      <circle cx="50" cy="50" r="46" fill="none" stroke="#0a2e7a" stroke-width="3" opacity="0.6"/>
-      <circle cx="46" cy="52" r="30" fill="none" stroke="#bff3ff" stroke-width="4" opacity=".55"/>
-      <circle cx="44" cy="54" r="17" fill="none" stroke="#eafcff" stroke-width="4" opacity=".7"/>
-      <circle cx="42" cy="55" r="6.5" fill="#093a9e"/>
-      <circle cx="40.5" cy="53.5" r="2.4" fill="#fff"/>
-    </svg>
-    <span class="word">pearldrop</span>
+    <img class="brand__logo" src="assets/pearldrop-logo.png" alt="pearldrop"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" />
+    <span class="word" style="display:none">pearldrop</span>
   </a>
   <nav>
     <a href="#">About us</a>
@@ -236,6 +228,7 @@
     </div>
 
     <div class="overlay">
+      <div class="scrim"></div>
       <div class="headline">
         <span class="kicker"><span class="dot"></span> Pearldrop</span>
         <h1>
