@@ -228,11 +228,11 @@
   <div class="hero__sticky">
     <div class="stage">
       <video id="v0" muted playsinline preload="auto" class="is-active"
-        src="videos/seg1-liveaction.mp4"></video>
+        src="videos/seg1-liveaction.mp4?v=2"></video>
       <video id="v1" muted playsinline preload="auto"
-        src="videos/seg2-morph.mp4"></video>
+        src="videos/seg2-morph.mp4?v=2"></video>
       <video id="v2" muted playsinline preload="auto"
-        src="videos/seg3-photography.mp4"></video>
+        src="videos/seg3-photography.mp4?v=2"></video>
     </div>
 
     <div class="overlay">
@@ -364,7 +364,13 @@
     var local = Math.max(0, Math.min(durations[seg]-0.04, t - starts[seg]));
     var v = videos[seg];
     if(ready[seg] && Math.abs(local - lastTime[seg]) > 0.016){
-      try { v.currentTime = local; lastTime[seg] = local; } catch(e){}
+      try {
+        // fastSeek jumps to the nearest keyframe cheaply (Safari/FF); dense
+        // keyframes make the currentTime fallback (Chrome) just as smooth.
+        if(typeof v.fastSeek === 'function'){ v.fastSeek(local); }
+        else { v.currentTime = local; }
+        lastTime[seg] = local;
+      } catch(e){}
     }
   }
 
