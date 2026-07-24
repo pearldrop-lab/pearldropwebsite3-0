@@ -47,8 +47,7 @@
   #pd-hero .pd-heroScroll{position:relative; height:520vh}
   #pd-hero .pd-sticky{position:sticky; top:0; height:100vh; overflow:hidden}
   #pd-hero .pd-stage{position:absolute; inset:0; background:radial-gradient(120% 90% at 50% 40%, #0a1c50 0%, #050b1f 70%)}
-  #pd-hero .pd-stage video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .35s ease; will-change:opacity}
-  #pd-hero .pd-stage video.is-active{opacity:1}
+  #pd-hero .pd-canvas{position:absolute; inset:0; width:100%; height:100%; display:block}
   #pd-hero .pd-stage::after{content:""; position:absolute; inset:0; pointer-events:none;
     background:
       radial-gradient(60% 45% at 12% 50%, rgba(5,11,31,.55), transparent 60%),
@@ -122,9 +121,7 @@
   <section class="pd-heroScroll">
     <div class="pd-sticky">
       <div class="pd-stage">
-        <video class="pd-v is-active" muted playsinline preload="auto" src="videos/seg1-liveaction.mp4?v=2"></video>
-        <video class="pd-v" muted playsinline preload="auto" src="videos/seg2-morph.mp4?v=2"></video>
-        <video class="pd-v" muted playsinline preload="auto" src="videos/seg3-photography.mp4?v=2"></video>
+        <canvas class="pd-canvas"></canvas>
       </div>
 
       <div class="pd-overlay">
@@ -165,7 +162,8 @@
     if(!root) return;
     var header = root.querySelector('.pd-header');
     var hero   = root.querySelector('.pd-heroScroll');
-    var videos = Array.prototype.slice.call(root.querySelectorAll('.pd-stage video'));
+    var canvas = root.querySelector('.pd-canvas');
+    var ctx = canvas.getContext('2d');
     var swap = root.querySelector('.pd-swap');
     var quote = root.querySelector('.pd-quote');
     var quoteText = root.querySelector('.pd-quoteText');
@@ -174,10 +172,9 @@
     var pbar = root.querySelector('.pd-progressBar');
     var dots = Array.prototype.slice.call(root.querySelectorAll('.pd-d'));
 
-    var durations = [5, 4, 8];   // fallback until metadata loads
-    var starts = [0, 5, 9], total = 17;
-    function recompute(){ starts = []; var a=0; for(var i=0;i<durations.length;i++){ starts[i]=a; a+=durations[i]; } total=a; }
-    recompute();
+    // Frame-sequence config. b1/b2 are the frame indices where the story
+    // moves to 2D animation and photography (drives word/quote swaps).
+    var CFG = { base:'frames/', ext:'.webp', count:411, b1:121, b2:218, digits:4 };
 
     var CONTENT = [
       { word:'live-action video',
@@ -191,19 +188,80 @@
         who:'Comms Lead, Premium Lifestyle Brand' }
     ];
 
-    var curSeg = -1, lastTime = [-1,-1,-1], ready = [false,false,false];
-    videos.forEach(function(v,i){
-      v.addEventListener('loadedmetadata', function(){
-        ready[i]=true;
-        if(isFinite(v.duration) && v.duration>0){ durations[i]=v.duration; recompute(); onScroll(); }
-      });
-      v.load();
-    });
+    /* ---------- frame loader ---------- */
+    var curSeg = -1;
+    var imgs = new Array(CFG.count + 1);
+    var loaded = new Array(CFG.count + 1);
+    var inflight = 0, MAXC = 6, curFrame = 1, drawnFrame = -1;
+    function src(i){ var s = String(i); while(s.length < CFG.digits) s = '0' + s; return CFG.base + s + CFG.ext; }
+
+    // load order: every 8th frame first (fast coarse scrub), then the rest
+    var queue = [];
+    (function(){
+      for(var i = 1; i <= CFG.count; i += 8) queue.push(i);
+      if(queue[queue.length-1] !== CFG.count) queue.push(CFG.count);
+      for(var j = 1; j <= CFG.count; j++) if((j - 1) % 8) queue.push(j);
+    })();
+
+    function nextIndex(){
+      // prefer unloaded frames near the current scroll position
+      for(var d = 0; d <= 32; d++){
+        var a = curFrame + d, b = curFrame - d;
+        if(a <= CFG.count && !loaded[a] && !imgs[a]) return a;
+        if(b >= 1 && !loaded[b] && !imgs[b]) return b;
+      }
+      while(queue.length){
+        var i = queue.shift();
+        if(!loaded[i] && !imgs[i]) return i;
+      }
+      return null;
+    }
+    function pump(){
+      while(inflight < MAXC){
+        var i = nextIndex();
+        if(i == null) break;
+        (function(idx){
+          inflight++;
+          var im = new Image();
+          imgs[idx] = im;
+          im.onload = function(){ loaded[idx] = true; inflight--; if(Math.abs(idx - curFrame) <= 8 || drawnFrame === -1) draw(); pump(); };
+          im.onerror = function(){ imgs[idx] = null; inflight--; pump(); };
+          im.src = src(idx);
+        })(i);
+      }
+    }
+
+    function nearestLoaded(t){
+      if(loaded[t]) return t;
+      for(var d = 1; d <= CFG.count; d++){
+        if(t - d >= 1 && loaded[t - d]) return t - d;
+        if(t + d <= CFG.count && loaded[t + d]) return t + d;
+      }
+      return -1;
+    }
+
+    function resize(){
+      var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      canvas.width = Math.round(canvas.clientWidth * dpr);
+      canvas.height = Math.round(canvas.clientHeight * dpr);
+      drawnFrame = -1; draw();
+    }
+
+    function draw(){
+      var t = nearestLoaded(curFrame);
+      if(t === -1 || t === drawnFrame) return;
+      var im = imgs[t], cw = canvas.width, ch = canvas.height;
+      if(!im || !cw || !ch) return;
+      var iw = im.naturalWidth, ih = im.naturalHeight;
+      var s = Math.max(cw / iw, ch / ih);
+      var dw = iw * s, dh = ih * s;
+      ctx.drawImage(im, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+      drawnFrame = t;
+    }
 
     function setSeg(seg){
       if(seg === curSeg) return;
       curSeg = seg;
-      videos.forEach(function(v,i){ v.classList.toggle('is-active', i===seg); });
       dots.forEach(function(d){ d.classList.toggle('on', +d.getAttribute('data-seg')===seg); });
       swap.classList.add('out'); quote.classList.add('swapping');
       setTimeout(function(){
@@ -225,25 +283,17 @@
       var p = Math.min(1, Math.max(0, (-rect.top) / scrollable));
       scrollhint.style.opacity = p > 0.02 ? '0' : '.9';
       pbar.style.width = (p*100).toFixed(2) + '%';
-      var t = p * total;
-      var seg = (t >= starts[2]) ? 2 : (t >= starts[1]) ? 1 : 0;
+      curFrame = 1 + Math.round(p * (CFG.count - 1));
+      var seg = (curFrame > CFG.b2) ? 2 : (curFrame > CFG.b1) ? 1 : 0;
       setSeg(seg);
-      var local = Math.max(0, Math.min(durations[seg]-0.04, t - starts[seg]));
-      var v = videos[seg];
-      if(ready[seg] && Math.abs(local - lastTime[seg]) > 0.016){
-        try {
-          if(typeof v.fastSeek === 'function'){ v.fastSeek(local); }
-          else { v.currentTime = local; }
-          lastTime[seg] = local;
-        } catch(e){}
-      }
+      draw();
     }
 
     var ticking = false;
     function requestTick(){ if(!ticking){ ticking = true; requestAnimationFrame(function(){ onScroll(); ticking=false; }); } }
     window.addEventListener('scroll', requestTick, {passive:true});
-    window.addEventListener('resize', requestTick);
-    setSeg(0); onScroll();
+    window.addEventListener('resize', function(){ resize(); requestTick(); });
+    setSeg(0); resize(); onScroll(); pump();
   }
   if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); } else { init(); }
 })();
