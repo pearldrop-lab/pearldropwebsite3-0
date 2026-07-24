@@ -174,7 +174,9 @@
 
     // Frame-sequence config. b1/b2 are the frame indices where the story
     // moves to 2D animation and photography (drives word/quote swaps).
-    var CFG = { base:'frames/', ext:'.webp?v=3', count:279, b1:66, b2:122, digits:4 };
+    // HD frame set (16MB). To roll back to the lighter 9.3MB set, change
+    // base to 'frames/' (same count/boundaries).
+    var CFG = { base:'frames-hd/', ext:'.webp?v=4', count:279, b1:66, b2:122, digits:4 };
 
     var CONTENT = [
       { word:'live-action video',
