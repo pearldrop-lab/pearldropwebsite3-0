@@ -55,21 +55,28 @@
     border:1px solid rgba(255,46,166,.85); color:#fff; opacity:1;
     font-weight:600; letter-spacing:.4px; text-shadow:none;
     background:linear-gradient(180deg, rgba(255,46,166,.42), rgba(255,46,166,.16));
-    animation:pd-pulse 2.6s ease-in-out infinite;
+    box-shadow:inset 0 0 14px rgba(255,46,166,.28);
     transition:background .25s ease, transform .25s ease;
+  }
+  /* separate glow layer: only opacity animates, so it breathes smoothly
+     instead of stepping the way an animated box-shadow blur does */
+  #pd-hero .pd-nav a.pd-cta::before{
+    content:""; position:absolute; inset:-1px; border-radius:999px; pointer-events:none;
+    box-shadow:0 0 24px 1px rgba(255,46,166,.85);
+    opacity:.3; animation:pd-pulse 4.5s ease-in-out infinite; will-change:opacity;
   }
   #pd-hero .pd-nav a.pd-cta::after{display:none}
   #pd-hero .pd-nav a.pd-cta:hover{
     background:linear-gradient(180deg, rgba(255,46,166,.8), rgba(255,46,166,.4));
-    transform:translateY(-1px); animation-play-state:paused;
-    box-shadow:inset 0 0 16px rgba(255,46,166,.5), 0 0 34px -4px rgba(255,46,166,1);
+    transform:translateY(-1px);
   }
+  #pd-hero .pd-nav a.pd-cta:hover::before{animation-play-state:paused; opacity:.95}
   @keyframes pd-pulse{
-    0%,100%{ box-shadow:inset 0 0 12px rgba(255,46,166,.25), 0 0 16px -6px rgba(255,46,166,.7) }
-    50%    { box-shadow:inset 0 0 18px rgba(255,46,166,.45), 0 0 34px -2px rgba(255,46,166,.95) }
+    0%,100%{ opacity:.28 }
+    50%    { opacity:.8 }
   }
   @media (prefers-reduced-motion:reduce){
-    #pd-hero .pd-nav a.pd-cta{animation:none; box-shadow:inset 0 0 14px rgba(255,46,166,.35), 0 0 24px -4px rgba(255,46,166,.85)}
+    #pd-hero .pd-nav a.pd-cta::before{animation:none; opacity:.5}
   }
 
   /* hero scroll rig */
