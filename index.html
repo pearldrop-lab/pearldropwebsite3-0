@@ -50,9 +50,10 @@
   /* separate glow layer: only opacity animates, so it breathes smoothly
      instead of stepping the way an animated box-shadow blur does */
   #pd-hero .pd-nav a.pd-cta::before{
-    content:""; position:absolute; inset:-1px; border-radius:999px; pointer-events:none;
-    box-shadow:0 0 24px 1px rgba(255,46,166,.85);
-    opacity:.3; animation:pd-pulse 4.5s ease-in-out infinite; will-change:opacity;
+    content:""; position:absolute; inset:-2px; border-radius:999px; pointer-events:none;
+    box-shadow:0 0 16px 2px rgba(255,46,166,.95), 0 0 44px 12px rgba(255,46,166,.6);
+    opacity:.12; transform:scale(.97);
+    animation:pd-pulse 3.4s ease-in-out infinite; will-change:opacity,transform;
   }
   #pd-hero .pd-nav a.pd-cta::after{display:none}
   #pd-hero .pd-nav a.pd-cta:hover{
@@ -61,11 +62,11 @@
   }
   #pd-hero .pd-nav a.pd-cta:hover::before{animation-play-state:paused; opacity:.95}
   @keyframes pd-pulse{
-    0%,100%{ opacity:.28 }
-    50%    { opacity:.8 }
+    0%,100%{ opacity:.12; transform:scale(.97) }
+    50%    { opacity:1;   transform:scale(1.07) }
   }
   @media (prefers-reduced-motion:reduce){
-    #pd-hero .pd-nav a.pd-cta::before{animation:none; opacity:.5}
+    #pd-hero .pd-nav a.pd-cta::before{animation:none; opacity:.55; transform:none}
   }
 
   /* hero scroll rig */
