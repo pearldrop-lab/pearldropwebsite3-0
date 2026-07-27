@@ -50,9 +50,27 @@
   #pd-hero .pd-nav a::after{content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px; background:var(--neon); border-radius:2px; transform:scaleX(0); transform-origin:left; transition:transform .28s cubic-bezier(.5,0,.1,1); box-shadow:var(--glow-neon)}
   #pd-hero .pd-nav a:hover{opacity:1; color:#fff; text-shadow:0 0 10px rgba(255,46,166,.5)}
   #pd-hero .pd-nav a:hover::after{transform:scaleX(1)}
-  #pd-hero .pd-cta{margin-left:6px; padding:9px 20px; border-radius:999px; border:1px solid rgba(255,46,166,.6); color:#fff; opacity:1; background:linear-gradient(180deg, rgba(255,46,166,.22), rgba(255,46,166,.06)); box-shadow:inset 0 0 12px rgba(255,46,166,.25), 0 0 18px -6px rgba(255,46,166,.7)}
-  #pd-hero .pd-cta::after{display:none}
-  #pd-hero .pd-cta:hover{background:linear-gradient(180deg, rgba(255,46,166,.42), rgba(255,46,166,.14)); box-shadow:inset 0 0 14px rgba(255,46,166,.4), 0 0 26px -4px rgba(255,46,166,.9)}
+  #pd-hero .pd-nav a.pd-cta{
+    margin-left:18px; padding:14px 34px; border-radius:999px;
+    border:1px solid rgba(255,46,166,.85); color:#fff; opacity:1;
+    font-weight:600; letter-spacing:.4px; text-shadow:none;
+    background:linear-gradient(180deg, rgba(255,46,166,.42), rgba(255,46,166,.16));
+    animation:pd-pulse 2.6s ease-in-out infinite;
+    transition:background .25s ease, transform .25s ease;
+  }
+  #pd-hero .pd-nav a.pd-cta::after{display:none}
+  #pd-hero .pd-nav a.pd-cta:hover{
+    background:linear-gradient(180deg, rgba(255,46,166,.8), rgba(255,46,166,.4));
+    transform:translateY(-1px); animation-play-state:paused;
+    box-shadow:inset 0 0 16px rgba(255,46,166,.5), 0 0 34px -4px rgba(255,46,166,1);
+  }
+  @keyframes pd-pulse{
+    0%,100%{ box-shadow:inset 0 0 12px rgba(255,46,166,.25), 0 0 16px -6px rgba(255,46,166,.7) }
+    50%    { box-shadow:inset 0 0 18px rgba(255,46,166,.45), 0 0 34px -2px rgba(255,46,166,.95) }
+  }
+  @media (prefers-reduced-motion:reduce){
+    #pd-hero .pd-nav a.pd-cta{animation:none; box-shadow:inset 0 0 14px rgba(255,46,166,.35), 0 0 24px -4px rgba(255,46,166,.85)}
+  }
 
   /* hero scroll rig */
   #pd-hero .pd-heroScroll{position:relative; height:520vh}
@@ -118,12 +136,12 @@
       <span class="pd-word" style="display:none">pearldrop</span>
     </a>
     <nav class="pd-nav">
-      <a href="#">About us</a>
-      <a href="#">Services</a>
-      <a href="#">Portfolio</a>
-      <a href="#">Case Studies</a>
-      <a href="#">Blog</a>
-      <a href="#" class="pd-cta">Contact</a>
+      <a href="/about-us/">About us</a>
+      <a href="/services/">Services</a>
+      <a href="/portfolio/">Portfolio</a>
+      <a href="/case-studies/">Case Studies</a>
+      <a href="/blog/">Blog</a>
+      <a href="/contact/" class="pd-cta">Contact</a>
     </nav>
   </header>
 
@@ -183,6 +201,8 @@
 
     // Frame-sequence config. b1/b2 are the frame indices where the story
     // moves to 2D animation and photography (drives word/quote swaps).
+    // HD frame set (16MB). To roll back to the lighter 9.3MB set, change
+    // base to 'frames/' (same count/boundaries).
     var CFG = { base:'https://pearldrop-lab.github.io/pearldropwebsite3-0/frames-hd/', ext:'.webp?v=4', count:279, b1:66, b2:122, digits:4 };
 
     var CONTENT = [
