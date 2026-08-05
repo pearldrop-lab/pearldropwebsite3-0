@@ -25,9 +25,13 @@
 <style>
   /* ================= PEARLDROP HERO (scoped to #pd-hero) ================= */
   #pd-hero{
-    --blue:#12b0ff; --cyan:#4fe4ff; --neon:#ff2ea6; --ink:#eaf2ff; --muted:#9db2d6;
-    --glow-neon:0 0 14px rgba(255,46,166,.75), 0 0 38px rgba(255,46,166,.45);
-    --glow-cyan:0 0 14px rgba(79,228,255,.6), 0 0 40px rgba(79,228,255,.35);
+    --blue:#12b0ff;
+    /* accent = electric cyan (the 'pop'); secondary = vivid azure */
+    --neon:#00dcff; --neon-rgb:0,220,255;
+    --cyan:#4d8cff; --cyan-rgb:77,140,255;
+    --ink:#eaf2ff; --muted:#93a9cf;
+    --glow-neon:0 0 14px rgba(var(--neon-rgb),.75), 0 0 38px rgba(var(--neon-rgb),.45);
+    --glow-cyan:0 0 14px rgba(var(--cyan-rgb),.6), 0 0 40px rgba(var(--cyan-rgb),.35);
     position:relative;
     font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     color:var(--ink); -webkit-font-smoothing:antialiased;
@@ -48,27 +52,27 @@
   #pd-hero .pd-nav{display:flex; align-items:center; gap:clamp(14px,2vw,34px)}
   #pd-hero .pd-nav a{position:relative; text-decoration:none; color:var(--ink); font-weight:500; font-size:15px; letter-spacing:.2px; padding:6px 2px; opacity:.92; transition:opacity .2s,color .2s,text-shadow .2s; white-space:nowrap; text-shadow:0 1px 16px rgba(0,0,0,.55)}
   #pd-hero .pd-nav a::after{content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px; background:var(--neon); border-radius:2px; transform:scaleX(0); transform-origin:left; transition:transform .28s cubic-bezier(.5,0,.1,1); box-shadow:var(--glow-neon)}
-  #pd-hero .pd-nav a:hover{opacity:1; color:#fff; text-shadow:0 0 10px rgba(255,46,166,.5)}
+  #pd-hero .pd-nav a:hover{opacity:1; color:#fff; text-shadow:0 0 10px rgba(var(--neon-rgb),.5)}
   #pd-hero .pd-nav a:hover::after{transform:scaleX(1)}
   #pd-hero .pd-nav a.pd-cta{
     margin-left:18px; padding:14px 34px; border-radius:999px;
-    border:1px solid rgba(255,46,166,.85); color:#fff; opacity:1;
+    border:1px solid rgba(var(--neon-rgb),.85); color:#fff; opacity:1;
     font-weight:600; letter-spacing:.4px; text-shadow:none;
-    background:linear-gradient(180deg, rgba(255,46,166,.42), rgba(255,46,166,.16));
-    box-shadow:inset 0 0 14px rgba(255,46,166,.28);
+    background:linear-gradient(180deg, rgba(var(--neon-rgb),.42), rgba(var(--neon-rgb),.16));
+    box-shadow:inset 0 0 14px rgba(var(--neon-rgb),.28);
     transition:background .25s ease, transform .25s ease;
   }
   /* separate glow layer: only opacity animates, so it breathes smoothly
      instead of stepping the way an animated box-shadow blur does */
   #pd-hero .pd-nav a.pd-cta::before{
     content:""; position:absolute; inset:-2px; border-radius:999px; pointer-events:none;
-    box-shadow:0 0 16px 2px rgba(255,46,166,.95), 0 0 44px 12px rgba(255,46,166,.6);
+    box-shadow:0 0 16px 2px rgba(var(--neon-rgb),.95), 0 0 44px 12px rgba(var(--neon-rgb),.6);
     opacity:.12; transform:scale(.97);
     animation:pd-pulse 3.4s ease-in-out infinite; will-change:opacity,transform;
   }
   #pd-hero .pd-nav a.pd-cta::after{display:none}
   #pd-hero .pd-nav a.pd-cta:hover{
-    background:linear-gradient(180deg, rgba(255,46,166,.8), rgba(255,46,166,.4));
+    background:linear-gradient(180deg, rgba(var(--neon-rgb),.8), rgba(var(--neon-rgb),.4));
     transform:translateY(-1px);
   }
   #pd-hero .pd-nav a.pd-cta:hover::before{animation-play-state:paused; opacity:.95}
@@ -89,7 +93,7 @@
     background:
       radial-gradient(60% 45% at 12% 50%, rgba(5,11,31,.55), transparent 60%),
       radial-gradient(70% 60% at 92% 62%, rgba(5,11,31,.5), transparent 62%),
-      radial-gradient(120% 120% at 50% 120%, rgba(255,46,166,.16), transparent 55%),
+      radial-gradient(120% 120% at 50% 120%, rgba(var(--neon-rgb),.16), transparent 55%),
       linear-gradient(180deg, rgba(5,11,31,.25), transparent 22%, transparent 72%, rgba(5,11,31,.55));
   }
 
@@ -110,7 +114,7 @@
   #pd-hero .pd-swap.out{transform:translateY(-105%); opacity:0}
   #pd-hero .pd-swap.in-start{transform:translateY(105%); opacity:0}
   #pd-hero .pd-sub{margin-top:26px; max-width:430px; color:#fff; font-size:clamp(15px,1.2vw,18px); line-height:1.5; font-weight:400; text-shadow:0 1px 18px rgba(0,0,0,.5)}
-  #pd-hero .pd-quote{position:absolute; right:clamp(22px,4.5vw,68px); bottom:clamp(90px,16vh,150px); width:min(38vw,420px); pointer-events:auto; padding:26px 28px 24px; border-radius:20px; background:linear-gradient(180deg, rgba(10,22,58,.66), rgba(6,12,32,.6)); border:1px solid rgba(255,46,166,.32); box-shadow:0 24px 60px -30px rgba(0,0,0,.9), inset 0 0 24px rgba(255,46,166,.08), 0 0 40px -22px rgba(255,46,166,.8); backdrop-filter:blur(12px); transition:transform .5s cubic-bezier(.5,0,.1,1), opacity .5s ease}
+  #pd-hero .pd-quote{position:absolute; right:clamp(22px,4.5vw,68px); bottom:clamp(90px,16vh,150px); width:min(38vw,420px); pointer-events:auto; padding:26px 28px 24px; border-radius:20px; background:linear-gradient(180deg, rgba(10,22,58,.66), rgba(6,12,32,.6)); border:1px solid rgba(var(--neon-rgb),.32); box-shadow:0 24px 60px -30px rgba(0,0,0,.9), inset 0 0 24px rgba(var(--neon-rgb),.08), 0 0 40px -22px rgba(var(--neon-rgb),.8); backdrop-filter:blur(12px); transition:transform .5s cubic-bezier(.5,0,.1,1), opacity .5s ease}
   #pd-hero .pd-quote.swapping{opacity:0; transform:translateY(14px)}
   #pd-hero .pd-mark{font-family:'Space Grotesk',sans-serif; font-size:56px; line-height:.5; color:var(--neon); text-shadow:var(--glow-neon); display:block; height:26px}
   #pd-hero .pd-quote p{font-size:clamp(15px,1.15vw,18px); line-height:1.45; font-weight:500; color:#f2f6ff}
@@ -118,7 +122,7 @@
   #pd-hero .pd-whoBar{width:26px;height:2px;background:var(--neon);box-shadow:var(--glow-neon);border-radius:2px}
 
   #pd-hero .pd-progress{position:absolute; left:0; right:0; bottom:0; height:3px; z-index:8; background:rgba(255,255,255,.06)}
-  #pd-hero .pd-progressBar{height:100%; width:0%; background:linear-gradient(90deg,var(--cyan),var(--neon)); box-shadow:var(--glow-neon)}
+  #pd-hero .pd-progressBar{height:100%; width:0%; background:linear-gradient(90deg,#1b6bff,var(--neon)); box-shadow:var(--glow-neon)}
   #pd-hero .pd-dots{position:absolute; left:50%; transform:translateX(-50%); bottom:26px; z-index:8; display:flex; gap:12px; align-items:center}
   #pd-hero .pd-d{display:flex; align-items:center; gap:8px; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); opacity:.5; transition:opacity .3s,color .3s}
   #pd-hero .pd-d i{width:8px;height:8px;border-radius:50%;background:currentColor;display:block}
