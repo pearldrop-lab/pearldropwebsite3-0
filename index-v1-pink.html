@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pearldrop — Head-turning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* full-page preview only — not part of the Elementor widget */
+  html,body{margin:0;padding:0;background:#050b1f}
+</style>
+<style>
+  /* ================= PEARLDROP HERO (scoped to #pd-hero) ================= */
+  #pd-hero{
+    --blue:#12b0ff; --cyan:#4fe4ff; --neon:#ff2ea6; --ink:#eaf2ff; --muted:#9db2d6;
+    --glow-neon:0 0 14px rgba(255,46,166,.75), 0 0 38px rgba(255,46,166,.45);
+    --glow-cyan:0 0 14px rgba(79,228,255,.6), 0 0 40px rgba(79,228,255,.35);
+    position:relative;
+    font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    color:var(--ink); -webkit-font-smoothing:antialiased;
+  }
+  #pd-hero *{box-sizing:border-box; margin:0; padding:0}
+
+  /* header */
+  #pd-hero .pd-header{
+    position:fixed; top:0; left:0; right:0; z-index:2147483000;
+    display:flex; align-items:center; justify-content:space-between; gap:24px;
+    padding:22px clamp(20px,4vw,54px);
+    background:transparent; transition:background .35s ease;
+  }
+  #pd-hero .pd-header.scrolled{background:linear-gradient(180deg, rgba(4,10,26,.55), rgba(4,10,26,0))}
+  #pd-hero .pd-brand{display:flex; align-items:center; gap:13px; text-decoration:none; flex:0 0 auto}
+  #pd-hero .pd-brand__logo{height:40px; width:auto; display:block; filter:drop-shadow(0 2px 12px rgba(0,0,0,.4))}
+  #pd-hero .pd-word{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:26px; letter-spacing:-.5px; color:var(--cyan); text-shadow:var(--glow-cyan)}
+  #pd-hero .pd-nav{display:flex; align-items:center; gap:clamp(14px,2vw,34px)}
+  #pd-hero .pd-nav a{position:relative; text-decoration:none; color:var(--ink); font-weight:500; font-size:15px; letter-spacing:.2px; padding:6px 2px; opacity:.92; transition:opacity .2s,color .2s,text-shadow .2s; white-space:nowrap; text-shadow:0 1px 16px rgba(0,0,0,.55)}
+  #pd-hero .pd-nav a::after{content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px; background:var(--neon); border-radius:2px; transform:scaleX(0); transform-origin:left; transition:transform .28s cubic-bezier(.5,0,.1,1); box-shadow:var(--glow-neon)}
+  #pd-hero .pd-nav a:hover{opacity:1; color:#fff; text-shadow:0 0 10px rgba(255,46,166,.5)}
+  #pd-hero .pd-nav a:hover::after{transform:scaleX(1)}
+  #pd-hero .pd-nav a.pd-cta{
+    margin-left:18px; padding:14px 34px; border-radius:999px;
+    border:1px solid rgba(255,46,166,.85); color:#fff; opacity:1;
+    font-weight:600; letter-spacing:.4px; text-shadow:none;
+    background:linear-gradient(180deg, rgba(255,46,166,.42), rgba(255,46,166,.16));
+    box-shadow:inset 0 0 14px rgba(255,46,166,.28);
+    transition:background .25s ease, transform .25s ease;
+  }
+  /* separate glow layer: only opacity animates, so it breathes smoothly
+     instead of stepping the way an animated box-shadow blur does */
+  #pd-hero .pd-nav a.pd-cta::before{
+    content:""; position:absolute; inset:-2px; border-radius:999px; pointer-events:none;
+    box-shadow:0 0 16px 2px rgba(255,46,166,.95), 0 0 44px 12px rgba(255,46,166,.6);
+    opacity:.12; transform:scale(.97);
+    animation:pd-pulse 3.4s ease-in-out infinite; will-change:opacity,transform;
+  }
+  #pd-hero .pd-nav a.pd-cta::after{display:none}
+  #pd-hero .pd-nav a.pd-cta:hover{
+    background:linear-gradient(180deg, rgba(255,46,166,.8), rgba(255,46,166,.4));
+    transform:translateY(-1px);
+  }
+  #pd-hero .pd-nav a.pd-cta:hover::before{animation-play-state:paused; opacity:.95}
+  @keyframes pd-pulse{
+    0%,100%{ opacity:.12; transform:scale(.97) }
+    50%    { opacity:1;   transform:scale(1.07) }
+  }
+  @media (prefers-reduced-motion:reduce){
+    #pd-hero .pd-nav a.pd-cta::before{animation:none; opacity:.55; transform:none}
+  }
+
+  /* hero scroll rig */
+  #pd-hero .pd-heroScroll{position:relative; height:520vh}
+  #pd-hero .pd-sticky{position:sticky; top:0; height:100vh; overflow:hidden}
+  #pd-hero .pd-stage{position:absolute; inset:0; background:radial-gradient(120% 90% at 50% 40%, #0a1c50 0%, #050b1f 70%)}
+  #pd-hero .pd-canvas{position:absolute; inset:0; width:100%; height:100%; display:block}
+  #pd-hero .pd-stage::after{content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(60% 45% at 12% 50%, rgba(5,11,31,.55), transparent 60%),
+      radial-gradient(70% 60% at 92% 62%, rgba(5,11,31,.5), transparent 62%),
+      radial-gradient(120% 120% at 50% 120%, rgba(255,46,166,.16), transparent 55%),
+      linear-gradient(180deg, rgba(5,11,31,.25), transparent 22%, transparent 72%, rgba(5,11,31,.55));
+  }
+
+  /* overlays */
+  #pd-hero .pd-overlay{position:absolute; inset:0; z-index:5; pointer-events:none}
+  #pd-hero .pd-scrim{position:absolute; inset:0; pointer-events:none;
+    background:
+      linear-gradient(95deg, rgba(3,8,24,.80) 0%, rgba(3,8,24,.42) 22%, rgba(3,8,24,0) 50%),
+      linear-gradient(0deg, rgba(3,8,24,.70) 0%, rgba(3,8,24,.18) 24%, rgba(3,8,24,0) 46%);
+  }
+  #pd-hero .pd-headline{position:absolute; left:clamp(22px,5vw,72px); top:61%; transform:translateY(-50%); max-width:44vw}
+  #pd-hero .pd-kicker{display:inline-flex; align-items:center; gap:9px; margin-bottom:18px; font-size:13px; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); font-weight:600}
+  #pd-hero .pd-kickerDot{width:7px;height:7px;border-radius:50%;background:var(--neon);box-shadow:var(--glow-neon)}
+  #pd-hero .pd-h1{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(38px,6.1vw,94px); line-height:.94; letter-spacing:-2px; text-shadow:0 4px 40px rgba(0,0,0,.4)}
+  #pd-hero .pd-lock{display:block; color:#fff}
+  #pd-hero .pd-swapWrap{display:block; position:relative}
+  #pd-hero .pd-swap{display:inline-block; color:var(--neon); text-shadow:var(--glow-neon); transition:transform .5s cubic-bezier(.5,0,.1,1), opacity .5s ease}
+  #pd-hero .pd-swap.out{transform:translateY(-105%); opacity:0}
+  #pd-hero .pd-swap.in-start{transform:translateY(105%); opacity:0}
+  #pd-hero .pd-sub{margin-top:26px; max-width:430px; color:#fff; font-size:clamp(15px,1.2vw,18px); line-height:1.5; font-weight:400; text-shadow:0 1px 18px rgba(0,0,0,.5)}
+  #pd-hero .pd-quote{position:absolute; right:clamp(22px,4.5vw,68px); bottom:clamp(90px,16vh,150px); width:min(38vw,420px); pointer-events:auto; padding:26px 28px 24px; border-radius:20px; background:linear-gradient(180deg, rgba(10,22,58,.66), rgba(6,12,32,.6)); border:1px solid rgba(255,46,166,.32); box-shadow:0 24px 60px -30px rgba(0,0,0,.9), inset 0 0 24px rgba(255,46,166,.08), 0 0 40px -22px rgba(255,46,166,.8); backdrop-filter:blur(12px); transition:transform .5s cubic-bezier(.5,0,.1,1), opacity .5s ease}
+  #pd-hero .pd-quote.swapping{opacity:0; transform:translateY(14px)}
+  #pd-hero .pd-mark{font-family:'Space Grotesk',sans-serif; font-size:56px; line-height:.5; color:var(--neon); text-shadow:var(--glow-neon); display:block; height:26px}
+  #pd-hero .pd-quote p{font-size:clamp(15px,1.15vw,18px); line-height:1.45; font-weight:500; color:#f2f6ff}
+  #pd-hero .pd-who{margin-top:16px; display:flex; align-items:center; gap:10px; font-size:13px; color:var(--cyan); letter-spacing:.3px; font-weight:600}
+  #pd-hero .pd-whoBar{width:26px;height:2px;background:var(--neon);box-shadow:var(--glow-neon);border-radius:2px}
+
+  #pd-hero .pd-progress{position:absolute; left:0; right:0; bottom:0; height:3px; z-index:8; background:rgba(255,255,255,.06)}
+  #pd-hero .pd-progressBar{height:100%; width:0%; background:linear-gradient(90deg,var(--cyan),var(--neon)); box-shadow:var(--glow-neon)}
+  #pd-hero .pd-dots{position:absolute; left:50%; transform:translateX(-50%); bottom:26px; z-index:8; display:flex; gap:12px; align-items:center}
+  #pd-hero .pd-d{display:flex; align-items:center; gap:8px; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); opacity:.5; transition:opacity .3s,color .3s}
+  #pd-hero .pd-d i{width:8px;height:8px;border-radius:50%;background:currentColor;display:block}
+  #pd-hero .pd-d.on{opacity:1;color:var(--neon);text-shadow:var(--glow-neon)}
+  #pd-hero .pd-scrollhint{position:absolute; left:clamp(22px,5vw,72px); bottom:34px; z-index:8; display:flex; align-items:center; gap:12px; color:var(--muted); font-size:12px; letter-spacing:2px; text-transform:uppercase; transition:opacity .4s ease}
+  #pd-hero .pd-mouse{width:22px;height:34px;border:2px solid var(--muted);border-radius:12px;position:relative}
+  #pd-hero .pd-mouse::before{content:"";position:absolute;left:50%;top:6px;width:3px;height:6px;border-radius:2px;background:var(--neon);transform:translateX(-50%);animation:pd-wheel 1.5s infinite}
+  @keyframes pd-wheel{0%{opacity:0;transform:translate(-50%,0)}30%{opacity:1}100%{opacity:0;transform:translate(-50%,10px)}}
+
+  @media (max-width:860px){
+    #pd-hero .pd-nav{gap:14px}
+    #pd-hero .pd-nav a:not(.pd-cta){display:none}
+    #pd-hero .pd-headline{max-width:82vw}
+    #pd-hero .pd-quote{right:auto; left:clamp(22px,5vw,72px); bottom:120px; width:min(80vw,420px)}
+  }
+</style>
+</head>
+<body>
+
+<div id="pd-hero">
+  <header class="pd-header">
+    <a class="pd-brand" href="#" aria-label="Pearldrop home">
+      <img class="pd-brand__logo" src="pearldrop-logo.png" alt="pearldrop"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" />
+      <span class="pd-word" style="display:none">pearldrop</span>
+    </a>
+    <nav class="pd-nav">
+      <a href="#">About us</a>
+      <a href="#">Services</a>
+      <a href="#">Portfolio</a>
+      <a href="#">Case Studies</a>
+      <a href="#">Blog</a>
+      <a href="#" class="pd-cta">Contact</a>
+    </nav>
+  </header>
+
+  <section class="pd-heroScroll">
+    <div class="pd-sticky">
+      <div class="pd-stage">
+        <canvas class="pd-canvas"></canvas>
+      </div>
+
+      <div class="pd-overlay">
+        <div class="pd-scrim"></div>
+        <div class="pd-headline">
+          <span class="pd-kicker"><span class="pd-kickerDot"></span> Pearldrop</span>
+          <h1 class="pd-h1">
+            <span class="pd-lock">Head-turning</span>
+            <span class="pd-swapWrap"><span class="pd-swap">live-action video</span></span>
+          </h1>
+          <p class="pd-sub">Video, animation and photography that makes people stop, look, and remember your brand.</p>
+        </div>
+
+        <div class="pd-quote">
+          <span class="pd-mark">&ldquo;</span>
+          <p class="pd-quoteText">We LOVE Pearldrop! They have produced some incredible content for us and we would highly recommend them!</p>
+          <div class="pd-who"><span class="pd-whoBar"></span><span class="pd-quoteWho">Head of Marketing, National Retail Brand</span></div>
+        </div>
+
+        <div class="pd-scrollhint"><span class="pd-mouse"></span> Scroll</div>
+
+        <div class="pd-dots">
+          <span class="pd-d on" data-seg="0"><i></i>Live-action</span>
+          <span class="pd-d" data-seg="1"><i></i>Animation</span>
+          <span class="pd-d" data-seg="2"><i></i>Photography</span>
+        </div>
+      </div>
+
+      <div class="pd-progress"><div class="pd-progressBar"></div></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  function init(){
+    var root = document.getElementById('pd-hero');
+    if(!root) return;
+    var header = root.querySelector('.pd-header');
+    var hero   = root.querySelector('.pd-heroScroll');
+    var canvas = root.querySelector('.pd-canvas');
+    var ctx = canvas.getContext('2d');
+    var swap = root.querySelector('.pd-swap');
+    var quote = root.querySelector('.pd-quote');
+    var quoteText = root.querySelector('.pd-quoteText');
+    var quoteWho = root.querySelector('.pd-quoteWho');
+    var scrollhint = root.querySelector('.pd-scrollhint');
+    var pbar = root.querySelector('.pd-progressBar');
+    var dots = Array.prototype.slice.call(root.querySelectorAll('.pd-d'));
+
+    // Frame-sequence config. b1/b2 are the frame indices where the story
+    // moves to 2D animation and photography (drives word/quote swaps).
+    // HD frame set (16MB). To roll back to the lighter 9.3MB set, change
+    // base to 'frames/' (same count/boundaries).
+    var CFG = { base:'frames-hd/', ext:'.webp?v=4', count:279, b1:66, b2:122, digits:4 };
+
+    var CONTENT = [
+      { word:'live-action video',
+        quote:'We LOVE Pearldrop! They have produced some incredible content for us and we would highly recommend them!',
+        who:'Head of Marketing, National Retail Brand' },
+      { word:'animation',
+        quote:'Their animation team turned a dry, technical concept into something our whole audience actually wanted to watch — clever, characterful and beautifully crafted.',
+        who:'Brand Director, Global Tech Firm' },
+      { word:'photography',
+        quote:'The photography was next-level. Every frame looked like a magazine cover — our brand has honestly never looked this good.',
+        who:'Comms Lead, Premium Lifestyle Brand' }
+    ];
+
+    /* ---------- frame loader ---------- */
+    var curSeg = -1;
+    var imgs = new Array(CFG.count + 1);
+    var loaded = new Array(CFG.count + 1);
+    var inflight = 0, MAXC = 6, curFrame = 1, drawnFrame = -1;
+    function src(i){ var s = String(i); while(s.length < CFG.digits) s = '0' + s; return CFG.base + s + CFG.ext; }
+
+    // load order: every 8th frame first (fast coarse scrub), then the rest
+    var queue = [];
+    (function(){
+      for(var i = 1; i <= CFG.count; i += 8) queue.push(i);
+      if(queue[queue.length-1] !== CFG.count) queue.push(CFG.count);
+      for(var j = 1; j <= CFG.count; j++) if((j - 1) % 8) queue.push(j);
+    })();
+
+    function nextIndex(){
+      // prefer unloaded frames near the current scroll position
+      for(var d = 0; d <= 32; d++){
+        var a = curFrame + d, b = curFrame - d;
+        if(a <= CFG.count && !loaded[a] && !imgs[a]) return a;
+        if(b >= 1 && !loaded[b] && !imgs[b]) return b;
+      }
+      while(queue.length){
+        var i = queue.shift();
+        if(!loaded[i] && !imgs[i]) return i;
+      }
+      return null;
+    }
+    function pump(){
+      while(inflight < MAXC){
+        var i = nextIndex();
+        if(i == null) break;
+        (function(idx){
+          inflight++;
+          var im = new Image();
+          imgs[idx] = im;
+          im.onload = function(){ loaded[idx] = true; inflight--; if(Math.abs(idx - curFrame) <= 8 || drawnFrame === -1) draw(); pump(); };
+          im.onerror = function(){ imgs[idx] = null; inflight--; pump(); };
+          im.src = src(idx);
+        })(i);
+      }
+    }
+
+    function nearestLoaded(t){
+      if(loaded[t]) return t;
+      for(var d = 1; d <= CFG.count; d++){
+        if(t - d >= 1 && loaded[t - d]) return t - d;
+        if(t + d <= CFG.count && loaded[t + d]) return t + d;
+      }
+      return -1;
+    }
+
+    function resize(){
+      var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      canvas.width = Math.round(canvas.clientWidth * dpr);
+      canvas.height = Math.round(canvas.clientHeight * dpr);
+      drawnFrame = -1; draw();
+    }
+
+    function draw(){
+      var t = nearestLoaded(curFrame);
+      if(t === -1 || t === drawnFrame) return;
+      var im = imgs[t], cw = canvas.width, ch = canvas.height;
+      if(!im || !cw || !ch) return;
+      var iw = im.naturalWidth, ih = im.naturalHeight;
+      var s = Math.max(cw / iw, ch / ih);
+      var dw = iw * s, dh = ih * s;
+      ctx.drawImage(im, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+      drawnFrame = t;
+    }
+
+    function setSeg(seg){
+      if(seg === curSeg) return;
+      curSeg = seg;
+      dots.forEach(function(d){ d.classList.toggle('on', +d.getAttribute('data-seg')===seg); });
+      swap.classList.add('out'); quote.classList.add('swapping');
+      setTimeout(function(){
+        swap.textContent = CONTENT[seg].word;
+        quoteText.textContent = CONTENT[seg].quote;
+        quoteWho.textContent = CONTENT[seg].who;
+        swap.classList.remove('out'); swap.classList.add('in-start');
+        void swap.offsetWidth;
+        swap.classList.remove('in-start');
+        quote.classList.remove('swapping');
+      }, 260);
+    }
+
+    function onScroll(){
+      var scrolled = window.scrollY || window.pageYOffset;
+      header.classList.toggle('scrolled', scrolled > 40);
+      var rect = hero.getBoundingClientRect();
+      var scrollable = hero.offsetHeight - window.innerHeight;
+      var p = Math.min(1, Math.max(0, (-rect.top) / scrollable));
+      scrollhint.style.opacity = p > 0.02 ? '0' : '.9';
+      pbar.style.width = (p*100).toFixed(2) + '%';
+      curFrame = 1 + Math.round(p * (CFG.count - 1));
+      var seg = (curFrame > CFG.b2) ? 2 : (curFrame > CFG.b1) ? 1 : 0;
+      setSeg(seg);
+      draw();
+    }
+
+    var ticking = false;
+    function requestTick(){ if(!ticking){ ticking = true; requestAnimationFrame(function(){ onScroll(); ticking=false; }); } }
+    window.addEventListener('scroll', requestTick, {passive:true});
+    window.addEventListener('resize', function(){ resize(); requestTick(); });
+    setSeg(0); resize(); onScroll(); pump();
+  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); } else { init(); }
+})();
+</script>
+</body>
+</html>
