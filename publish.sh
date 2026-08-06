@@ -31,7 +31,7 @@ git worktree add -q "$WT" "$BRANCH"
 # only what the live site serves
 find "$WT" -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
 cp index.html pearldrop-logo.png "$WT"/
-cp -r frames-v2c "$WT"/
+cp -r frames-v2b "$WT"/
 touch "$WT/.nojekyll"          # skip Jekyll processing
 
 ( cd "$WT"
