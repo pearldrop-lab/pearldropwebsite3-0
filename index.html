@@ -93,8 +93,10 @@
   /* full-screen mobile menu (sits just under the fixed header) */
   #pd-hero .pd-mobileNav{
     position:fixed; inset:0; z-index:2147482000;
-    display:flex; flex-direction:column; justify-content:center;
-    padding:0 clamp(24px,8vw,60px);
+    /* top-aligned and scrollable: with submenus open the content can be
+       taller than the viewport, so centring would push items under the header */
+    display:flex; flex-direction:column; justify-content:flex-start;
+    padding:96px clamp(24px,8vw,60px) 48px;
     background:linear-gradient(160deg, rgba(4,14,40,.975), rgba(3,8,24,.99));
     backdrop-filter:blur(18px);
     opacity:0; visibility:hidden;
@@ -117,6 +119,82 @@
   #pd-hero .pd-mobileNav.open a:nth-child(4){transition-delay:.24s}
   #pd-hero .pd-mobileNav.open a:nth-child(5){transition-delay:.30s}
   #pd-hero .pd-mobileNav.open a:nth-child(6){transition-delay:.36s}
+
+  /* ---------- mega menu ---------- */
+  #pd-hero .pd-hasMenu{position:relative; display:flex; align-items:center}
+  #pd-hero .pd-chev{
+    display:inline-block; width:7px; height:7px; margin-left:7px;
+    border-right:2px solid currentColor; border-bottom:2px solid currentColor;
+    transform:translateY(-2px) rotate(45deg); opacity:.65;
+    transition:transform .25s ease, opacity .2s ease;
+  }
+  #pd-hero .pd-hasMenu.open .pd-chev{transform:translateY(1px) rotate(-135deg); opacity:1}
+  #pd-hero .pd-hasMenu.open > a{opacity:1; color:#fff}
+  #pd-hero .pd-hasMenu.open > a::after{transform:scaleX(1)}
+
+  #pd-hero .pd-mega{
+    position:fixed; left:0; right:0; top:0; z-index:2147482900;
+    padding:96px clamp(20px,4vw,54px) 34px;
+    background:linear-gradient(180deg, rgba(4,14,40,.97) 0%, rgba(3,9,26,.985) 100%);
+    backdrop-filter:blur(20px);
+    border-bottom:1px solid rgba(var(--neon-rgb),.22);
+    box-shadow:0 30px 70px -40px rgba(0,0,0,.95);
+    opacity:0; visibility:hidden; transform:translateY(-12px);
+    transition:opacity .28s ease, transform .28s cubic-bezier(.5,0,.1,1), visibility .28s;
+  }
+  #pd-hero .pd-mega.open{opacity:1; visibility:visible; transform:none}
+  #pd-hero .pd-megaInner{max-width:1460px; margin:0 auto}
+  #pd-hero .pd-megaGrid{display:grid; grid-template-columns:1.7fr 1fr 1fr 1fr; gap:clamp(20px,2.4vw,44px)}
+  #pd-hero .pd-colStack{display:flex; flex-direction:column; gap:30px}
+
+  #pd-hero .pd-group{min-width:0}
+  #pd-hero .pd-groupHead{
+    display:flex; align-items:center; gap:11px; text-decoration:none;
+    padding-bottom:11px; margin-bottom:13px;
+    border-bottom:1px solid rgba(var(--cyan-rgb),.22);
+    transition:border-color .25s ease;
+  }
+  #pd-hero .pd-groupHead:hover{border-bottom-color:var(--neon)}
+  #pd-hero .pd-groupHead svg{
+    width:21px; height:21px; flex:0 0 auto; stroke:var(--neon); fill:none;
+    stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round;
+    filter:drop-shadow(0 0 7px rgba(var(--neon-rgb),.5));
+    transition:transform .25s ease;
+  }
+  #pd-hero .pd-groupHead:hover svg{transform:translateY(-2px) scale(1.06)}
+  #pd-hero .pd-groupHead span{
+    font-family:'Space Grotesk',sans-serif; font-weight:700;
+    font-size:13.5px; letter-spacing:1.4px; text-transform:uppercase; color:#fff;
+    transition:color .2s ease;
+  }
+  #pd-hero .pd-groupHead:hover span{color:var(--neon)}
+
+  #pd-hero .pd-groupList{list-style:none; display:grid; gap:2px}
+  /* multi-column flow rather than a grid, so wrapped items don't leave gaps */
+  #pd-hero .pd-groupList.two{display:block; columns:2; column-gap:clamp(14px,1.6vw,30px)}
+  #pd-hero .pd-groupList.two li{break-inside:avoid; margin-bottom:2px}
+  #pd-hero .pd-groupList a{
+    display:block; text-decoration:none; color:var(--muted);
+    font-size:14.5px; line-height:1.3; padding:6px 8px; border-radius:7px;
+    transition:color .18s ease, background .18s ease, transform .18s ease;
+  }
+  #pd-hero .pd-groupList a:hover{color:#fff; background:rgba(var(--neon-rgb),.11); transform:translateX(3px)}
+
+  #pd-hero .pd-megaCta{
+    padding:20px; border-radius:16px;
+    background:linear-gradient(160deg, rgba(var(--neon-rgb),.16), rgba(var(--cyan-rgb),.06));
+    border:1px solid rgba(var(--neon-rgb),.3);
+  }
+  #pd-hero .pd-megaCta h4{
+    font-family:'Space Grotesk',sans-serif; font-size:17px; color:#fff;
+    margin-bottom:7px; font-weight:700;
+  }
+  #pd-hero .pd-megaCta p{font-size:13.5px; color:var(--muted); line-height:1.45; margin-bottom:14px}
+  #pd-hero .pd-megaCta a{
+    display:inline-block; text-decoration:none; color:var(--neon); font-weight:600;
+    font-size:14px; letter-spacing:.3px;
+  }
+  #pd-hero .pd-megaCta a:hover{text-shadow:var(--glow-neon)}
 
   /* hero scroll rig */
   #pd-hero .pd-heroScroll{position:relative; height:520vh}
@@ -184,7 +262,52 @@
     #pd-hero .pd-dots{bottom:22px; gap:10px}
     #pd-hero .pd-d{font-size:10px; letter-spacing:1.2px; white-space:nowrap}
     #pd-hero .pd-d i{width:6px; height:6px}
+    /* mega menus are desktop-only; mobile uses the accordion below */
+    #pd-hero .pd-mega{display:none}
   }
+
+  /* ---------- mobile menu: scrolling + accordion submenus ---------- */
+  #pd-hero .pd-mobileNav{overflow-y:auto; -webkit-overflow-scrolling:touch}
+  #pd-hero .pd-mobileNav > a{flex:0 0 auto}
+  #pd-hero .pd-mobileNav .pd-mRow{
+    flex:0 0 auto;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    border-bottom:1px solid rgba(var(--cyan-rgb),.18);
+    opacity:0; transform:translateY(16px);
+    transition:opacity .4s ease, transform .4s cubic-bezier(.5,0,.1,1);
+  }
+  #pd-hero .pd-mobileNav.open .pd-mRow{opacity:1; transform:none}
+  #pd-hero .pd-mobileNav .pd-mRow > a{border-bottom:0; opacity:1; transform:none; flex:1 1 auto}
+  #pd-hero .pd-mToggle{
+    flex:0 0 auto; width:44px; height:44px; border:0; background:transparent;
+    cursor:pointer; position:relative; padding:0;
+  }
+  #pd-hero .pd-mToggle::before,#pd-hero .pd-mToggle::after{
+    content:""; position:absolute; left:50%; top:50%; background:var(--neon);
+    border-radius:2px; transform:translate(-50%,-50%); transition:transform .3s ease, opacity .2s;
+    box-shadow:0 0 8px rgba(var(--neon-rgb),.6);
+  }
+  #pd-hero .pd-mToggle::before{width:16px; height:2px}
+  #pd-hero .pd-mToggle::after{width:2px; height:16px}
+  #pd-hero .pd-mToggle.open::after{transform:translate(-50%,-50%) rotate(90deg); opacity:0}
+  #pd-hero .pd-mSub{
+    flex:0 0 auto;
+    display:grid; grid-template-rows:0fr; overflow:hidden;
+    transition:grid-template-rows .35s cubic-bezier(.5,0,.1,1);
+  }
+  #pd-hero .pd-mSub.open{grid-template-rows:1fr}
+  #pd-hero .pd-mSubInner{min-height:0; overflow:hidden}
+  #pd-hero .pd-mSub h5{
+    font-family:'Space Grotesk',sans-serif; font-size:11.5px; letter-spacing:1.4px;
+    text-transform:uppercase; color:var(--neon); font-weight:700;
+    padding:14px 0 5px 14px;
+  }
+  #pd-hero .pd-mSub a{
+    display:block; font-family:'Inter',sans-serif; font-size:15.5px; font-weight:400;
+    color:var(--muted); padding:8px 0 8px 14px; border-bottom:0;
+    opacity:1; transform:none; letter-spacing:0;
+  }
+  #pd-hero .pd-mSub a:active{color:#fff}
 </style>
 </head>
 <body>
@@ -197,9 +320,9 @@
       <span class="pd-word" style="display:none">pearldrop</span>
     </a>
     <nav class="pd-nav">
-      <a href="#">About us</a>
-      <a href="#">Services</a>
-      <a href="#">Portfolio</a>
+      <span class="pd-hasMenu" data-menu="about"><a href="#">About us<i class="pd-chev"></i></a></span>
+      <span class="pd-hasMenu" data-menu="services"><a href="#">Services<i class="pd-chev"></i></a></span>
+      <span class="pd-hasMenu" data-menu="portfolio"><a href="#">Portfolio<i class="pd-chev"></i></a></span>
       <a href="#">Case Studies</a>
       <a href="#">Blog</a>
       <a href="#" class="pd-cta">Contact</a>
@@ -209,10 +332,251 @@
     </button>
   </header>
 
+  <!-- ============ MEGA MENU: SERVICES (from SERVICES_menu.docx) ============ -->
+  <div class="pd-mega" data-mega="services">
+    <div class="pd-megaInner">
+      <div class="pd-megaGrid">
+
+        <div class="pd-group">
+          <a class="pd-groupHead" href="#">
+            <svg viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M7 5v14M17 5v14M2.5 12h19M2.5 8.5h4.5M2.5 15.5h4.5M17 8.5h4.5M17 15.5h4.5"/></svg>
+            <span>Live-Action</span>
+          </a>
+          <ul class="pd-groupList two">
+            <li><a href="#">Activations and Launches</a></li>
+            <li><a href="#">Automotive</a></li>
+            <li><a href="#">Aerial/Drone</a></li>
+            <li><a href="#">Case Studies</a></li>
+            <li><a href="#">Conferences and Ceremonies</a></li>
+            <li><a href="#">Charity</a></li>
+            <li><a href="#">Company Profiles</a></li>
+            <li><a href="#">Internal Communications</a></li>
+            <li><a href="#">Landing Pages</a></li>
+            <li><a href="#">Live Events</a></li>
+            <li><a href="#">Live-streaming</a></li>
+            <li><a href="#">Product</a></li>
+            <li><a href="#">Promotional</a></li>
+            <li><a href="#">Training</a></li>
+          </ul>
+        </div>
+
+        <div class="pd-colStack">
+          <div class="pd-group">
+            <a class="pd-groupHead" href="#">
+              <svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h2.2l1.2-2h6.8l1.2 2H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.6"/></svg>
+              <span>Photography</span>
+            </a>
+            <ul class="pd-groupList">
+              <li><a href="#">Architectural</a></li>
+              <li><a href="#">Automotive</a></li>
+              <li><a href="#">Headshots</a></li>
+              <li><a href="#">Lifestyle</a></li>
+              <li><a href="#">Live-event</a></li>
+            </ul>
+          </div>
+          <div class="pd-group">
+            <a class="pd-groupHead" href="#">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="14" height="14" rx="3"/><path d="m8.5 8.5 4.5 2.5-4.5 2.5z"/><path d="M20 8.5v7M22.5 10.5v3"/></svg>
+              <span>2D Animation</span>
+            </a>
+            <ul class="pd-groupList">
+              <li><a href="#">Explainer</a></li>
+              <li><a href="#">Character</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pd-colStack">
+          <div class="pd-group">
+            <a class="pd-groupHead" href="#">
+              <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2.2"/><circle cx="15" cy="12" r="2.2"/><circle cx="8" cy="18" r="2.2"/></svg>
+              <span>Post-Production</span>
+            </a>
+            <ul class="pd-groupList">
+              <li><a href="#">Editing</a></li>
+              <li><a href="#">VFX</a></li>
+              <li><a href="#">Subtitling and Transcription</a></li>
+              <li><a href="#">British Sign Language (BSL)</a></li>
+            </ul>
+          </div>
+          <div class="pd-group">
+            <a class="pd-groupHead" href="#">
+              <svg viewBox="0 0 24 24"><path d="m12 3 1.9 4.6 4.6 1.9-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="m18.2 15.4.75 1.85 1.85.75-1.85.75-.75 1.85-.75-1.85-1.85-.75 1.85-.75z"/></svg>
+              <span>AI Video Production</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="pd-colStack">
+          <div class="pd-group">
+            <a class="pd-groupHead" href="#">
+              <svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>
+              <span>Sectors</span>
+            </a>
+            <ul class="pd-groupList">
+              <li><a href="#">Education</a></li>
+              <li><a href="#">Healthcare</a></li>
+              <li><a href="#">Science and Technology</a></li>
+            </ul>
+          </div>
+          <div class="pd-megaCta">
+            <h4>Not sure where to start?</h4>
+            <p>Tell us what you need and we'll shape the right approach.</p>
+            <a href="#">Talk to us &rarr;</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MEGA MENU: ABOUT US (placeholder - confirm items) ============ -->
+  <div class="pd-mega" data-mega="about">
+    <div class="pd-megaInner">
+      <div class="pd-megaGrid">
+        <div class="pd-group">
+          <a class="pd-groupHead" href="#">
+            <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.4"/><path d="M2.8 19.5a6.4 6.4 0 0 1 12.4 0"/><circle cx="17" cy="9.5" r="2.6"/><path d="M16 14.4a5.6 5.6 0 0 1 5.2 5.1"/></svg>
+            <span>The Studio</span>
+          </a>
+          <ul class="pd-groupList">
+            <li><a href="#">Meet Pearldrop</a></li>
+            <li><a href="#">Our Team</a></li>
+            <li><a href="#">How We Work</a></li>
+          </ul>
+        </div>
+        <div class="pd-group">
+          <a class="pd-groupHead" href="#">
+            <svg viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="m10 9.5 5 2.5-5 2.5z"/></svg>
+            <span>Our Work</span>
+          </a>
+          <ul class="pd-groupList">
+            <li><a href="#">Showreels</a></li>
+            <li><a href="#">Why Video</a></li>
+          </ul>
+        </div>
+        <div class="pd-group">
+          <a class="pd-groupHead" href="#">
+            <svg viewBox="0 0 24 24"><path d="M20.5 14.5a2 2 0 0 1-2 2H8l-4.5 3.5v-15a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/><path d="M8 8.5h8M8 12h5"/></svg>
+            <span>Clients</span>
+          </a>
+          <ul class="pd-groupList">
+            <li><a href="#">Testimonials</a></li>
+            <li><a href="#">Who We Work With</a></li>
+          </ul>
+        </div>
+        <div class="pd-colStack">
+          <div class="pd-megaCta">
+            <h4>Let's make something extraordinary</h4>
+            <p>Twenty years of turning heads for brands big and small.</p>
+            <a href="#">Get in touch &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MEGA MENU: PORTFOLIO (placeholder - confirm items) ============ -->
+  <div class="pd-mega" data-mega="portfolio">
+    <div class="pd-megaInner">
+      <div class="pd-megaGrid">
+        <div class="pd-group">
+          <a class="pd-groupHead" href="#">
+            <svg viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M7 5v14M17 5v14M2.5 12h19"/></svg>
+            <span>Video</span>
+          </a>
+          <ul class="pd-groupList">
+            <li><a href="#">Brand Films</a></li>
+            <li><a href="#">Promotional</a></li>
+            <li><a href="#">Events</a></li>
+            <li><a href="#">Training</a></li>
+          </ul>
+        </div>
+        <div class="pd-group">
+          <a class="pd-groupHead" href="#">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="14" height="14" rx="3"/><path d="m8.5 8.5 4.5 2.5-4.5 2.5z"/><path d="M20 8.5v7M22.5 10.5v3"/></svg>
+            <span>Animation</span>
+          </a>
+          <ul class="pd-groupList">
+            <li><a href="#">Explainer</a></li>
+            <li><a href="#">Character</a></li>
+          </ul>
+        </div>
+        <div class="pd-group">
+          <a class="pd-groupHead" href="#">
+            <svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h2.2l1.2-2h6.8l1.2 2H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.6"/></svg>
+            <span>Photography</span>
+          </a>
+          <ul class="pd-groupList">
+            <li><a href="#">Stills Galleries</a></li>
+            <li><a href="#">Headshots</a></li>
+          </ul>
+        </div>
+        <div class="pd-colStack">
+          <div class="pd-group">
+            <a class="pd-groupHead" href="#">
+              <svg viewBox="0 0 24 24"><path d="M12 3.5 20.5 8v8L12 20.5 3.5 16V8z"/><path d="M12 3.5v17M3.5 8l8.5 4.5L20.5 8"/></svg>
+              <span>Aerial</span>
+            </a>
+            <ul class="pd-groupList">
+              <li><a href="#">Drone Reel</a></li>
+            </ul>
+          </div>
+          <div class="pd-megaCta">
+            <h4>See the full reel</h4>
+            <p>Everything in one place, sorted by discipline.</p>
+            <a href="#">View portfolio &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <nav class="pd-mobileNav" id="pd-mobileNav" aria-label="Mobile menu">
-    <a href="#">About us</a>
-    <a href="#">Services</a>
-    <a href="#">Portfolio</a>
+    <div class="pd-mRow"><a href="#">About us</a><button class="pd-mToggle" type="button" aria-label="Toggle About us submenu"></button></div>
+    <div class="pd-mSub"><div class="pd-mSubInner">
+      <h5>The Studio</h5>
+      <a href="#">Meet Pearldrop</a><a href="#">Our Team</a><a href="#">How We Work</a>
+      <h5>Our Work</h5>
+      <a href="#">Showreels</a><a href="#">Why Video</a>
+      <h5>Clients</h5>
+      <a href="#">Testimonials</a><a href="#">Who We Work With</a>
+    </div></div>
+
+    <div class="pd-mRow"><a href="#">Services</a><button class="pd-mToggle" type="button" aria-label="Toggle Services submenu"></button></div>
+    <div class="pd-mSub"><div class="pd-mSubInner">
+      <h5>Live-Action</h5>
+      <a href="#">Activations and Launches</a><a href="#">Automotive</a><a href="#">Aerial/Drone</a>
+      <a href="#">Case Studies</a><a href="#">Conferences and Ceremonies</a><a href="#">Charity</a>
+      <a href="#">Company Profiles</a><a href="#">Internal Communications</a><a href="#">Landing Pages</a>
+      <a href="#">Live Events</a><a href="#">Live-streaming</a><a href="#">Product</a>
+      <a href="#">Promotional</a><a href="#">Training</a>
+      <h5>Photography</h5>
+      <a href="#">Architectural</a><a href="#">Automotive</a><a href="#">Headshots</a>
+      <a href="#">Lifestyle</a><a href="#">Live-event</a>
+      <h5>2D Animation</h5>
+      <a href="#">Explainer</a><a href="#">Character</a>
+      <h5>Post-Production</h5>
+      <a href="#">Editing</a><a href="#">VFX</a><a href="#">Subtitling and Transcription</a>
+      <a href="#">British Sign Language (BSL)</a>
+      <h5>AI Video Production</h5>
+      <a href="#">AI Video Production</a>
+      <h5>Sectors</h5>
+      <a href="#">Education</a><a href="#">Healthcare</a><a href="#">Science and Technology</a>
+    </div></div>
+
+    <div class="pd-mRow"><a href="#">Portfolio</a><button class="pd-mToggle" type="button" aria-label="Toggle Portfolio submenu"></button></div>
+    <div class="pd-mSub"><div class="pd-mSubInner">
+      <h5>Video</h5>
+      <a href="#">Brand Films</a><a href="#">Promotional</a><a href="#">Events</a><a href="#">Training</a>
+      <h5>Animation</h5>
+      <a href="#">Explainer</a><a href="#">Character</a>
+      <h5>Photography</h5>
+      <a href="#">Stills Galleries</a><a href="#">Headshots</a>
+      <h5>Aerial</h5>
+      <a href="#">Drone Reel</a>
+    </div></div>
+
     <a href="#">Case Studies</a>
     <a href="#">Blog</a>
     <a href="#">Contact</a>
@@ -392,6 +756,41 @@
       draw();
     }
 
+    /* ---------- desktop mega menus ---------- */
+    var megas = Array.prototype.slice.call(root.querySelectorAll('.pd-mega'));
+    var triggers = Array.prototype.slice.call(root.querySelectorAll('.pd-hasMenu'));
+    if(megas.length && triggers.length){
+      var closeTimer = null, openName = null;
+      function showMega(name){
+        clearTimeout(closeTimer);
+        openName = name;
+        megas.forEach(function(m){ m.classList.toggle('open', m.getAttribute('data-mega')===name); });
+        triggers.forEach(function(t){ t.classList.toggle('open', t.getAttribute('data-menu')===name); });
+      }
+      function hideMega(){
+        openName = null;
+        megas.forEach(function(m){ m.classList.remove('open'); });
+        triggers.forEach(function(t){ t.classList.remove('open'); });
+      }
+      function scheduleHide(){ clearTimeout(closeTimer); closeTimer = setTimeout(hideMega, 180); }
+
+      triggers.forEach(function(t){
+        var name = t.getAttribute('data-menu');
+        t.addEventListener('mouseenter', function(){ showMega(name); });
+        t.addEventListener('mouseleave', scheduleHide);
+        // keyboard / touch: toggle rather than follow the link straight away
+        t.querySelector('a').addEventListener('click', function(e){
+          if(openName !== name){ e.preventDefault(); showMega(name); }
+        });
+      });
+      megas.forEach(function(m){
+        m.addEventListener('mouseenter', function(){ clearTimeout(closeTimer); });
+        m.addEventListener('mouseleave', scheduleHide);
+      });
+      document.addEventListener('keydown', function(e){ if(e.key === 'Escape') hideMega(); });
+      window.addEventListener('scroll', function(){ if(openName) hideMega(); }, {passive:true});
+    }
+
     /* ---------- mobile burger menu ---------- */
     var burger = root.querySelector('.pd-burger');
     var mobileNav = root.querySelector('.pd-mobileNav');
@@ -410,6 +809,18 @@
       burger.addEventListener('click', function(){ setNav(!navOpen); });
       mobileNav.addEventListener('click', function(e){
         if(e.target.tagName === 'A') setNav(false);
+      });
+      // accordion submenus
+      Array.prototype.slice.call(mobileNav.querySelectorAll('.pd-mToggle')).forEach(function(btn){
+        btn.addEventListener('click', function(e){
+          e.stopPropagation();
+          var sub = btn.parentElement.nextElementSibling;
+          if(!sub || !sub.classList.contains('pd-mSub')) return;
+          var willOpen = !sub.classList.contains('open');
+          btn.classList.toggle('open', willOpen);
+          sub.classList.toggle('open', willOpen);
+          btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        });
       });
       document.addEventListener('keydown', function(e){
         if(e.key === 'Escape' && navOpen) setNav(false);
