@@ -178,6 +178,12 @@
       font-size:clamp(17px,4.4vw,21px); line-height:1.55;
       max-width:min(560px,88vw); margin-top:22px;
     }
+    /* scroll hint collided with the section dots; the dots already show
+       progress, so drop the hint and centre the dots cleanly */
+    #pd-hero .pd-scrollhint{display:none}
+    #pd-hero .pd-dots{bottom:22px; gap:10px}
+    #pd-hero .pd-d{font-size:10px; letter-spacing:1.2px; white-space:nowrap}
+    #pd-hero .pd-d i{width:6px; height:6px}
   }
 </style>
 </head>
