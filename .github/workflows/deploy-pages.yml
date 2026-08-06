@@ -32,10 +32,20 @@ jobs:
           # Try to enable Pages automatically if it isn't already
           enablement: true
 
+      # Deploys were taking ~9 minutes because the artifact carried 869 frame
+      # files. Only frames-v2b/ is used by the live hero, so drop the legacy
+      # sets and the source videos from the upload. This touches the checkout
+      # only - everything stays in git, so the v1 rollback is unaffected.
+      - name: Trim assets the live site does not serve
+        run: |
+          rm -rf frames frames-hd videos
+          rm -f *.mp4
+          echo "Publishing $(find . -path ./.git -prune -o -type f -print | wc -l) files"
+
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Publish the repository root (index.html + videos/)
+          # Publish the repository root (index.html + frames-v2b/ + logo)
           path: '.'
 
       - name: Deploy to GitHub Pages
