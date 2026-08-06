@@ -204,9 +204,10 @@
 
     // Frame-sequence config. b1/b2 are the frame indices where the story
     // moves to 2D animation and photography (drives word/quote swaps).
-    // HD frame set (16MB). To roll back to the lighter 9.3MB set, change
-    // base to 'frames/' (same count/boundaries).
-    var CFG = { base:'frames-hd/', ext:'.webp?v=4', count:279, b1:66, b2:122, digits:4 };
+    // Hero v2b, 1600x900 (24MB). Earlier sets remain in the repo:
+    //   frames-hd/ (v1 studio, 279 frames, b1:66 b2:122)
+    //   frames/    (v1 studio, lighter)
+    var CFG = { base:'frames-v2b/', ext:'.webp?v=5', count:311, b1:69, b2:182, digits:4 };
 
     var CONTENT = [
       { word:'live-action video',
