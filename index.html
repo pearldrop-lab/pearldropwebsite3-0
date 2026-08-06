@@ -166,12 +166,18 @@
   #pd-hero .pd-mouse::before{content:"";position:absolute;left:50%;top:6px;width:3px;height:6px;border-radius:2px;background:var(--neon);transform:translateX(-50%);animation:pd-wheel 1.5s infinite}
   @keyframes pd-wheel{0%{opacity:0;transform:translate(-50%,0)}30%{opacity:1}100%{opacity:0;transform:translate(-50%,10px)}}
 
-  @media (max-width:860px){
+  /* 1024px so tablets and landscape phones also get the mobile treatment */
+  @media (max-width:1024px){
     #pd-hero .pd-nav{display:none}
     #pd-hero .pd-burger{display:flex}
     #pd-hero .pd-headline{max-width:82vw}
-    /* quote card is hidden on mobile - it collided with the headline */
+    /* quote card is hidden here - it collided with the headline */
     #pd-hero .pd-quote{display:none}
+    /* bump body copy up: 1.2vw is unreadably small on a phone */
+    #pd-hero .pd-sub{
+      font-size:clamp(17px,4.4vw,21px); line-height:1.55;
+      max-width:min(560px,88vw); margin-top:22px;
+    }
   }
 </style>
 </head>
@@ -403,7 +409,7 @@
         if(e.key === 'Escape' && navOpen) setNav(false);
       });
       window.addEventListener('resize', function(){
-        if(navOpen && window.innerWidth > 860) setNav(false);
+        if(navOpen && window.innerWidth > 1024) setNav(false);
       });
     }
 
