@@ -84,6 +84,51 @@
     #pd-hero .pd-nav a.pd-cta::before{animation:none; opacity:.55; transform:none}
   }
 
+  /* burger (mobile only) */
+  #pd-hero .pd-burger{
+    display:none; position:relative; z-index:2;
+    width:46px; height:46px; padding:0; border:0; background:transparent;
+    cursor:pointer; align-items:center; justify-content:center; flex:0 0 auto;
+  }
+  #pd-hero .pd-burger span{
+    display:block; position:absolute; left:11px; width:24px; height:2px; border-radius:2px;
+    background:#fff; box-shadow:0 1px 8px rgba(0,0,0,.5);
+    transition:transform .3s cubic-bezier(.5,0,.1,1), opacity .2s ease;
+  }
+  #pd-hero .pd-burger span:nth-child(1){transform:translateY(-7px)}
+  #pd-hero .pd-burger span:nth-child(3){transform:translateY(7px)}
+  #pd-hero .pd-burger.open span:nth-child(1){transform:rotate(45deg)}
+  #pd-hero .pd-burger.open span:nth-child(2){opacity:0}
+  #pd-hero .pd-burger.open span:nth-child(3){transform:rotate(-45deg)}
+
+  /* full-screen mobile menu (sits just under the fixed header) */
+  #pd-hero .pd-mobileNav{
+    position:fixed; inset:0; z-index:2147482000;
+    display:flex; flex-direction:column; justify-content:center;
+    padding:0 clamp(24px,8vw,60px);
+    background:linear-gradient(160deg, rgba(4,14,40,.975), rgba(3,8,24,.99));
+    backdrop-filter:blur(18px);
+    opacity:0; visibility:hidden;
+    transition:opacity .35s ease, visibility .35s ease;
+  }
+  #pd-hero .pd-mobileNav.open{opacity:1; visibility:visible}
+  #pd-hero .pd-mobileNav a{
+    color:#fff; text-decoration:none;
+    font-family:'Space Grotesk',sans-serif; font-weight:600;
+    font-size:clamp(26px,7vw,40px); letter-spacing:-.5px;
+    padding:16px 0; border-bottom:1px solid rgba(var(--cyan-rgb),.18);
+    opacity:0; transform:translateY(16px);
+    transition:opacity .4s ease, transform .4s cubic-bezier(.5,0,.1,1), color .2s ease;
+  }
+  #pd-hero .pd-mobileNav a:last-child{border-bottom:0; color:var(--neon); text-shadow:var(--glow-neon)}
+  #pd-hero .pd-mobileNav.open a{opacity:1; transform:none}
+  #pd-hero .pd-mobileNav.open a:nth-child(1){transition-delay:.06s}
+  #pd-hero .pd-mobileNav.open a:nth-child(2){transition-delay:.12s}
+  #pd-hero .pd-mobileNav.open a:nth-child(3){transition-delay:.18s}
+  #pd-hero .pd-mobileNav.open a:nth-child(4){transition-delay:.24s}
+  #pd-hero .pd-mobileNav.open a:nth-child(5){transition-delay:.30s}
+  #pd-hero .pd-mobileNav.open a:nth-child(6){transition-delay:.36s}
+
   /* hero scroll rig */
   #pd-hero .pd-heroScroll{position:relative; height:520vh}
   #pd-hero .pd-sticky{position:sticky; top:0; height:100vh; overflow:hidden}
@@ -133,8 +178,8 @@
   @keyframes pd-wheel{0%{opacity:0;transform:translate(-50%,0)}30%{opacity:1}100%{opacity:0;transform:translate(-50%,10px)}}
 
   @media (max-width:860px){
-    #pd-hero .pd-nav{gap:14px}
-    #pd-hero .pd-nav a:not(.pd-cta){display:none}
+    #pd-hero .pd-nav{display:none}
+    #pd-hero .pd-burger{display:flex}
     #pd-hero .pd-headline{max-width:82vw}
     #pd-hero .pd-quote{right:auto; left:clamp(22px,5vw,72px); bottom:120px; width:min(80vw,420px)}
   }
@@ -155,7 +200,19 @@
       <a href="/blog/">Blog</a>
       <a href="/contact/" class="pd-cta">Contact</a>
     </nav>
+    <button class="pd-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="pd-mobileNav">
+      <span></span><span></span><span></span>
+    </button>
   </header>
+
+  <nav class="pd-mobileNav" id="pd-mobileNav" aria-label="Mobile menu">
+    <a href="/about-us/">About us</a>
+    <a href="/services/">Services</a>
+    <a href="/portfolio/">Portfolio</a>
+    <a href="/case-studies/">Case Studies</a>
+    <a href="/blog/">Blog</a>
+    <a href="/contact/">Contact</a>
+  </nav>
 
   <section class="pd-heroScroll">
     <div class="pd-sticky">
@@ -329,6 +386,33 @@
       var seg = (curFrame > CFG.b2) ? 2 : (curFrame > CFG.b1) ? 1 : 0;
       setSeg(seg);
       draw();
+    }
+
+    /* ---------- mobile burger menu ---------- */
+    var burger = root.querySelector('.pd-burger');
+    var mobileNav = root.querySelector('.pd-mobileNav');
+    if(burger && mobileNav){
+      var navOpen = false;
+      function setNav(open){
+        navOpen = open;
+        burger.classList.toggle('open', open);
+        mobileNav.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        // stop the page scrolling behind the open menu
+        document.documentElement.style.overflow = open ? 'hidden' : '';
+        document.body.style.overflow = open ? 'hidden' : '';
+      }
+      burger.addEventListener('click', function(){ setNav(!navOpen); });
+      mobileNav.addEventListener('click', function(e){
+        if(e.target.tagName === 'A') setNav(false);
+      });
+      document.addEventListener('keydown', function(e){
+        if(e.key === 'Escape' && navOpen) setNav(false);
+      });
+      window.addEventListener('resize', function(){
+        if(navOpen && window.innerWidth > 860) setNav(false);
+      });
     }
 
     var ticking = false;
