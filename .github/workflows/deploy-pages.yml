@@ -1,8 +1,9 @@
 name: Deploy site to GitHub Pages
 
+# Publishing now happens from the gh-pages branch (see publish.sh) because
+# the Actions deployment repeatedly stalled in deployment_queued and timed out.
+# Kept here, manual-only, as a fallback.
 on:
-  push:
-    branches: [claude/pearldrop-hero-video-d6wl0v]
   workflow_dispatch:
 
 # Allow this workflow to publish to Pages
