@@ -133,30 +133,37 @@
   #pd-hero .pd-hasMenu.open > a::after{transform:scaleX(1)}
 
   #pd-hero .pd-mega{
-    position:fixed; left:0; right:0; top:0; z-index:2147482900; overflow:hidden;
-    padding:100px clamp(20px,4vw,54px) 40px;
-    background:linear-gradient(180deg, rgba(4,14,40,.975) 0%, rgba(3,9,26,.99) 100%);
-    backdrop-filter:blur(22px);
-    border-bottom:1px solid rgba(var(--neon-rgb),.24);
-    box-shadow:0 34px 80px -44px rgba(0,0,0,.95);
-    opacity:0; visibility:hidden; transform:translateY(-14px);
-    transition:opacity .3s ease, transform .34s cubic-bezier(.5,0,.1,1), visibility .3s;
+    position:fixed; left:0; right:0; top:0; z-index:2147482900;
+    padding:86px clamp(14px,3vw,40px) 0;
+    pointer-events:none;
+    opacity:0; visibility:hidden; transform:translateY(-10px);
+    transition:opacity .28s ease, transform .32s cubic-bezier(.5,0,.1,1), visibility .28s;
   }
   #pd-hero .pd-mega.open{opacity:1; visibility:visible; transform:none}
+  #pd-hero .pd-megaInner{
+    pointer-events:auto; position:relative; overflow:hidden;
+    width:max-content; max-width:min(1120px,96vw); margin:0 auto;
+    padding:26px clamp(22px,2.4vw,34px) 28px;
+    border-radius:20px;
+    background:linear-gradient(180deg, rgba(6,18,48,.975) 0%, rgba(4,11,30,.99) 100%);
+    backdrop-filter:blur(22px);
+    border:1px solid rgba(var(--neon-rgb),.26);
+    box-shadow:0 30px 70px -30px rgba(0,0,0,.92);
+  }
   /* drifting aurora so the panel feels alive rather than a flat sheet */
-  #pd-hero .pd-mega::before{
+  #pd-hero .pd-megaInner::before{
     content:""; position:absolute; inset:-40% -10%; pointer-events:none; z-index:0;
     background:
-      radial-gradient(38% 55% at 18% 30%, rgba(var(--neon-rgb),.16), transparent 70%),
-      radial-gradient(34% 50% at 78% 65%, rgba(var(--cyan-rgb),.15), transparent 70%);
+      radial-gradient(38% 55% at 18% 30%, rgba(var(--neon-rgb),.15), transparent 70%),
+      radial-gradient(34% 50% at 78% 65%, rgba(var(--cyan-rgb),.14), transparent 70%);
     animation:pd-drift 17s ease-in-out infinite alternate;
   }
   @keyframes pd-drift{
     0%{transform:translate3d(0,0,0) scale(1)}
     100%{transform:translate3d(3%,4%,0) scale(1.1)}
   }
-  #pd-hero .pd-megaInner{max-width:1460px; margin:0 auto; position:relative; z-index:1}
-  #pd-hero .pd-megaGrid{display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:clamp(18px,2.2vw,40px)}
+  #pd-hero .pd-megaGrid{position:relative; z-index:1; display:flex; align-items:flex-start; gap:clamp(20px,2.6vw,46px)}
+  #pd-hero .pd-megaGrid > *{flex:0 0 auto; min-width:158px}
   #pd-hero .pd-colStack{display:flex; flex-direction:column; gap:26px}
 
   /* columns rise in one after another when the panel opens */
@@ -225,76 +232,6 @@
   }
   #pd-hero .pd-groupList a:hover::before{height:62%}
   #pd-hero .pd-groupList a:hover::after{opacity:1; transform:translate(0,-50%)}
-
-  /* feature card */
-  #pd-hero .pd-megaCta{
-    position:relative; overflow:hidden; padding:24px; border-radius:18px;
-    background:linear-gradient(155deg, rgba(var(--neon-rgb),.2), rgba(var(--cyan-rgb),.07));
-    border:1px solid rgba(var(--neon-rgb),.34);
-  }
-  #pd-hero .pd-megaCta::after{
-    content:""; position:absolute; right:-30px; bottom:-40px; width:150px; height:150px;
-    border-radius:50%; background:radial-gradient(circle, rgba(var(--neon-rgb),.3), transparent 70%);
-    pointer-events:none;
-  }
-  #pd-hero .pd-megaCta .pd-ctaKicker{
-    display:inline-block; font-size:10.5px; letter-spacing:2px; text-transform:uppercase;
-    color:var(--neon); font-weight:700; margin-bottom:9px;
-  }
-  #pd-hero .pd-megaCta h4{
-    font-family:'Space Grotesk',sans-serif; font-size:20px; line-height:1.15; color:#fff;
-    margin-bottom:9px; font-weight:700; letter-spacing:-.3px;
-  }
-  #pd-hero .pd-megaCta p{font-size:13.5px; color:var(--muted); line-height:1.5; margin-bottom:16px}
-  #pd-hero .pd-megaCta .pd-ctaBtn{
-    display:inline-flex; align-items:center; gap:8px; text-decoration:none;
-    color:#fff; font-weight:600; font-size:14px; letter-spacing:.3px;
-    padding:10px 20px; border-radius:999px;
-    background:linear-gradient(180deg, rgba(var(--neon-rgb),.45), rgba(var(--neon-rgb),.18));
-    border:1px solid rgba(var(--neon-rgb),.7);
-    transition:transform .22s ease, box-shadow .22s ease, background .22s ease;
-  }
-  #pd-hero .pd-megaCta .pd-ctaBtn:hover{
-    transform:translateY(-2px);
-    background:linear-gradient(180deg, rgba(var(--neon-rgb),.75), rgba(var(--neon-rgb),.35));
-    box-shadow:0 10px 26px -10px rgba(var(--neon-rgb),1);
-  }
-
-  /* featured work card - fills the tall column and shows, not tells */
-  #pd-hero .pd-megaFeature{
-    position:relative; display:block; overflow:hidden; border-radius:18px;
-    text-decoration:none; border:1px solid rgba(var(--cyan-rgb),.28);
-    transition:transform .3s cubic-bezier(.4,0,.15,1), border-color .3s ease, box-shadow .3s ease;
-  }
-  #pd-hero .pd-megaFeature:hover{
-    transform:translateY(-4px); border-color:var(--neon);
-    box-shadow:0 18px 40px -18px rgba(var(--neon-rgb),.75);
-  }
-  #pd-hero .pd-megaFeature img{
-    display:block; width:100%; height:172px; object-fit:cover;
-    transition:transform .5s cubic-bezier(.4,0,.15,1);
-  }
-  #pd-hero .pd-megaFeature:hover img{transform:scale(1.07)}
-  #pd-hero .pd-featOverlay{
-    position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end;
-    padding:14px 16px; background:linear-gradient(180deg, rgba(3,9,26,0) 35%, rgba(3,9,26,.92) 100%);
-  }
-  #pd-hero .pd-featLabel{font-size:10.5px; letter-spacing:2px; text-transform:uppercase; color:var(--neon); font-weight:700}
-  #pd-hero .pd-featTitle{font-family:'Space Grotesk',sans-serif; font-size:15.5px; color:#fff; font-weight:600; margin-top:3px}
-  #pd-hero .pd-playBadge{
-    position:absolute; top:50%; left:50%; width:52px; height:52px; margin:-26px 0 0 -26px;
-    border-radius:50%; border:1.5px solid rgba(255,255,255,.85);
-    background:rgba(3,9,26,.42); backdrop-filter:blur(3px);
-    display:flex; align-items:center; justify-content:center;
-    transition:transform .3s cubic-bezier(.4,0,.15,1), background .3s ease, border-color .3s;
-  }
-  #pd-hero .pd-megaFeature:hover .pd-playBadge{
-    transform:scale(1.12); background:rgba(var(--neon-rgb),.4); border-color:var(--neon);
-  }
-  #pd-hero .pd-playBadge::after{
-    content:""; margin-left:3px; border-style:solid; border-width:8px 0 8px 13px;
-    border-color:transparent transparent transparent #fff;
-  }
 
   /* hero scroll rig */
   #pd-hero .pd-heroScroll{position:relative; height:520vh}
@@ -507,23 +444,6 @@
           </div>
         </div>
 
-        <div class="pd-colStack">
-        <div class="pd-megaCta">
-          <span class="pd-ctaKicker">Say hello</span>
-          <h4>Got something wild in mind?</h4>
-          <p>Bring us the brief everyone else called tricky. That's the fun bit.</p>
-          <a class="pd-ctaBtn" href="#">Start a project <span>&rarr;</span></a>
-          </div>
-          <a class="pd-megaFeature" href="#">
-            <img src="frames-v2b/0040.webp" alt="Pearldrop showreel" />
-            <span class="pd-featOverlay">
-              <span class="pd-featLabel">Showreel 2026</span>
-              <span class="pd-featTitle">Two minutes of head-turning</span>
-            </span>
-            <span class="pd-playBadge"></span>
-          </a>
-        </div>
-
       </div>
     </div>
   </div>
@@ -568,15 +488,6 @@
           </ul>
         </div>
 
-        <div class="pd-colStack">
-        <div class="pd-megaCta">
-          <span class="pd-ctaKicker">Your world</span>
-          <h4>Not on the list?</h4>
-          <p>We learn industries fast - and ask the questions nobody else thought to.</p>
-          <a class="pd-ctaBtn" href="#">Talk it through <span>&rarr;</span></a>
-          </div>
-        </div>
-
       </div>
     </div>
   </div>
@@ -617,15 +528,6 @@
             <li><a href="#">Testimonials</a></li>
             <li><a href="#">Who We Work With</a></li>
           </ul>
-        </div>
-
-        <div class="pd-colStack">
-        <div class="pd-megaCta">
-          <span class="pd-ctaKicker">Since 2003</span>
-          <h4>Made in Hertfordshire, seen everywhere.</h4>
-          <p>A small crew with a big kit list and a bigger imagination.</p>
-          <a class="pd-ctaBtn" href="#">Get in touch <span>&rarr;</span></a>
-          </div>
         </div>
 
       </div>
@@ -680,12 +582,6 @@
           <ul class="pd-groupList">
             <li><a href="#">Drone Reel</a></li>
           </ul>
-          </div>
-        <div class="pd-megaCta">
-          <span class="pd-ctaKicker">Everything</span>
-          <h4>See the full reel</h4>
-          <p>All of it, in one place, sorted by discipline.</p>
-          <a class="pd-ctaBtn" href="#">View portfolio <span>&rarr;</span></a>
           </div>
         </div>
 
@@ -953,8 +849,10 @@
         });
       });
       megas.forEach(function(m){
-        m.addEventListener('mouseenter', function(){ clearTimeout(closeTimer); });
-        m.addEventListener('mouseleave', scheduleHide);
+        // the outer layer is click-through, so hover lives on the panel itself
+        var surface = m.querySelector('.pd-megaInner') || m;
+        surface.addEventListener('mouseenter', function(){ clearTimeout(closeTimer); });
+        surface.addEventListener('mouseleave', scheduleHide);
       });
       document.addEventListener('keydown', function(e){ if(e.key === 'Escape') hideMega(); });
       window.addEventListener('scroll', function(){ if(openName) hideMega(); }, {passive:true});
