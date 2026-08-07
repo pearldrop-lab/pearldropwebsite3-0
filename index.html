@@ -180,9 +180,12 @@
     100%{transform:translate3d(3%,4%,0) scale(1.1)}
   }
 
+  /* the block of columns is centred in the bar; the columns themselves
+     stay left-aligned so every list still reads down a straight edge */
   #pd-hero .pd-cols{
     position:relative; z-index:1;
     display:flex; align-items:flex-start; flex-wrap:wrap;
+    justify-content:center;
     gap:30px clamp(28px,3.4vw,64px);
   }
   #pd-hero .pd-col{min-width:0}
