@@ -236,7 +236,9 @@
 
   #pd-hero .pd-list{list-style:none; display:grid; gap:2px}
   /* the long live-action list flows into two columns without gaps */
-  #pd-hero .pd-list.split{display:block; columns:2; column-gap:clamp(18px,1.8vw,32px)}
+  /* gap must clear the hover bar's left overhang so the second column's
+     highlight never reaches into the first column's text */
+  #pd-hero .pd-list.split{display:block; columns:2; column-gap:clamp(26px,2vw,38px)}
   #pd-hero .pd-list.split li{break-inside:avoid}
   #pd-hero .pd-list li{
     opacity:0; transform:translateY(-9px);
@@ -251,39 +253,67 @@
   #pd-hero .pd-list li:nth-child(11){--td:.44s} #pd-hero .pd-list li:nth-child(12){--td:.48s}
   #pd-hero .pd-list li:nth-child(13){--td:.52s} #pd-hero .pd-list li:nth-child(14){--td:.56s}
   #pd-hero .pd-list li{transition-delay:calc(var(--d,0s) + var(--td,0s))}
+  /* The label sits flush with the heading's icon: the negative margin and
+     matching padding cancel out, so text starts at the column edge while
+     the hover bar and its droplet hang out to the left of everything. */
   #pd-hero .pd-list a{
-    --g:var(--neon-rgb);
+    --g:var(--neon-rgb); --ov:18px;
     position:relative; display:block; text-decoration:none;
-    padding:6.5px 8px 6.5px 18px; border-radius:8px;
+    margin-left:calc(var(--ov) * -1);
+    padding:6.5px 8px 6.5px var(--ov); border-radius:8px;
     font-size:15px; line-height:1.35; color:var(--ink);
-    /* slide via transform so hover never reflows the columns */
-    transition:color .18s ease, background .18s ease, transform .22s cubic-bezier(.3,0,.2,1);
+    transition:color .18s ease, background .18s ease;
   }
   /* a droplet lands beside whatever you're about to click */
   #pd-hero .pd-list a::before{
-    content:""; position:absolute; left:2px; top:50%; width:7px; height:7px;
+    content:""; position:absolute; left:4px; top:50%; width:7px; height:7px;
     margin-top:-3.5px; border-radius:50%;
     background:rgb(var(--g)); box-shadow:0 0 10px rgba(var(--g),.9);
     opacity:0; transform:scale(.3);
     transition:opacity .18s ease, transform .25s cubic-bezier(.3,1.6,.4,1);
   }
-  #pd-hero .pd-list a:hover{color:#fff; background:rgba(var(--g),.1); transform:translateX(9px)}
+  #pd-hero .pd-list a:hover{color:#fff; background:rgba(var(--g),.1)}
   #pd-hero .pd-list a:hover::before{opacity:1; transform:none}
-  /* sectors: the three links, writ large */
-  #pd-hero .pd-list.big{gap:6px}
-  #pd-hero .pd-list.big a{
-    display:flex; align-items:center; gap:13px;
-    font-family:'Space Grotesk',sans-serif; font-weight:600;
-    font-size:clamp(19px,1.6vw,23px); letter-spacing:-.3px;
-    padding:11px 14px 11px 20px;
+  /* sectors: three big icon blocks rather than a short list */
+  #pd-hero .pd-sector{
+    display:flex; flex-direction:column; align-items:flex-start; gap:16px;
+    width:clamp(200px,17vw,250px); text-decoration:none;
+    opacity:0; transform:translateY(-10px);
+    transition:opacity .34s ease var(--d,0s), transform .4s cubic-bezier(.25,.9,.3,1) var(--d,0s);
   }
-  #pd-hero .pd-list.big a svg{
-    width:22px; height:22px; flex:0 0 auto; stroke:rgb(var(--g)); fill:none;
-    stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round;
-    transition:transform .25s cubic-bezier(.3,1.5,.4,1);
+  #pd-hero .pd-mega.open .pd-sector{opacity:1; transform:none}
+  /* a pearl the size of the space it has to fill, with the logo's
+     off-centre ring hung around it */
+  #pd-hero .pd-sectorIcon{
+    position:relative; width:112px; height:112px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(120% 120% at 32% 26%, rgba(var(--g),.26), rgba(var(--g),.04) 66%);
+    border:1px solid rgba(var(--g),.34);
+    transition:transform .35s cubic-bezier(.3,1.35,.4,1), box-shadow .3s ease, border-color .3s ease;
   }
-  #pd-hero .pd-list.big a:hover{transform:translateX(10px)}
-  #pd-hero .pd-list.big a:hover svg{transform:rotate(-8deg) scale(1.12)}
+  #pd-hero .pd-sectorIcon::before{
+    content:""; position:absolute; inset:-10px -5px -5px -10px; border-radius:50%;
+    border:1.5px solid rgba(var(--g),.34); border-top-color:transparent;
+    transition:transform .6s cubic-bezier(.35,0,.2,1);
+  }
+  #pd-hero .pd-sectorIcon svg{
+    width:56px; height:56px; stroke:rgb(var(--g)); fill:none;
+    stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round;
+  }
+  #pd-hero .pd-sector:hover .pd-sectorIcon{
+    transform:translateY(-5px) scale(1.06);
+    border-color:rgb(var(--g));
+    box-shadow:0 20px 40px -14px rgba(var(--g),.85);
+  }
+  #pd-hero .pd-sector:hover .pd-sectorIcon::before{transform:rotate(210deg)}
+  #pd-hero .pd-sectorName{
+    font-family:'Space Grotesk',sans-serif; font-weight:700;
+    font-size:clamp(20px,1.7vw,25px); line-height:1.1; letter-spacing:-.5px; color:#fff;
+    /* reserve two lines so the taglines sit on one baseline across all three */
+    min-height:2.2em;
+    transition:color .2s ease;
+  }
+  #pd-hero .pd-sector:hover .pd-sectorName{color:rgb(var(--g))}
 
   /* portfolio thumbnails: a tidy grid that lifts and glows on hover */
   #pd-hero .pd-thumbs{display:grid; gap:14px; padding-top:2px}
@@ -326,7 +356,7 @@
     #pd-hero .pd-megaInner{transform:none; transition:none}
     #pd-hero .pd-megaBody::before{animation:none}
     #pd-hero .pd-colTitle, #pd-hero .pd-colTag,
-    #pd-hero .pd-list li, #pd-hero .pd-thumb{
+    #pd-hero .pd-list li, #pd-hero .pd-thumb, #pd-hero .pd-sector{
       opacity:1 !important; transform:none !important; transition-delay:0s !important;
     }
     #pd-hero .pd-mega.open .pd-colTitle::after{transition:none}
@@ -534,15 +564,21 @@
     <div class="pd-megaInner">
       <div class="pd-megaBody">
         <div class="pd-cols">
-        <div class="pd-col">
-          <a class="pd-colTitle" style="--g:0,220,255" href="#"><svg viewBox="0 0 24 24"><path d="M4 4.5h6a2.5 2.5 0 0 1 2 2.5 2.5 2.5 0 0 1 2-2.5h6v13h-6a2.5 2.5 0 0 0-2 2 2.5 2.5 0 0 0-2-2H4z"/></svg>sectors</a>
-          <p class="pd-colTag">We already speak the language.</p>
-          <ul class="pd-list big">
-            <li><a style="--g:0,220,255" href="#"><svg viewBox="0 0 24 24"><path d="M4 4.5h6a2.5 2.5 0 0 1 2 2.5 2.5 2.5 0 0 1 2-2.5h6v13h-6a2.5 2.5 0 0 0-2 2 2.5 2.5 0 0 0-2-2H4z"/></svg> Education</a></li>
-            <li><a style="--g:48,216,240" href="#"><svg viewBox="0 0 24 24"><path d="M3 12h4l2.5-6 4 12 2.5-6h5"/></svg> Healthcare</a></li>
-            <li><a style="--g:0,160,255" href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.4"/><ellipse cx="12" cy="12" rx="9.5" ry="4.2"/><ellipse cx="12" cy="12" rx="9.5" ry="4.2" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9.5" ry="4.2" transform="rotate(120 12 12)"/></svg> Science and Technology</a></li>
-          </ul>
-        </div>
+        <a class="pd-sector" style="--g:0,220,255" href="#">
+          <span class="pd-sectorIcon"><svg viewBox="0 0 48 48"><path d="M3.5 18 24 8.5 44.5 18 24 27.5z"/><path d="M12 22.5V32c0 3.4 5.4 6.2 12 6.2s12-2.8 12-6.2v-9.5"/><path d="M40.5 19.8v10.4"/><circle cx="40.5" cy="33" r="2.4"/></svg></span>
+          <span class="pd-sectorName">Education</span>
+          <span class="pd-colTag">Stories that actually get watched.</span>
+        </a>
+        <a class="pd-sector" style="--g:48,216,240" href="#">
+          <span class="pd-sectorIcon"><svg viewBox="0 0 48 48"><path d="M24 40.5S7.5 30.5 7.5 19.8A8.6 8.6 0 0 1 24 16.3a8.6 8.6 0 0 1 16.5 3.5C40.5 30.5 24 40.5 24 40.5z"/><path d="M11 23.5h7.5l3-5.5 4.5 11 3-5.5H37"/></svg></span>
+          <span class="pd-sectorName">Healthcare</span>
+          <span class="pd-colTag">Careful, clear, human.</span>
+        </a>
+        <a class="pd-sector" style="--g:0,160,255" href="#">
+          <span class="pd-sectorIcon"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="4.2"/><ellipse cx="24" cy="24" rx="19" ry="8.2"/><ellipse cx="24" cy="24" rx="19" ry="8.2" transform="rotate(60 24 24)"/><ellipse cx="24" cy="24" rx="19" ry="8.2" transform="rotate(120 24 24)"/></svg></span>
+          <span class="pd-sectorName">Science and Technology</span>
+          <span class="pd-colTag">Complex made compelling.</span>
+        </a>
         </div>
       </div>
     </div>
