@@ -485,6 +485,13 @@
     opacity:1; transform:none; letter-spacing:0;
   }
   #pd-hero .pd-mSub a:active{color:#fff}
+  /* section headings that are links in their own right, not list labels */
+  #pd-hero .pd-mSub a.pd-mHead{
+    font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:600;
+    color:#fff; letter-spacing:-.2px; padding:13px 0 13px 14px;
+  }
+  #pd-hero .pd-mSub a.pd-mHead + .pd-mHead{border-top:1px solid rgba(var(--cyan-rgb),.13)}
+  #pd-hero .pd-mSub a.pd-mHead:active{color:var(--neon)}
 </style>
 <div id="pd-hero">
   <header class="pd-header">
@@ -686,20 +693,11 @@
 
     <div class="pd-mRow"><a href="#">Services</a><button class="pd-mToggle" type="button" aria-label="Toggle Services submenu"></button></div>
     <div class="pd-mSub"><div class="pd-mSubInner">
-      <h5>Live-Action</h5>
-      <a href="#">Activations and Launches</a><a href="#">Automotive</a><a href="#">Aerial/Drone</a>
-      <a href="#">Case Studies</a><a href="#">Conferences and Ceremonies</a><a href="#">Charity</a>
-      <a href="#">Company Profiles</a><a href="#">Internal Communications</a><a href="#">Landing Pages</a>
-      <a href="#">Live Events</a><a href="#">Live-streaming</a><a href="#">Product</a>
-      <a href="#">Promotional</a><a href="#">Training</a>
-      <h5>2D Animation</h5>
-      <a href="#">Explainer</a><a href="#">Character</a>
-      <h5>Photography</h5>
-      <a href="#">Architectural</a><a href="#">Automotive</a><a href="#">Headshots</a>
-      <a href="#">Lifestyle</a><a href="#">Live-event</a>
-      <h5>Post-Production</h5>
-      <a href="#">Editing</a><a href="#">VFX</a><a href="#">Subtitling and Transcription</a>
-      <a href="#">British Sign Language (BSL)</a><a href="#">AI Video Production</a>
+      <!-- overview pages only: the full service lists live on those pages -->
+      <a class="pd-mHead" href="#">Live-Action</a>
+      <a class="pd-mHead" href="#">2D Animation</a>
+      <a class="pd-mHead" href="#">Photography</a>
+      <a class="pd-mHead" href="#">Post-Production</a>
     </div></div>
 
     <div class="pd-mRow"><a href="#">Portfolio</a><button class="pd-mToggle" type="button" aria-label="Toggle Portfolio submenu"></button></div>
