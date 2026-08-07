@@ -35,6 +35,9 @@
     background:transparent; transition:background .35s ease;
   }
   #pd-hero .pd-header.scrolled{background:linear-gradient(180deg, rgba(4,10,26,.55), rgba(4,10,26,0))}
+  /* an open menu supplies the header's background itself, so drop the
+     scroll gradient rather than banding the top of the panel */
+  #pd-hero:has(.pd-mega.open) .pd-header.scrolled{background:transparent}
   #pd-hero .pd-brand{display:flex; align-items:center; gap:13px; text-decoration:none; flex:0 0 auto}
   #pd-hero .pd-brand__logo{height:40px; width:auto; display:block; filter:drop-shadow(0 2px 12px rgba(0,0,0,.4))}
   #pd-hero .pd-word{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:26px; letter-spacing:-.5px; color:var(--cyan); text-shadow:var(--glow-cyan)}
@@ -139,7 +142,7 @@
      droplet that pops in beside whatever you're about to click. */
   #pd-hero .pd-mega{
     position:fixed; left:0; right:0; top:0; z-index:2147482900;
-    padding-top:86px; overflow:hidden;
+    overflow:hidden;
     pointer-events:none;
     opacity:0; visibility:hidden;
     transition:opacity .22s ease, visibility .22s;
@@ -156,7 +159,9 @@
   }
   #pd-hero .pd-megaBody{
     position:relative; overflow:hidden;
-    padding:36px clamp(24px,3.5vw,56px) 42px;
+    /* the top 86px sit behind the fixed header, so the bar becomes the
+       background the nav items read against */
+    padding:122px clamp(24px,3.5vw,56px) 42px;
     background:linear-gradient(180deg, rgba(6,18,48,.98) 0%, rgba(4,11,30,.995) 100%);
     backdrop-filter:blur(22px);
     border-bottom:1px solid rgba(var(--neon-rgb),.3);
