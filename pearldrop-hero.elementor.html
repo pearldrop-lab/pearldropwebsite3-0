@@ -189,12 +189,24 @@
   /* the block of columns is centred in the bar; the columns themselves
      stay left-aligned so every list still reads down a straight edge */
   #pd-hero .pd-cols{
+    --colgap:clamp(28px,3.4vw,64px);
     position:relative; z-index:1;
-    display:flex; align-items:flex-start; flex-wrap:wrap;
+    display:flex; align-items:stretch; flex-wrap:wrap;
     justify-content:center;
-    gap:30px clamp(28px,3.4vw,64px);
+    gap:30px var(--colgap);
   }
   #pd-hero .pd-col{min-width:0}
+  /* a faint rule down the middle of each gap, fading out top and bottom
+     so it reads as a divider rather than a drawn border */
+  #pd-hero .pd-cols > *{position:relative}
+  #pd-hero .pd-cols > * + *::before{
+    content:""; position:absolute; top:2px; bottom:2px;
+    left:calc(var(--colgap) / -2); width:1px; pointer-events:none;
+    background:linear-gradient(180deg,
+      rgba(255,255,255,0), rgba(255,255,255,.14) 10%,
+      rgba(255,255,255,.14) 88%, rgba(255,255,255,0));
+  }
+  #pd-hero .pd-cols > *.pd-rowStart::before{display:none}
   /* whole columns arrive one at a time, left to right - fast, but far
      enough apart that you register each one landing. The first delay
      clears the bar's own slide (.38s) so nothing is already on screen
@@ -888,11 +900,23 @@
     var triggers = Array.prototype.slice.call(root.querySelectorAll('.pd-hasMenu'));
     if(megas.length && triggers.length){
       var closeTimer = null, openName = null;
+      // Columns are separated by a hairline drawn in the gap to their left.
+      // When the row wraps, the column that starts the new row must not draw
+      // one, or it hangs in space at the row's left edge.
+      function markRowStarts(m){
+        var cols = m.querySelectorAll('.pd-cols > *'), prevTop = null;
+        Array.prototype.forEach.call(cols, function(c, i){
+          var top = c.offsetTop;
+          c.classList.toggle('pd-rowStart', i === 0 || top > prevTop + 1);
+          prevTop = top;
+        });
+      }
       function showMega(name){
         clearTimeout(closeTimer);
         openName = name;
         megas.forEach(function(m){ m.classList.toggle('open', m.getAttribute('data-mega')===name); });
         triggers.forEach(function(t){ t.classList.toggle('open', t.getAttribute('data-menu')===name); });
+        megas.forEach(function(m){ if(m.getAttribute('data-mega')===name) markRowStarts(m); });
       }
       function hideMega(){
         openName = null;
@@ -916,6 +940,7 @@
         surface.addEventListener('mouseenter', function(){ clearTimeout(closeTimer); });
         surface.addEventListener('mouseleave', scheduleHide);
       });
+      window.addEventListener('resize', function(){ megas.forEach(markRowStarts); });
       document.addEventListener('keydown', function(e){ if(e.key === 'Escape') hideMega(); });
       window.addEventListener('scroll', function(){ if(openName) hideMega(); }, {passive:true});
     }
