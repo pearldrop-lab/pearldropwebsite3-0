@@ -307,32 +307,50 @@
   /* portfolio thumbnails: a tidy grid that lifts and glows on hover */
   /* one shared tile size, so the video column's two stacked thumbnails
      line up row-for-row with the photography grid beside it */
-  #pd-hero .pd-thumbs{--tile:clamp(150px,12.5vw,180px); display:grid; gap:14px; padding-top:2px}
+  #pd-hero .pd-thumbs{--tile:clamp(186px,17.4vw,252px); display:grid; gap:16px; padding-top:2px}
   #pd-hero .pd-thumbs.cols1{grid-template-columns:var(--tile)}
   #pd-hero .pd-thumbs.cols3{grid-template-columns:repeat(3, var(--tile))}
   #pd-hero .pd-thumb{
     --g:var(--neon-rgb);
-    position:relative; display:block; border-radius:13px; overflow:hidden;
+    position:relative; display:block; border-radius:15px; overflow:hidden;
     border:1px solid rgba(var(--g),.32); text-decoration:none;
     transition:transform .3s cubic-bezier(.25,.9,.3,1),
       border-color .2s ease, box-shadow .25s ease;
   }
   #pd-hero .pd-thumb img{
     display:block; width:100%; aspect-ratio:16/10; object-fit:cover;
-    transition:transform .45s cubic-bezier(.3,0,.2,1);
+    transition:transform .5s cubic-bezier(.3,0,.2,1), filter .3s ease;
   }
-  #pd-hero .pd-thumb span{
-    position:absolute; left:0; right:0; bottom:0; padding:24px 11px 9px;
-    font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13px;
-    letter-spacing:.4px; color:#fff;
-    background:linear-gradient(0deg, rgba(3,8,24,.88), transparent);
+  #pd-hero .pd-thumbLabel{
+    position:absolute; left:0; right:0; bottom:0; z-index:2; padding:30px 14px 12px;
+    font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15.5px;
+    letter-spacing:.3px; color:#fff;
+    background:linear-gradient(0deg, rgba(3,8,24,.92), rgba(3,8,24,.5) 45%, transparent);
+    transition:transform .3s cubic-bezier(.25,.9,.3,1);
+  }
+  /* a play badge on the two showreel tiles - it is video, after all */
+  #pd-hero .pd-play{
+    position:absolute; left:50%; top:50%; z-index:2;
+    width:56px; height:56px; margin:-28px 0 0 -28px;
+    display:flex; align-items:center; justify-content:center; border-radius:50%;
+    background:rgba(4,12,32,.42); border:1.5px solid rgba(255,255,255,.78);
+    backdrop-filter:blur(3px);
+    opacity:.92; transform:scale(.94);
+    transition:opacity .25s ease, transform .34s cubic-bezier(.3,1.45,.4,1),
+      background .25s ease, border-color .25s ease;
+  }
+  #pd-hero .pd-play svg{width:19px; height:19px; margin-left:3px; fill:#fff; stroke:none}
+  #pd-hero .pd-thumb:hover .pd-play{
+    opacity:1; transform:scale(1.12);
+    background:rgba(var(--g),.9); border-color:#fff;
   }
   #pd-hero .pd-thumb:hover{
-    transform:translateY(-4px);
+    transform:translateY(-6px);
     border-color:rgb(var(--g));
-    box-shadow:0 16px 32px -12px rgba(var(--g),.6);
+    box-shadow:0 22px 44px -14px rgba(var(--g),.75);
   }
-  #pd-hero .pd-thumb:hover img{transform:scale(1.07)}
+  #pd-hero .pd-thumb:hover img{transform:scale(1.09); filter:saturate(1.12) brightness(1.06)}
+  #pd-hero .pd-thumb:hover .pd-thumbLabel{transform:translateY(-2px)}
 
   @media (prefers-reduced-motion: reduce){
     #pd-hero .pd-megaInner{transform:none; transition:none}
@@ -617,20 +635,20 @@
           <a class="pd-colTitle" style="--g:0,220,255" href="#"><svg viewBox="0 0 24 24"><path d="M2.5 5h19v14h-19z"/><path d="M7 5v14M17 5v14M2.5 12h19M2.5 8.5h4.5M2.5 15.5h4.5M17 8.5h4.5M17 15.5h4.5"/></svg>video</a>
           <p class="pd-colTag">The good stuff, moving.</p>
           <div class="pd-thumbs cols1">
-            <a class="pd-thumb" style="--g:0,220,255" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/video-liveaction.webp" alt="" loading="lazy" /><span>Live-action</span></a>
-            <a class="pd-thumb" style="--g:0,220,255" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/video-2danimation.webp" alt="" loading="lazy" /><span>2D animation</span></a>
+            <a class="pd-thumb" style="--g:0,220,255" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/video-liveaction.webp" alt="" loading="lazy" /><span class="pd-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span><span class="pd-thumbLabel">Live-action</span></a>
+            <a class="pd-thumb" style="--g:0,220,255" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/video-2danimation.webp" alt="" loading="lazy" /><span class="pd-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span><span class="pd-thumbLabel">2D animation</span></a>
           </div>
         </div>
         <div class="pd-col">
           <a class="pd-colTitle" style="--g:48,216,240" href="#"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h2.2l1.2-2h6.8l1.2 2H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.6"/></svg>photography</a>
           <p class="pd-colTag">The good stuff, holding still.</p>
           <div class="pd-thumbs cols3">
-            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/photo-architectural.webp" alt="" loading="lazy" /><span>Architectural</span></a>
-            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/photo-automotive.webp" alt="" loading="lazy" /><span>Automotive</span></a>
-            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/photo-conferences.webp" alt="" loading="lazy" /><span>Conferences and Ceremonies</span></a>
-            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/photo-headshots.webp" alt="" loading="lazy" /><span>Headshots</span></a>
-            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/photo-lifestyle.webp" alt="" loading="lazy" /><span>Lifestyle</span></a>
-            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/photo-liveevents.webp" alt="" loading="lazy" /><span>Live events</span></a>
+            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/photo-architectural.webp" alt="" loading="lazy" /><span class="pd-thumbLabel">Architectural</span></a>
+            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/photo-automotive.webp" alt="" loading="lazy" /><span class="pd-thumbLabel">Automotive</span></a>
+            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/photo-conferences.webp" alt="" loading="lazy" /><span class="pd-thumbLabel">Conferences and Ceremonies</span></a>
+            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/photo-headshots.webp" alt="" loading="lazy" /><span class="pd-thumbLabel">Headshots</span></a>
+            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/photo-lifestyle.webp" alt="" loading="lazy" /><span class="pd-thumbLabel">Lifestyle</span></a>
+            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/photo-liveevents.webp" alt="" loading="lazy" /><span class="pd-thumbLabel">Live events</span></a>
           </div>
         </div>
         </div>
