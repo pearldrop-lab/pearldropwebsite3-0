@@ -132,12 +132,11 @@
   #pd-hero .pd-hasMenu.open > a{opacity:1; color:#fff}
   #pd-hero .pd-hasMenu.open > a::after{transform:scaleX(1)}
 
-  /* == The splash bar ====================================================
-     Menus are not panels any more: each one is a screen-wide sheet of
-     Pearldrop water. It slides out from under the header with a small
-     bounce, ripple rings pulse from the nav item that opened it, the
-     bottom edge is a wave, and the links are loose sticker pills that
-     pop in one after another, each sitting at its own slight angle. */
+  /* == Mega menus: the waterfall index ===================================
+     A screen-wide bar of downward lists - readability first. The play is
+     in the type: big lowercase headings whose underline grows on hover, a
+     giant ghosted watermark word, items cascading in like water, and a
+     droplet that pops in beside whatever you're about to click. */
   #pd-hero .pd-mega{
     position:fixed; left:0; right:0; top:0; z-index:2147482900;
     padding-top:86px; overflow:hidden;
@@ -146,200 +145,162 @@
     transition:opacity .22s ease, visibility .22s;
   }
   #pd-hero .pd-mega.open{opacity:1; visibility:visible}
-  /* the drop lands where you point: rings ripple out of the nav item */
-  #pd-hero .pd-mega::before, #pd-hero .pd-mega::after{
-    content:""; position:absolute; left:var(--drop-px,50%); top:84px;
-    width:16px; height:16px; margin:-8px; border-radius:50%;
-    border:2px solid rgba(var(--neon-rgb),.85); opacity:0; pointer-events:none;
-    z-index:3;
-  }
-  #pd-hero .pd-mega.open::before{animation:pd-ring .85s cubic-bezier(.2,.55,.3,1) .06s}
-  #pd-hero .pd-mega.open::after{animation:pd-ring .85s cubic-bezier(.2,.55,.3,1) .24s}
-  @keyframes pd-ring{
-    0%{opacity:.9; transform:scale(.35)}
-    100%{opacity:0; transform:scale(15)}
-  }
   #pd-hero .pd-megaInner{
     pointer-events:auto; position:relative; width:100%;
-    transform:translateY(-103%);
-    transition:transform .38s cubic-bezier(.55,0,.6,1);
+    transform:translateY(-102%);
+    transition:transform .34s cubic-bezier(.55,0,.6,1);
   }
   #pd-hero .pd-mega.open .pd-megaInner{
     transform:none;
-    transition:transform .55s cubic-bezier(.2,1.07,.3,1);
+    transition:transform .42s cubic-bezier(.25,.9,.3,1);
   }
   #pd-hero .pd-megaBody{
     position:relative; overflow:hidden;
-    padding:18px clamp(20px,4vw,64px) 24px;
-    background:linear-gradient(180deg, rgba(6,18,48,.98) 0%, rgb(4,11,30) 100%);
+    padding:36px clamp(24px,3.5vw,56px) 42px;
+    background:linear-gradient(180deg, rgba(6,18,48,.98) 0%, rgba(4,11,30,.995) 100%);
     backdrop-filter:blur(22px);
+    border-bottom:1px solid rgba(var(--neon-rgb),.3);
+    box-shadow:0 30px 70px -28px rgba(0,0,0,.9);
   }
-  /* aurora drifting through the water */
+  /* aurora drifting through the background */
   #pd-hero .pd-megaBody::before{
     content:""; position:absolute; inset:-40% -10%; pointer-events:none; z-index:0;
     background:
-      radial-gradient(38% 55% at 18% 30%, rgba(var(--neon-rgb),.15), transparent 70%),
-      radial-gradient(34% 50% at 78% 65%, rgba(var(--cyan-rgb),.14), transparent 70%);
+      radial-gradient(38% 55% at 18% 30%, rgba(var(--neon-rgb),.13), transparent 70%),
+      radial-gradient(34% 50% at 78% 65%, rgba(var(--cyan-rgb),.12), transparent 70%);
     animation:pd-drift 17s ease-in-out infinite alternate;
   }
   @keyframes pd-drift{
     0%{transform:translate3d(0,0,0) scale(1)}
     100%{transform:translate3d(3%,4%,0) scale(1.1)}
   }
-  /* wavy bottom edge with a glowing waterline riding it */
-  #pd-hero .pd-wave{
-    display:block; width:100%; height:26px; margin-top:-1px;
-    filter:drop-shadow(0 18px 28px rgba(0,0,0,.55));
-  }
-  /* the logo's eccentric rings, oversized and ghosted, off to one side */
-  #pd-hero .pd-swirl{
-    position:absolute; right:-60px; bottom:-120px; width:430px; height:430px;
-    pointer-events:none; z-index:0; animation:pd-orbit 26s linear infinite;
-  }
-  #pd-hero .pd-swirl::before, #pd-hero .pd-swirl::after, #pd-hero .pd-swirl i{
-    content:""; position:absolute; border-radius:50%;
-  }
-  #pd-hero .pd-swirl::before{inset:0; border:2px solid rgba(0,72,192,.4)}
-  #pd-hero .pd-swirl::after{inset:42px 74px 72px 40px; border:2px solid rgba(var(--cyan-rgb),.24)}
-  #pd-hero .pd-swirl i{
-    inset:116px 178px 142px 98px; border:2px solid rgba(var(--neon-rgb),.3);
-    background:radial-gradient(circle at 42% 40%, rgba(var(--neon-rgb),.2), transparent 65%);
-  }
-  @keyframes pd-orbit{to{transform:rotate(360deg)}}
-
-  /* one row per group: a big lowercase title on the left, and the links
-     flowing across the full width of the screen */
-  #pd-hero .pd-rows{position:relative; z-index:1; display:flex; flex-direction:column}
-  #pd-hero .pd-row{
-    --g:var(--neon-rgb);
-    display:flex; align-items:flex-start; gap:clamp(18px,3vw,46px);
-    padding:13px clamp(2px,.8vw,12px);
-    opacity:0; transform:translateX(-32px);
-  }
-  #pd-hero .pd-row + .pd-row{border-top:1px dashed rgba(var(--cyan-rgb),.16)}
-  #pd-hero .pd-mega.open .pd-row{animation:pd-rowIn .45s cubic-bezier(.22,1,.3,1) forwards}
-  #pd-hero .pd-mega.open .pd-row:nth-child(1){animation-delay:.04s}
-  #pd-hero .pd-mega.open .pd-row:nth-child(2){animation-delay:.1s}
-  #pd-hero .pd-mega.open .pd-row:nth-child(3){animation-delay:.16s}
-  #pd-hero .pd-mega.open .pd-row:nth-child(4){animation-delay:.22s}
-  #pd-hero .pd-mega.open .pd-row:nth-child(5){animation-delay:.28s}
-  @keyframes pd-rowIn{to{opacity:1; transform:none}}
-
-  #pd-hero .pd-rowHead{
-    flex:0 0 clamp(250px,23vw,320px);
-    display:flex; align-items:center; gap:15px; text-decoration:none;
-    min-height:52px;
-  }
-  /* a pearl: circular chip + eccentric off-centre ring, like the logo */
-  #pd-hero .pd-groupIcon{
-    position:relative; flex:0 0 auto; width:46px; height:46px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    background:radial-gradient(120% 120% at 32% 26%, rgba(var(--g),.3), rgba(var(--g),.05) 62%);
-    border:1px solid rgba(var(--g),.36);
-    transition:transform .3s cubic-bezier(.4,0,.15,1), box-shadow .3s ease, border-color .3s;
-  }
-  #pd-hero .pd-groupIcon::before{
-    content:""; position:absolute; inset:-6px -3px -3px -6px; border-radius:50%;
-    border:1.6px solid rgba(var(--g),.4); border-top-color:transparent;
-    transition:transform .55s cubic-bezier(.35,0,.2,1);
-  }
-  #pd-hero .pd-rowHead:hover .pd-groupIcon{
-    transform:translateY(-3px) scale(1.08);
-    box-shadow:0 10px 24px -8px rgba(var(--g),.9);
-    border-color:rgb(var(--g));
-  }
-  #pd-hero .pd-rowHead:hover .pd-groupIcon::before{transform:rotate(200deg)}
-  #pd-hero .pd-groupIcon svg{
-    width:21px; height:21px; stroke:rgb(var(--g)); fill:none;
-    stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round;
-  }
-  #pd-hero .pd-rowText{display:flex; flex-direction:column; gap:9px; min-width:0}
-  #pd-hero .pd-rowTitle{
-    position:relative; align-self:flex-start;
+  /* the watermark: the menu's name, giant and ghosted, off to the right */
+  #pd-hero .pd-ghost{
+    position:absolute; right:clamp(16px,3vw,60px); bottom:-14px; z-index:0;
     font-family:'Space Grotesk',sans-serif; font-weight:700;
-    font-size:clamp(21px,1.9vw,28px); line-height:1; letter-spacing:-.6px; color:#fff;
-    transition:color .2s ease;
+    font-size:clamp(90px,11vw,170px); line-height:1; letter-spacing:-5px;
+    color:transparent; -webkit-text-stroke:1.5px rgba(var(--neon-rgb),.16);
+    pointer-events:none; user-select:none; white-space:nowrap;
+    opacity:0; transform:translateX(40px);
+    transition:opacity .5s ease .12s, transform .6s cubic-bezier(.25,.9,.3,1) .12s;
   }
-  #pd-hero .pd-rowHead:hover .pd-rowTitle{color:rgb(var(--g))}
-  /* the squiggle draws itself under the title when the bar opens */
-  #pd-hero .pd-squig{position:absolute; left:1px; right:-4px; bottom:-9px; height:9px; overflow:visible}
-  #pd-hero .pd-squig path{
-    fill:none; stroke:rgb(var(--g)); stroke-width:2.4; stroke-linecap:round;
-    stroke-dasharray:150; stroke-dashoffset:150;
-  }
-  #pd-hero .pd-mega.open .pd-squig path{animation:pd-draw .6s ease .4s forwards}
-  @keyframes pd-draw{to{stroke-dashoffset:0}}
-  #pd-hero .pd-rowHead:hover .pd-squig{animation:pd-jelly .45s ease}
-  @keyframes pd-jelly{30%{transform:translateY(2px) scaleX(.97)} 65%{transform:translateY(-1px) scaleX(1.02)}}
-  #pd-hero .pd-rowTag{font-size:12.5px; line-height:1.3; color:var(--muted); font-style:italic; opacity:.85}
+  #pd-hero .pd-mega.open .pd-ghost{opacity:1; transform:none}
 
-  /* sticker pills: every link sits at its own slight angle, pops in with
-     a spring, and snaps straight when you hover it */
-  #pd-hero .pd-pills{display:flex; flex-wrap:wrap; align-content:flex-start; gap:9px 10px; padding-top:8px; min-width:0}
-  #pd-hero .pd-pills a{
-    display:inline-flex; align-items:center; gap:9px;
-    padding:8px 17px 9px; border-radius:999px;
-    font-size:14.5px; line-height:1; color:var(--ink); text-decoration:none;
-    border:1.5px solid rgba(var(--g),.42);
-    background:rgba(var(--g),.08);
-    opacity:0; transform:scale(.55) rotate(var(--r,0deg));
-    transition:opacity .3s ease, transform .38s cubic-bezier(.3,1.5,.4,1),
-      background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease;
+  #pd-hero .pd-cols{
+    position:relative; z-index:1;
+    display:flex; align-items:flex-start; flex-wrap:wrap;
+    gap:30px clamp(28px,3.4vw,64px);
   }
-  #pd-hero .pd-pills a svg{width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round}
-  #pd-hero .pd-pills a:nth-child(5n+1){--r:-2deg}
-  #pd-hero .pd-pills a:nth-child(5n+2){--r:1.4deg}
-  #pd-hero .pd-pills a:nth-child(5n+3){--r:-1deg}
-  #pd-hero .pd-pills a:nth-child(5n+4){--r:2deg}
-  #pd-hero .pd-pills a:nth-child(5n+5){--r:.7deg}
-  #pd-hero .pd-mega.open .pd-pills a{opacity:1; transform:scale(1) rotate(var(--r,0deg))}
-  #pd-hero .pd-mega.open .pd-pills a:nth-child(1){transition-delay:.12s}
-  #pd-hero .pd-mega.open .pd-pills a:nth-child(2){transition-delay:.15s}
-  #pd-hero .pd-mega.open .pd-pills a:nth-child(3){transition-delay:.18s}
-  #pd-hero .pd-mega.open .pd-pills a:nth-child(4){transition-delay:.21s}
-  #pd-hero .pd-mega.open .pd-pills a:nth-child(5){transition-delay:.24s}
-  #pd-hero .pd-mega.open .pd-pills a:nth-child(6){transition-delay:.27s}
-  #pd-hero .pd-mega.open .pd-pills a:nth-child(7){transition-delay:.3s}
-  #pd-hero .pd-mega.open .pd-pills a:nth-child(8){transition-delay:.33s}
-  #pd-hero .pd-mega.open .pd-pills a:nth-child(9){transition-delay:.36s}
-  #pd-hero .pd-mega.open .pd-pills a:nth-child(10){transition-delay:.39s}
-  #pd-hero .pd-mega.open .pd-pills a:nth-child(11){transition-delay:.42s}
-  #pd-hero .pd-mega.open .pd-pills a:nth-child(12){transition-delay:.45s}
-  #pd-hero .pd-mega.open .pd-pills a:nth-child(13){transition-delay:.48s}
-  #pd-hero .pd-mega.open .pd-pills a:nth-child(14){transition-delay:.51s}
-  #pd-hero .pd-mega.open .pd-pills a:hover{
-    transition-delay:0s;
-    transform:scale(1.08) rotate(0deg);
-    background:rgb(var(--g)); border-color:rgb(var(--g)); color:#04102a;
-    box-shadow:0 10px 24px -8px rgba(var(--g),.8);
-  }
-  /* jumbo pills for the sectors bar */
-  #pd-hero .pd-pills.jumbo{gap:14px}
-  #pd-hero .pd-pills.jumbo a{
-    padding:15px 26px; font-family:'Space Grotesk',sans-serif; font-weight:600;
-    font-size:17.5px; letter-spacing:.2px;
-  }
+  #pd-hero .pd-col{min-width:0}
+  #pd-hero .pd-colGroup{display:flex; flex-direction:column; gap:30px; min-width:0}
+  /* stagger base per column; item delays add onto it */
+  #pd-hero .pd-cols > *:nth-child(1){--d:0s}
+  #pd-hero .pd-cols > *:nth-child(2){--d:.07s}
+  #pd-hero .pd-cols > *:nth-child(3){--d:.14s}
+  #pd-hero .pd-cols > *:nth-child(4){--d:.21s}
 
-  /* portfolio: prints scattered on a table, each at its own angle */
-  #pd-hero .pd-thumbs{display:flex; flex-wrap:wrap; gap:16px 15px; padding-top:8px}
+  #pd-hero .pd-colTitle{
+    --g:var(--neon-rgb);
+    position:relative; display:flex; align-items:center; gap:11px;
+    padding-bottom:13px; margin-bottom:8px;
+    font-family:'Space Grotesk',sans-serif; font-weight:700;
+    font-size:clamp(20px,1.75vw,26px); line-height:1; letter-spacing:-.5px;
+    white-space:nowrap;
+    color:rgb(var(--g)); text-decoration:none;
+    opacity:0; transform:translateY(-8px);
+    transition:opacity .3s ease var(--d,0s), transform .35s cubic-bezier(.25,.9,.3,1) var(--d,0s);
+  }
+  #pd-hero .pd-mega.open .pd-colTitle{opacity:1; transform:none}
+  #pd-hero .pd-colTitle svg{
+    width:22px; height:22px; flex:0 0 auto; stroke:currentColor; fill:none;
+    stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round;
+  }
+  /* the underline starts as a stub and grows to full width on hover */
+  #pd-hero .pd-colTitle::after{
+    content:""; position:absolute; left:1px; bottom:0; height:4px; width:0;
+    border-radius:99px; background:rgb(var(--g));
+    box-shadow:0 0 12px rgba(var(--g),.7);
+    transition:width .4s cubic-bezier(.3,0,.2,1);
+  }
+  #pd-hero .pd-mega.open .pd-colTitle::after{width:34px; transition-delay:calc(var(--d,0s) + .18s)}
+  #pd-hero .pd-mega.open .pd-colTitle:hover::after{width:100%; transition-delay:0s}
+  #pd-hero .pd-colTag{
+    font-size:12.5px; line-height:1.35; color:var(--muted); font-style:italic; opacity:0;
+    margin-bottom:14px;
+    transition:opacity .35s ease calc(var(--d,0s) + .1s);
+  }
+  #pd-hero .pd-mega.open .pd-colTag{opacity:.85}
+
+  #pd-hero .pd-list{list-style:none; display:grid; gap:2px}
+  /* the long live-action list flows into two columns without gaps */
+  #pd-hero .pd-list.split{display:block; columns:2; column-gap:clamp(18px,1.8vw,32px)}
+  #pd-hero .pd-list.split li{break-inside:avoid}
+  #pd-hero .pd-list li{
+    opacity:0; transform:translateY(-9px);
+    transition:opacity .28s ease var(--d,0s), transform .32s cubic-bezier(.25,.9,.3,1) var(--d,0s);
+  }
+  #pd-hero .pd-mega.open .pd-list li{opacity:1; transform:none}
+  #pd-hero .pd-list li:nth-child(1){--td:.04s} #pd-hero .pd-list li:nth-child(2){--td:.08s}
+  #pd-hero .pd-list li:nth-child(3){--td:.12s} #pd-hero .pd-list li:nth-child(4){--td:.16s}
+  #pd-hero .pd-list li:nth-child(5){--td:.2s}  #pd-hero .pd-list li:nth-child(6){--td:.24s}
+  #pd-hero .pd-list li:nth-child(7){--td:.28s} #pd-hero .pd-list li:nth-child(8){--td:.32s}
+  #pd-hero .pd-list li:nth-child(9){--td:.36s} #pd-hero .pd-list li:nth-child(10){--td:.4s}
+  #pd-hero .pd-list li:nth-child(11){--td:.44s} #pd-hero .pd-list li:nth-child(12){--td:.48s}
+  #pd-hero .pd-list li:nth-child(13){--td:.52s} #pd-hero .pd-list li:nth-child(14){--td:.56s}
+  #pd-hero .pd-list li{transition-delay:calc(var(--d,0s) + var(--td,0s))}
+  #pd-hero .pd-list a{
+    --g:var(--neon-rgb);
+    position:relative; display:block; text-decoration:none;
+    padding:6.5px 8px 6.5px 18px; border-radius:8px;
+    font-size:15px; line-height:1.35; color:var(--ink);
+    /* slide via transform so hover never reflows the columns */
+    transition:color .18s ease, background .18s ease, transform .22s cubic-bezier(.3,0,.2,1);
+  }
+  /* a droplet lands beside whatever you're about to click */
+  #pd-hero .pd-list a::before{
+    content:""; position:absolute; left:2px; top:50%; width:7px; height:7px;
+    margin-top:-3.5px; border-radius:50%;
+    background:rgb(var(--g)); box-shadow:0 0 10px rgba(var(--g),.9);
+    opacity:0; transform:scale(.3);
+    transition:opacity .18s ease, transform .25s cubic-bezier(.3,1.6,.4,1);
+  }
+  #pd-hero .pd-list a:hover{color:#fff; background:rgba(var(--g),.1); transform:translateX(9px)}
+  #pd-hero .pd-list a:hover::before{opacity:1; transform:none}
+  /* sectors: the three links, writ large */
+  #pd-hero .pd-list.big{gap:6px}
+  #pd-hero .pd-list.big a{
+    display:flex; align-items:center; gap:13px;
+    font-family:'Space Grotesk',sans-serif; font-weight:600;
+    font-size:clamp(19px,1.6vw,23px); letter-spacing:-.3px;
+    padding:11px 14px 11px 20px;
+  }
+  #pd-hero .pd-list.big a svg{
+    width:22px; height:22px; flex:0 0 auto; stroke:rgb(var(--g)); fill:none;
+    stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round;
+    transition:transform .25s cubic-bezier(.3,1.5,.4,1);
+  }
+  #pd-hero .pd-list.big a:hover{transform:translateX(10px)}
+  #pd-hero .pd-list.big a:hover svg{transform:rotate(-8deg) scale(1.12)}
+
+  /* portfolio thumbnails: a tidy grid that lifts and glows on hover */
+  #pd-hero .pd-thumbs{display:grid; gap:14px; padding-top:2px}
+  #pd-hero .pd-thumbs.cols2{grid-template-columns:repeat(2, clamp(170px,15vw,215px))}
+  #pd-hero .pd-thumbs.cols3{grid-template-columns:repeat(3, clamp(150px,12.5vw,180px))}
   #pd-hero .pd-thumb{
-    position:relative; display:block; width:clamp(150px,13.5vw,196px);
-    border-radius:13px; overflow:hidden;
-    border:1.5px solid rgba(var(--g),.35);
-    text-decoration:none;
-    opacity:0; transform:scale(.6) rotate(var(--r,0deg));
-    transition:opacity .3s ease, transform .4s cubic-bezier(.3,1.5,.4,1),
-      border-color .2s ease, box-shadow .2s ease;
+    --g:var(--neon-rgb);
+    position:relative; display:block; border-radius:13px; overflow:hidden;
+    border:1px solid rgba(var(--g),.32); text-decoration:none;
+    opacity:0; transform:translateY(-10px);
+    transition:opacity .3s ease, transform .34s cubic-bezier(.25,.9,.3,1),
+      border-color .2s ease, box-shadow .25s ease;
   }
-  #pd-hero .pd-thumb:nth-child(2n+1){--r:-1.6deg}
-  #pd-hero .pd-thumb:nth-child(2n){--r:1.8deg}
-  #pd-hero .pd-mega.open .pd-thumb{opacity:1; transform:scale(1) rotate(var(--r,0deg))}
-  #pd-hero .pd-mega.open .pd-thumb:nth-child(1){transition-delay:.16s}
-  #pd-hero .pd-mega.open .pd-thumb:nth-child(2){transition-delay:.2s}
-  #pd-hero .pd-mega.open .pd-thumb:nth-child(3){transition-delay:.24s}
-  #pd-hero .pd-mega.open .pd-thumb:nth-child(4){transition-delay:.28s}
-  #pd-hero .pd-mega.open .pd-thumb:nth-child(5){transition-delay:.32s}
-  #pd-hero .pd-mega.open .pd-thumb:nth-child(6){transition-delay:.36s}
+  #pd-hero .pd-mega.open .pd-thumb{opacity:1; transform:none}
+  #pd-hero .pd-thumb:nth-child(1){transition-delay:calc(var(--d,0s) + .04s)}
+  #pd-hero .pd-thumb:nth-child(2){transition-delay:calc(var(--d,0s) + .09s)}
+  #pd-hero .pd-thumb:nth-child(3){transition-delay:calc(var(--d,0s) + .14s)}
+  #pd-hero .pd-thumb:nth-child(4){transition-delay:calc(var(--d,0s) + .19s)}
+  #pd-hero .pd-thumb:nth-child(5){transition-delay:calc(var(--d,0s) + .24s)}
+  #pd-hero .pd-thumb:nth-child(6){transition-delay:calc(var(--d,0s) + .29s)}
   #pd-hero .pd-thumb img{
     display:block; width:100%; aspect-ratio:16/10; object-fit:cover;
     transition:transform .45s cubic-bezier(.3,0,.2,1);
@@ -352,21 +313,20 @@
   }
   #pd-hero .pd-mega.open .pd-thumb:hover{
     transition-delay:0s;
-    transform:scale(1.05) rotate(0deg) translateY(-3px);
+    transform:translateY(-4px);
     border-color:rgb(var(--g));
     box-shadow:0 16px 32px -12px rgba(var(--g),.6);
   }
-  #pd-hero .pd-thumb:hover img{transform:scale(1.08)}
+  #pd-hero .pd-thumb:hover img{transform:scale(1.07)}
 
   @media (prefers-reduced-motion: reduce){
-    #pd-hero .pd-mega::before, #pd-hero .pd-mega::after{animation:none !important}
     #pd-hero .pd-megaInner{transform:none; transition:none}
-    #pd-hero .pd-swirl, #pd-hero .pd-megaBody::before{animation:none}
-    #pd-hero .pd-row, #pd-hero .pd-pills a, #pd-hero .pd-thumb{
-      opacity:1 !important; transform:none !important;
-      animation:none !important; transition-delay:0s !important;
+    #pd-hero .pd-megaBody::before{animation:none}
+    #pd-hero .pd-ghost, #pd-hero .pd-colTitle, #pd-hero .pd-colTag,
+    #pd-hero .pd-list li, #pd-hero .pd-thumb{
+      opacity:1 !important; transform:none !important; transition-delay:0s !important;
     }
-    #pd-hero .pd-squig path{stroke-dashoffset:0; animation:none !important}
+    #pd-hero .pd-mega.open .pd-colTitle::after{transition:none}
   }
 
   /* hero scroll rig */
@@ -509,238 +469,166 @@
   <div class="pd-mega" data-mega="services">
     <div class="pd-megaInner">
       <div class="pd-megaBody">
-        <span class="pd-swirl" aria-hidden="true"><i></i></span>
-        <div class="pd-rows">
-        <div class="pd-row" style="--g:0,220,255">
-          <a class="pd-rowHead" href="#">
-            <span class="pd-groupIcon"><svg viewBox="0 0 24 24"><path d="M2.5 5h19v14h-19z"/><path d="M7 5v14M17 5v14M2.5 12h19M2.5 8.5h4.5M2.5 15.5h4.5M17 8.5h4.5M17 15.5h4.5"/></svg></span>
-            <span class="pd-rowText">
-              <span class="pd-rowTitle">live-action<svg class="pd-squig" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true"><path d="M3 6c14-5 24 5 38 1s24-6 38-1 25 5 38 0"/></svg></span>
-              <span class="pd-rowTag">Real people, real places, real good.</span>
-            </span>
-          </a>
-          <div class="pd-pills">
-            <a href="#">Activations and Launches</a>
-            <a href="#">Automotive</a>
-            <a href="#">Aerial/Drone</a>
-            <a href="#">Case Studies</a>
-            <a href="#">Conferences and Ceremonies</a>
-            <a href="#">Charity</a>
-            <a href="#">Company Profiles</a>
-            <a href="#">Internal Communications</a>
-            <a href="#">Landing Pages</a>
-            <a href="#">Live Events</a>
-            <a href="#">Live-streaming</a>
-            <a href="#">Product</a>
-            <a href="#">Promotional</a>
-            <a href="#">Training</a>
+        <span class="pd-ghost" aria-hidden="true">services</span>
+        <div class="pd-cols">
+        <div class="pd-col">
+          <a class="pd-colTitle" style="--g:0,220,255" href="#"><svg viewBox="0 0 24 24"><path d="M2.5 5h19v14h-19z"/><path d="M7 5v14M17 5v14M2.5 12h19M2.5 8.5h4.5M2.5 15.5h4.5M17 8.5h4.5M17 15.5h4.5"/></svg>live-action</a>
+          <p class="pd-colTag">Real people, real places, real good.</p>
+          <ul class="pd-list split">
+            <li><a style="--g:0,220,255" href="#">Activations and Launches</a></li>
+            <li><a style="--g:0,220,255" href="#">Automotive</a></li>
+            <li><a style="--g:0,220,255" href="#">Aerial/Drone</a></li>
+            <li><a style="--g:0,220,255" href="#">Case Studies</a></li>
+            <li><a style="--g:0,220,255" href="#">Conferences and Ceremonies</a></li>
+            <li><a style="--g:0,220,255" href="#">Charity</a></li>
+            <li><a style="--g:0,220,255" href="#">Company Profiles</a></li>
+            <li><a style="--g:0,220,255" href="#">Internal Communications</a></li>
+            <li><a style="--g:0,220,255" href="#">Landing Pages</a></li>
+            <li><a style="--g:0,220,255" href="#">Live Events</a></li>
+            <li><a style="--g:0,220,255" href="#">Live-streaming</a></li>
+            <li><a style="--g:0,220,255" href="#">Product</a></li>
+            <li><a style="--g:0,220,255" href="#">Promotional</a></li>
+            <li><a style="--g:0,220,255" href="#">Training</a></li>
+          </ul>
+        </div>
+        <div class="pd-col">
+          <a class="pd-colTitle" style="--g:48,216,240" href="#"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h2.2l1.2-2h6.8l1.2 2H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.6"/></svg>photography</a>
+          <p class="pd-colTag">Stills that stop the scroll.</p>
+          <ul class="pd-list">
+            <li><a style="--g:48,216,240" href="#">Architectural</a></li>
+            <li><a style="--g:48,216,240" href="#">Automotive</a></li>
+            <li><a style="--g:48,216,240" href="#">Headshots</a></li>
+            <li><a style="--g:48,216,240" href="#">Lifestyle</a></li>
+            <li><a style="--g:48,216,240" href="#">Live-event</a></li>
+          </ul>
+        </div>
+        <div class="pd-colGroup">
+          <div>
+            <a class="pd-colTitle" style="--g:0,160,255" href="#"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="14" height="14" rx="3"/><path d="m8.5 8.5 4.5 2.5-4.5 2.5z"/><path d="M20 8.5v7M22.5 10.5v3"/></svg>2d animation</a>
+            <p class="pd-colTag">For when reality needs a rewrite.</p>
+            <ul class="pd-list">
+              <li><a style="--g:0,160,255" href="#">Explainer</a></li>
+              <li><a style="--g:0,160,255" href="#">Character</a></li>
+            </ul>
+          </div>
+          <div>
+            <a class="pd-colTitle" style="--g:168,216,255" href="#"><svg viewBox="0 0 24 24"><path d="m12 3 1.9 4.6 4.6 1.9-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="m18.2 15.4.75 1.85 1.85.75-1.85.75-.75 1.85-.75-1.85-1.85-.75 1.85-.75z"/></svg>ai video production</a>
+            <p class="pd-colTag">New tools. Same high bar.</p>
           </div>
         </div>
-        <div class="pd-row" style="--g:0,160,255">
-          <a class="pd-rowHead" href="#">
-            <span class="pd-groupIcon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="14" height="14" rx="3"/><path d="m8.5 8.5 4.5 2.5-4.5 2.5z"/><path d="M20 8.5v7M22.5 10.5v3"/></svg></span>
-            <span class="pd-rowText">
-              <span class="pd-rowTitle">2d animation<svg class="pd-squig" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true"><path d="M3 6c14-5 24 5 38 1s24-6 38-1 25 5 38 0"/></svg></span>
-              <span class="pd-rowTag">For when reality needs a rewrite.</span>
-            </span>
-          </a>
-          <div class="pd-pills">
-            <a href="#">Explainer</a>
-            <a href="#">Character</a>
-          </div>
-        </div>
-        <div class="pd-row" style="--g:168,216,255">
-          <a class="pd-rowHead" href="#">
-            <span class="pd-groupIcon"><svg viewBox="0 0 24 24"><path d="m12 3 1.9 4.6 4.6 1.9-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="m18.2 15.4.75 1.85 1.85.75-1.85.75-.75 1.85-.75-1.85-1.85-.75 1.85-.75z"/></svg></span>
-            <span class="pd-rowText">
-              <span class="pd-rowTitle">ai video production<svg class="pd-squig" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true"><path d="M3 6c14-5 24 5 38 1s24-6 38-1 25 5 38 0"/></svg></span>
-              <span class="pd-rowTag">New tools. Same high bar.</span>
-            </span>
-          </a>
-        </div>
-        <div class="pd-row" style="--g:48,216,240">
-          <a class="pd-rowHead" href="#">
-            <span class="pd-groupIcon"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h2.2l1.2-2h6.8l1.2 2H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.6"/></svg></span>
-            <span class="pd-rowText">
-              <span class="pd-rowTitle">photography<svg class="pd-squig" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true"><path d="M3 6c14-5 24 5 38 1s24-6 38-1 25 5 38 0"/></svg></span>
-              <span class="pd-rowTag">Stills that stop the scroll.</span>
-            </span>
-          </a>
-          <div class="pd-pills">
-            <a href="#">Architectural</a>
-            <a href="#">Automotive</a>
-            <a href="#">Headshots</a>
-            <a href="#">Lifestyle</a>
-            <a href="#">Live-event</a>
-          </div>
-        </div>
-        <div class="pd-row" style="--g:110,150,255">
-          <a class="pd-rowHead" href="#">
-            <span class="pd-groupIcon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2.2"/><circle cx="15" cy="12" r="2.2"/><circle cx="8" cy="18" r="2.2"/></svg></span>
-            <span class="pd-rowText">
-              <span class="pd-rowTitle">post-production<svg class="pd-squig" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true"><path d="M3 6c14-5 24 5 38 1s24-6 38-1 25 5 38 0"/></svg></span>
-              <span class="pd-rowTag">Where it all comes together.</span>
-            </span>
-          </a>
-          <div class="pd-pills">
-            <a href="#">Editing</a>
-            <a href="#">VFX</a>
-            <a href="#">Subtitling and Transcription</a>
-            <a href="#">British Sign Language (BSL)</a>
-          </div>
+        <div class="pd-col">
+          <a class="pd-colTitle" style="--g:110,150,255" href="#"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2.2"/><circle cx="15" cy="12" r="2.2"/><circle cx="8" cy="18" r="2.2"/></svg>post-production</a>
+          <p class="pd-colTag">Where it all comes together.</p>
+          <ul class="pd-list">
+            <li><a style="--g:110,150,255" href="#">Editing</a></li>
+            <li><a style="--g:110,150,255" href="#">VFX</a></li>
+            <li><a style="--g:110,150,255" href="#">Subtitling and Transcription</a></li>
+            <li><a style="--g:110,150,255" href="#">British Sign Language (BSL)</a></li>
+          </ul>
         </div>
         </div>
       </div>
-      <svg class="pd-wave" viewBox="0 0 1440 28" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0 0h1440v10c-200 16-340-6-500 2s-300 14-440 4-160-12-320-2S60 26 0 12z" fill="rgb(4,11,30)"/>
-        <path d="M1440 10c-200 16-340-6-500 2s-300 14-440 4-160-12-320-2S60 26 0 12" fill="none" stroke="rgba(0,220,255,.35)" stroke-width="1.6"/>
-      </svg>
     </div>
   </div>
 
   <div class="pd-mega" data-mega="sectors">
     <div class="pd-megaInner">
       <div class="pd-megaBody">
-        <span class="pd-swirl" aria-hidden="true"><i></i></span>
-        <div class="pd-rows">
-        <div class="pd-row" style="--g:0,220,255">
-          <a class="pd-rowHead" href="#">
-            <span class="pd-groupIcon"><svg viewBox="0 0 24 24"><path d="M4 4.5h6a2.5 2.5 0 0 1 2 2.5 2.5 2.5 0 0 1 2-2.5h6v13h-6a2.5 2.5 0 0 0-2 2 2.5 2.5 0 0 0-2-2H4z"/></svg></span>
-            <span class="pd-rowText">
-              <span class="pd-rowTitle">sectors<svg class="pd-squig" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true"><path d="M3 6c14-5 24 5 38 1s24-6 38-1 25 5 38 0"/></svg></span>
-              <span class="pd-rowTag">We already speak the language.</span>
-            </span>
-          </a>
-          <div class="pd-pills jumbo">
-            <a href="#" style="--g:0,220,255"><svg viewBox="0 0 24 24"><path d="M4 4.5h6a2.5 2.5 0 0 1 2 2.5 2.5 2.5 0 0 1 2-2.5h6v13h-6a2.5 2.5 0 0 0-2 2 2.5 2.5 0 0 0-2-2H4z"/></svg> Education</a>
-            <a href="#" style="--g:48,216,240"><svg viewBox="0 0 24 24"><path d="M3 12h4l2.5-6 4 12 2.5-6h5"/></svg> Healthcare</a>
-            <a href="#" style="--g:0,160,255"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.4"/><ellipse cx="12" cy="12" rx="9.5" ry="4.2"/><ellipse cx="12" cy="12" rx="9.5" ry="4.2" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9.5" ry="4.2" transform="rotate(120 12 12)"/></svg> Science and Technology</a>
-          </div>
+        <span class="pd-ghost" aria-hidden="true">sectors</span>
+        <div class="pd-cols">
+        <div class="pd-col">
+          <a class="pd-colTitle" style="--g:0,220,255" href="#"><svg viewBox="0 0 24 24"><path d="M4 4.5h6a2.5 2.5 0 0 1 2 2.5 2.5 2.5 0 0 1 2-2.5h6v13h-6a2.5 2.5 0 0 0-2 2 2.5 2.5 0 0 0-2-2H4z"/></svg>sectors</a>
+          <p class="pd-colTag">We already speak the language.</p>
+          <ul class="pd-list big">
+            <li><a style="--g:0,220,255" href="#"><svg viewBox="0 0 24 24"><path d="M4 4.5h6a2.5 2.5 0 0 1 2 2.5 2.5 2.5 0 0 1 2-2.5h6v13h-6a2.5 2.5 0 0 0-2 2 2.5 2.5 0 0 0-2-2H4z"/></svg> Education</a></li>
+            <li><a style="--g:48,216,240" href="#"><svg viewBox="0 0 24 24"><path d="M3 12h4l2.5-6 4 12 2.5-6h5"/></svg> Healthcare</a></li>
+            <li><a style="--g:0,160,255" href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.4"/><ellipse cx="12" cy="12" rx="9.5" ry="4.2"/><ellipse cx="12" cy="12" rx="9.5" ry="4.2" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9.5" ry="4.2" transform="rotate(120 12 12)"/></svg> Science and Technology</a></li>
+          </ul>
         </div>
         </div>
       </div>
-      <svg class="pd-wave" viewBox="0 0 1440 28" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0 0h1440v10c-200 16-340-6-500 2s-300 14-440 4-160-12-320-2S60 26 0 12z" fill="rgb(4,11,30)"/>
-        <path d="M1440 10c-200 16-340-6-500 2s-300 14-440 4-160-12-320-2S60 26 0 12" fill="none" stroke="rgba(0,220,255,.35)" stroke-width="1.6"/>
-      </svg>
     </div>
   </div>
 
   <div class="pd-mega" data-mega="about">
     <div class="pd-megaInner">
       <div class="pd-megaBody">
-        <span class="pd-swirl" aria-hidden="true"><i></i></span>
-        <div class="pd-rows">
-        <div class="pd-row" style="--g:0,220,255">
-          <a class="pd-rowHead" href="#">
-            <span class="pd-groupIcon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.4"/><path d="M2.8 19.5a6.4 6.4 0 0 1 12.4 0"/><circle cx="17" cy="9.5" r="2.6"/><path d="M16 14.4a5.6 5.6 0 0 1 5.2 5.1"/></svg></span>
-            <span class="pd-rowText">
-              <span class="pd-rowTitle">the company<svg class="pd-squig" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true"><path d="M3 6c14-5 24 5 38 1s24-6 38-1 25 5 38 0"/></svg></span>
-              <span class="pd-rowTag">Since 2003. Still can't sit still.</span>
-            </span>
-          </a>
-          <div class="pd-pills">
-            <a href="#">Meet Pearldrop</a>
-            <a href="#">Our values</a>
-            <a href="#">Our showreels</a>
-            <a href="#">Our clients</a>
-            <a href="#">Testimonials</a>
-            <a href="#">Memberships and Accreditations</a>
-            <a href="#">Behind-the-scenes</a>
-          </div>
+        <span class="pd-ghost" aria-hidden="true">about us</span>
+        <div class="pd-cols">
+        <div class="pd-col">
+          <a class="pd-colTitle" style="--g:0,220,255" href="#"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.4"/><path d="M2.8 19.5a6.4 6.4 0 0 1 12.4 0"/><circle cx="17" cy="9.5" r="2.6"/><path d="M16 14.4a5.6 5.6 0 0 1 5.2 5.1"/></svg>the company</a>
+          <p class="pd-colTag">Since 2003. Still can't sit still.</p>
+          <ul class="pd-list">
+            <li><a style="--g:0,220,255" href="#">Meet Pearldrop</a></li>
+            <li><a style="--g:0,220,255" href="#">Our values</a></li>
+            <li><a style="--g:0,220,255" href="#">Our showreels</a></li>
+            <li><a style="--g:0,220,255" href="#">Our clients</a></li>
+            <li><a style="--g:0,220,255" href="#">Testimonials</a></li>
+            <li><a style="--g:0,220,255" href="#">Memberships and Accreditations</a></li>
+            <li><a style="--g:0,220,255" href="#">Behind-the-scenes</a></li>
+          </ul>
         </div>
-        <div class="pd-row" style="--g:48,216,240">
-          <a class="pd-rowHead" href="#">
-            <span class="pd-groupIcon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.2v.4"/></svg></span>
-            <span class="pd-rowText">
-              <span class="pd-rowTitle">useful info<svg class="pd-squig" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true"><path d="M3 6c14-5 24 5 38 1s24-6 38-1 25 5 38 0"/></svg></span>
-              <span class="pd-rowTag">The whys, the hows, the FAQs.</span>
-            </span>
-          </a>
-          <div class="pd-pills">
-            <a href="#">How we work</a>
-            <a href="#">Why should you work with Pearldrop?</a>
-            <a href="#">Why video?</a>
-            <a href="#">Sustainability</a>
-            <a href="#">FAQ</a>
-          </div>
+        <div class="pd-col">
+          <a class="pd-colTitle" style="--g:48,216,240" href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.2v.4"/></svg>useful info</a>
+          <p class="pd-colTag">The whys, the hows, the FAQs.</p>
+          <ul class="pd-list">
+            <li><a style="--g:48,216,240" href="#">How we work</a></li>
+            <li><a style="--g:48,216,240" href="#">Why should you work with Pearldrop?</a></li>
+            <li><a style="--g:48,216,240" href="#">Why video?</a></li>
+            <li><a style="--g:48,216,240" href="#">Sustainability</a></li>
+            <li><a style="--g:48,216,240" href="#">FAQ</a></li>
+          </ul>
         </div>
-        <div class="pd-row" style="--g:0,160,255">
-          <a class="pd-rowHead" href="#">
-            <span class="pd-groupIcon"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13.5h18"/></svg></span>
-            <span class="pd-rowText">
-              <span class="pd-rowTitle">employment<svg class="pd-squig" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true"><path d="M3 6c14-5 24 5 38 1s24-6 38-1 25 5 38 0"/></svg></span>
-              <span class="pd-rowTag">Come make things with us.</span>
-            </span>
-          </a>
-          <div class="pd-pills">
-            <a href="#">Recruitment</a>
-            <a href="#">Work Experience</a>
+        <div class="pd-colGroup">
+          <div>
+            <a class="pd-colTitle" style="--g:0,160,255" href="#"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13.5h18"/></svg>employment</a>
+            <p class="pd-colTag">Come make things with us.</p>
+            <ul class="pd-list">
+              <li><a style="--g:0,160,255" href="#">Recruitment</a></li>
+              <li><a style="--g:0,160,255" href="#">Work Experience</a></li>
+            </ul>
           </div>
-        </div>
-        <div class="pd-row" style="--g:110,150,255">
-          <a class="pd-rowHead" href="#">
-            <span class="pd-groupIcon"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.6-3 7.6-7 9.2-4-1.6-7-4.6-7-9.2V6z"/><path d="m9 12 2 2 4-4.5"/></svg></span>
-            <span class="pd-rowText">
-              <span class="pd-rowTitle">legal<svg class="pd-squig" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true"><path d="M3 6c14-5 24 5 38 1s24-6 38-1 25 5 38 0"/></svg></span>
-              <span class="pd-rowTag">The small print, writ large.</span>
-            </span>
-          </a>
-          <div class="pd-pills">
-            <a href="#">Terms of Service</a>
-            <a href="#">Privacy Policy</a>
+          <div>
+            <a class="pd-colTitle" style="--g:110,150,255" href="#"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.6-3 7.6-7 9.2-4-1.6-7-4.6-7-9.2V6z"/><path d="m9 12 2 2 4-4.5"/></svg>legal</a>
+            <p class="pd-colTag">The small print, writ large.</p>
+            <ul class="pd-list">
+              <li><a style="--g:110,150,255" href="#">Terms of Service</a></li>
+              <li><a style="--g:110,150,255" href="#">Privacy Policy</a></li>
+            </ul>
           </div>
         </div>
         </div>
       </div>
-      <svg class="pd-wave" viewBox="0 0 1440 28" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0 0h1440v10c-200 16-340-6-500 2s-300 14-440 4-160-12-320-2S60 26 0 12z" fill="rgb(4,11,30)"/>
-        <path d="M1440 10c-200 16-340-6-500 2s-300 14-440 4-160-12-320-2S60 26 0 12" fill="none" stroke="rgba(0,220,255,.35)" stroke-width="1.6"/>
-      </svg>
     </div>
   </div>
 
   <div class="pd-mega" data-mega="portfolio">
     <div class="pd-megaInner">
       <div class="pd-megaBody">
-        <span class="pd-swirl" aria-hidden="true"><i></i></span>
-        <div class="pd-rows">
-        <div class="pd-row" style="--g:0,220,255">
-          <a class="pd-rowHead" href="#">
-            <span class="pd-groupIcon"><svg viewBox="0 0 24 24"><path d="M2.5 5h19v14h-19z"/><path d="M7 5v14M17 5v14M2.5 12h19M2.5 8.5h4.5M2.5 15.5h4.5M17 8.5h4.5M17 15.5h4.5"/></svg></span>
-            <span class="pd-rowText">
-              <span class="pd-rowTitle">video<svg class="pd-squig" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true"><path d="M3 6c14-5 24 5 38 1s24-6 38-1 25 5 38 0"/></svg></span>
-              <span class="pd-rowTag">The good stuff, moving.</span>
-            </span>
-          </a>
-          <div class="pd-thumbs">
-            <a class="pd-thumb" href="#"><img src="menu-thumbs/video-liveaction.webp" alt="" loading="lazy" /><span>Live-action</span></a>
-            <a class="pd-thumb" href="#"><img src="menu-thumbs/video-2danimation.webp" alt="" loading="lazy" /><span>2D animation</span></a>
+        <span class="pd-ghost" aria-hidden="true">portfolio</span>
+        <div class="pd-cols">
+        <div class="pd-col">
+          <a class="pd-colTitle" style="--g:0,220,255" href="#"><svg viewBox="0 0 24 24"><path d="M2.5 5h19v14h-19z"/><path d="M7 5v14M17 5v14M2.5 12h19M2.5 8.5h4.5M2.5 15.5h4.5M17 8.5h4.5M17 15.5h4.5"/></svg>video</a>
+          <p class="pd-colTag">The good stuff, moving.</p>
+          <div class="pd-thumbs cols2">
+            <a class="pd-thumb" style="--g:0,220,255" href="#"><img src="menu-thumbs/video-liveaction.webp" alt="" loading="lazy" /><span>Live-action</span></a>
+            <a class="pd-thumb" style="--g:0,220,255" href="#"><img src="menu-thumbs/video-2danimation.webp" alt="" loading="lazy" /><span>2D animation</span></a>
           </div>
         </div>
-        <div class="pd-row" style="--g:48,216,240">
-          <a class="pd-rowHead" href="#">
-            <span class="pd-groupIcon"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h2.2l1.2-2h6.8l1.2 2H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.6"/></svg></span>
-            <span class="pd-rowText">
-              <span class="pd-rowTitle">photography<svg class="pd-squig" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true"><path d="M3 6c14-5 24 5 38 1s24-6 38-1 25 5 38 0"/></svg></span>
-              <span class="pd-rowTag">The good stuff, holding still.</span>
-            </span>
-          </a>
-          <div class="pd-thumbs">
-            <a class="pd-thumb" href="#"><img src="menu-thumbs/photo-architectural.webp" alt="" loading="lazy" /><span>Architectural</span></a>
-            <a class="pd-thumb" href="#"><img src="menu-thumbs/photo-automotive.webp" alt="" loading="lazy" /><span>Automotive</span></a>
-            <a class="pd-thumb" href="#"><img src="menu-thumbs/photo-conferences.webp" alt="" loading="lazy" /><span>Conferences and Ceremonies</span></a>
-            <a class="pd-thumb" href="#"><img src="menu-thumbs/photo-headshots.webp" alt="" loading="lazy" /><span>Headshots</span></a>
-            <a class="pd-thumb" href="#"><img src="menu-thumbs/photo-lifestyle.webp" alt="" loading="lazy" /><span>Lifestyle</span></a>
-            <a class="pd-thumb" href="#"><img src="menu-thumbs/photo-liveevents.webp" alt="" loading="lazy" /><span>Live events</span></a>
+        <div class="pd-col">
+          <a class="pd-colTitle" style="--g:48,216,240" href="#"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h2.2l1.2-2h6.8l1.2 2H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.6"/></svg>photography</a>
+          <p class="pd-colTag">The good stuff, holding still.</p>
+          <div class="pd-thumbs cols3">
+            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="menu-thumbs/photo-architectural.webp" alt="" loading="lazy" /><span>Architectural</span></a>
+            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="menu-thumbs/photo-automotive.webp" alt="" loading="lazy" /><span>Automotive</span></a>
+            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="menu-thumbs/photo-conferences.webp" alt="" loading="lazy" /><span>Conferences and Ceremonies</span></a>
+            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="menu-thumbs/photo-headshots.webp" alt="" loading="lazy" /><span>Headshots</span></a>
+            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="menu-thumbs/photo-lifestyle.webp" alt="" loading="lazy" /><span>Lifestyle</span></a>
+            <a class="pd-thumb" style="--g:48,216,240" href="#"><img src="menu-thumbs/photo-liveevents.webp" alt="" loading="lazy" /><span>Live events</span></a>
           </div>
         </div>
         </div>
       </div>
-      <svg class="pd-wave" viewBox="0 0 1440 28" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0 0h1440v10c-200 16-340-6-500 2s-300 14-440 4-160-12-320-2S60 26 0 12z" fill="rgb(4,11,30)"/>
-        <path d="M1440 10c-200 16-340-6-500 2s-300 14-440 4-160-12-320-2S60 26 0 12" fill="none" stroke="rgba(0,220,255,.35)" stroke-width="1.6"/>
-      </svg>
     </div>
   </div>
 
@@ -983,21 +871,6 @@
         openName = name;
         megas.forEach(function(m){ m.classList.toggle('open', m.getAttribute('data-mega')===name); });
         triggers.forEach(function(t){ t.classList.toggle('open', t.getAttribute('data-menu')===name); });
-        // aim the drop at the trigger: the panel's circular wipe and the
-        // ripple rings both bloom from the hovered nav item
-        var t = triggers.filter(function(x){ return x.getAttribute('data-menu')===name; })[0];
-        var m = megas.filter(function(x){ return x.getAttribute('data-mega')===name; })[0];
-        if(t && m){
-          var inner = m.querySelector('.pd-megaInner');
-          var cx = t.getBoundingClientRect();
-          cx = cx.left + cx.width/2;
-          m.style.setProperty('--drop-px', Math.round(cx) + 'px');
-          if(inner){
-            var ir = inner.getBoundingClientRect();
-            var pct = ir.width ? ((cx - ir.left) / ir.width * 100) : 50;
-            inner.style.setProperty('--drop-x', Math.max(4, Math.min(96, pct)).toFixed(1) + '%');
-          }
-        }
       }
       function hideMega(){
         openName = null;
