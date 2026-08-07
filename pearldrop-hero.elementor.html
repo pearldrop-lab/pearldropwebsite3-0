@@ -305,9 +305,11 @@
   #pd-hero .pd-sector:hover .pd-sectorName{color:rgb(var(--g))}
 
   /* portfolio thumbnails: a tidy grid that lifts and glows on hover */
-  #pd-hero .pd-thumbs{display:grid; gap:14px; padding-top:2px}
-  #pd-hero .pd-thumbs.cols2{grid-template-columns:repeat(2, clamp(170px,15vw,215px))}
-  #pd-hero .pd-thumbs.cols3{grid-template-columns:repeat(3, clamp(150px,12.5vw,180px))}
+  /* one shared tile size, so the video column's two stacked thumbnails
+     line up row-for-row with the photography grid beside it */
+  #pd-hero .pd-thumbs{--tile:clamp(150px,12.5vw,180px); display:grid; gap:14px; padding-top:2px}
+  #pd-hero .pd-thumbs.cols1{grid-template-columns:var(--tile)}
+  #pd-hero .pd-thumbs.cols3{grid-template-columns:repeat(3, var(--tile))}
   #pd-hero .pd-thumb{
     --g:var(--neon-rgb);
     position:relative; display:block; border-radius:13px; overflow:hidden;
@@ -614,7 +616,7 @@
         <div class="pd-col">
           <a class="pd-colTitle" style="--g:0,220,255" href="#"><svg viewBox="0 0 24 24"><path d="M2.5 5h19v14h-19z"/><path d="M7 5v14M17 5v14M2.5 12h19M2.5 8.5h4.5M2.5 15.5h4.5M17 8.5h4.5M17 15.5h4.5"/></svg>video</a>
           <p class="pd-colTag">The good stuff, moving.</p>
-          <div class="pd-thumbs cols2">
+          <div class="pd-thumbs cols1">
             <a class="pd-thumb" style="--g:0,220,255" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/video-liveaction.webp" alt="" loading="lazy" /><span>Live-action</span></a>
             <a class="pd-thumb" style="--g:0,220,255" href="#"><img src="https://pearldrop-lab.github.io/pearldropwebsite3-0/menu-thumbs/video-2danimation.webp" alt="" loading="lazy" /><span>2D animation</span></a>
           </div>
