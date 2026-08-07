@@ -185,17 +185,6 @@
     0%{transform:translate3d(0,0,0) scale(1)}
     100%{transform:translate3d(3%,4%,0) scale(1.1)}
   }
-  /* the watermark: the menu's name, giant and ghosted, off to the right */
-  #pd-hero .pd-ghost{
-    position:absolute; right:clamp(16px,3vw,60px); bottom:-14px; z-index:0;
-    font-family:'Space Grotesk',sans-serif; font-weight:700;
-    font-size:clamp(90px,11vw,170px); line-height:1; letter-spacing:-5px;
-    color:transparent; -webkit-text-stroke:1.5px rgba(var(--neon-rgb),.16);
-    pointer-events:none; user-select:none; white-space:nowrap;
-    opacity:0; transform:translateX(40px);
-    transition:opacity .5s ease .12s, transform .6s cubic-bezier(.25,.9,.3,1) .12s;
-  }
-  #pd-hero .pd-mega.open .pd-ghost{opacity:1; transform:none}
 
   #pd-hero .pd-cols{
     position:relative; z-index:1;
@@ -333,7 +322,7 @@
   @media (prefers-reduced-motion: reduce){
     #pd-hero .pd-megaInner{transform:none; transition:none}
     #pd-hero .pd-megaBody::before{animation:none}
-    #pd-hero .pd-ghost, #pd-hero .pd-colTitle, #pd-hero .pd-colTag,
+    #pd-hero .pd-colTitle, #pd-hero .pd-colTag,
     #pd-hero .pd-list li, #pd-hero .pd-thumb{
       opacity:1 !important; transform:none !important; transition-delay:0s !important;
     }
@@ -477,7 +466,6 @@
   <div class="pd-mega" data-mega="services">
     <div class="pd-megaInner">
       <div class="pd-megaBody">
-        <span class="pd-ghost" aria-hidden="true">services</span>
         <div class="pd-cols">
         <div class="pd-col">
           <a class="pd-colTitle" style="--g:0,220,255" href="#"><svg viewBox="0 0 24 24"><path d="M2.5 5h19v14h-19z"/><path d="M7 5v14M17 5v14M2.5 12h19M2.5 8.5h4.5M2.5 15.5h4.5M17 8.5h4.5M17 15.5h4.5"/></svg>live-action</a>
@@ -542,7 +530,6 @@
   <div class="pd-mega" data-mega="sectors">
     <div class="pd-megaInner">
       <div class="pd-megaBody">
-        <span class="pd-ghost" aria-hidden="true">sectors</span>
         <div class="pd-cols">
         <div class="pd-col">
           <a class="pd-colTitle" style="--g:0,220,255" href="#"><svg viewBox="0 0 24 24"><path d="M4 4.5h6a2.5 2.5 0 0 1 2 2.5 2.5 2.5 0 0 1 2-2.5h6v13h-6a2.5 2.5 0 0 0-2 2 2.5 2.5 0 0 0-2-2H4z"/></svg>sectors</a>
@@ -561,7 +548,6 @@
   <div class="pd-mega" data-mega="about">
     <div class="pd-megaInner">
       <div class="pd-megaBody">
-        <span class="pd-ghost" aria-hidden="true">about us</span>
         <div class="pd-cols">
         <div class="pd-col">
           <a class="pd-colTitle" style="--g:0,220,255" href="#"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.4"/><path d="M2.8 19.5a6.4 6.4 0 0 1 12.4 0"/><circle cx="17" cy="9.5" r="2.6"/><path d="M16 14.4a5.6 5.6 0 0 1 5.2 5.1"/></svg>the company</a>
@@ -613,7 +599,6 @@
   <div class="pd-mega" data-mega="portfolio">
     <div class="pd-megaInner">
       <div class="pd-megaBody">
-        <span class="pd-ghost" aria-hidden="true">portfolio</span>
         <div class="pd-cols">
         <div class="pd-col">
           <a class="pd-colTitle" style="--g:0,220,255" href="#"><svg viewBox="0 0 24 24"><path d="M2.5 5h19v14h-19z"/><path d="M7 5v14M17 5v14M2.5 12h19M2.5 8.5h4.5M2.5 15.5h4.5M17 8.5h4.5M17 15.5h4.5"/></svg>video</a>
