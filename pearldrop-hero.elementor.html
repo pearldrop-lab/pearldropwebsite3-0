@@ -195,12 +195,19 @@
     gap:30px clamp(28px,3.4vw,64px);
   }
   #pd-hero .pd-col{min-width:0}
-  #pd-hero .pd-colGroup{display:flex; flex-direction:column; gap:30px; min-width:0}
-  /* stagger base per column; item delays add onto it */
-  #pd-hero .pd-cols > *:nth-child(1){--d:0s}
-  #pd-hero .pd-cols > *:nth-child(2){--d:.07s}
-  #pd-hero .pd-cols > *:nth-child(3){--d:.14s}
-  #pd-hero .pd-cols > *:nth-child(4){--d:.21s}
+  /* whole columns arrive one at a time, left to right - fast, but far
+     enough apart that you register each one landing */
+  #pd-hero .pd-cols > *{
+    opacity:0; transform:translateY(-12px);
+    transition:opacity .26s ease var(--d,0s), transform .32s cubic-bezier(.25,.9,.3,1) var(--d,0s);
+  }
+  #pd-hero .pd-mega.open .pd-cols > *{opacity:1; transform:none}
+  #pd-hero .pd-cols > *:nth-child(1){--d:.02s}
+  #pd-hero .pd-cols > *:nth-child(2){--d:.13s}
+  #pd-hero .pd-cols > *:nth-child(3){--d:.24s}
+  #pd-hero .pd-cols > *:nth-child(4){--d:.35s}
+  #pd-hero .pd-cols > *:nth-child(5){--d:.46s}
+  #pd-hero .pd-cols > *:nth-child(6){--d:.57s}
 
   #pd-hero .pd-colTitle{
     --g:var(--neon-rgb);
@@ -210,10 +217,7 @@
     font-size:clamp(20px,1.75vw,26px); line-height:1; letter-spacing:-.5px;
     white-space:nowrap;
     color:rgb(var(--g)); text-decoration:none;
-    opacity:0; transform:translateY(-8px);
-    transition:opacity .3s ease var(--d,0s), transform .35s cubic-bezier(.25,.9,.3,1) var(--d,0s);
   }
-  #pd-hero .pd-mega.open .pd-colTitle{opacity:1; transform:none}
   #pd-hero .pd-colTitle svg{
     width:22px; height:22px; flex:0 0 auto; stroke:currentColor; fill:none;
     stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round;
@@ -228,31 +232,11 @@
   #pd-hero .pd-mega.open .pd-colTitle::after{width:34px; transition-delay:calc(var(--d,0s) + .18s)}
   #pd-hero .pd-mega.open .pd-colTitle:hover::after{width:100%; transition-delay:0s}
   #pd-hero .pd-colTag{
-    font-size:12.5px; line-height:1.35; color:var(--muted); font-style:italic; opacity:0;
+    font-size:12.5px; line-height:1.35; color:var(--muted); font-style:italic; opacity:.85;
     margin-bottom:14px;
-    transition:opacity .35s ease calc(var(--d,0s) + .1s);
   }
-  #pd-hero .pd-mega.open .pd-colTag{opacity:.85}
 
   #pd-hero .pd-list{list-style:none; display:grid; gap:2px}
-  /* the long live-action list flows into two columns without gaps */
-  /* gap must clear the hover bar's left overhang so the second column's
-     highlight never reaches into the first column's text */
-  #pd-hero .pd-list.split{display:block; columns:2; column-gap:clamp(26px,2vw,38px)}
-  #pd-hero .pd-list.split li{break-inside:avoid}
-  #pd-hero .pd-list li{
-    opacity:0; transform:translateY(-9px);
-    transition:opacity .28s ease var(--d,0s), transform .32s cubic-bezier(.25,.9,.3,1) var(--d,0s);
-  }
-  #pd-hero .pd-mega.open .pd-list li{opacity:1; transform:none}
-  #pd-hero .pd-list li:nth-child(1){--td:.04s} #pd-hero .pd-list li:nth-child(2){--td:.08s}
-  #pd-hero .pd-list li:nth-child(3){--td:.12s} #pd-hero .pd-list li:nth-child(4){--td:.16s}
-  #pd-hero .pd-list li:nth-child(5){--td:.2s}  #pd-hero .pd-list li:nth-child(6){--td:.24s}
-  #pd-hero .pd-list li:nth-child(7){--td:.28s} #pd-hero .pd-list li:nth-child(8){--td:.32s}
-  #pd-hero .pd-list li:nth-child(9){--td:.36s} #pd-hero .pd-list li:nth-child(10){--td:.4s}
-  #pd-hero .pd-list li:nth-child(11){--td:.44s} #pd-hero .pd-list li:nth-child(12){--td:.48s}
-  #pd-hero .pd-list li:nth-child(13){--td:.52s} #pd-hero .pd-list li:nth-child(14){--td:.56s}
-  #pd-hero .pd-list li{transition-delay:calc(var(--d,0s) + var(--td,0s))}
   /* The label sits flush with the heading's icon: the negative margin and
      matching padding cancel out, so text starts at the column edge while
      the hover bar and its droplet hang out to the left of everything. */
@@ -275,13 +259,11 @@
   #pd-hero .pd-list a:hover{color:#fff; background:rgba(var(--g),.1)}
   #pd-hero .pd-list a:hover::before{opacity:1; transform:none}
   /* sectors: three big icon blocks rather than a short list */
+  /* a sector block is itself a column, so .pd-cols handles its entrance */
   #pd-hero .pd-sector{
     display:flex; flex-direction:column; align-items:flex-start; gap:16px;
     width:clamp(200px,17vw,250px); text-decoration:none;
-    opacity:0; transform:translateY(-10px);
-    transition:opacity .34s ease var(--d,0s), transform .4s cubic-bezier(.25,.9,.3,1) var(--d,0s);
   }
-  #pd-hero .pd-mega.open .pd-sector{opacity:1; transform:none}
   /* a pearl the size of the space it has to fill, with the logo's
      off-centre ring hung around it */
   #pd-hero .pd-sectorIcon{
@@ -323,17 +305,9 @@
     --g:var(--neon-rgb);
     position:relative; display:block; border-radius:13px; overflow:hidden;
     border:1px solid rgba(var(--g),.32); text-decoration:none;
-    opacity:0; transform:translateY(-10px);
-    transition:opacity .3s ease, transform .34s cubic-bezier(.25,.9,.3,1),
+    transition:transform .3s cubic-bezier(.25,.9,.3,1),
       border-color .2s ease, box-shadow .25s ease;
   }
-  #pd-hero .pd-mega.open .pd-thumb{opacity:1; transform:none}
-  #pd-hero .pd-thumb:nth-child(1){transition-delay:calc(var(--d,0s) + .04s)}
-  #pd-hero .pd-thumb:nth-child(2){transition-delay:calc(var(--d,0s) + .09s)}
-  #pd-hero .pd-thumb:nth-child(3){transition-delay:calc(var(--d,0s) + .14s)}
-  #pd-hero .pd-thumb:nth-child(4){transition-delay:calc(var(--d,0s) + .19s)}
-  #pd-hero .pd-thumb:nth-child(5){transition-delay:calc(var(--d,0s) + .24s)}
-  #pd-hero .pd-thumb:nth-child(6){transition-delay:calc(var(--d,0s) + .29s)}
   #pd-hero .pd-thumb img{
     display:block; width:100%; aspect-ratio:16/10; object-fit:cover;
     transition:transform .45s cubic-bezier(.3,0,.2,1);
@@ -344,8 +318,7 @@
     letter-spacing:.4px; color:#fff;
     background:linear-gradient(0deg, rgba(3,8,24,.88), transparent);
   }
-  #pd-hero .pd-mega.open .pd-thumb:hover{
-    transition-delay:0s;
+  #pd-hero .pd-thumb:hover{
     transform:translateY(-4px);
     border-color:rgb(var(--g));
     box-shadow:0 16px 32px -12px rgba(var(--g),.6);
@@ -355,8 +328,7 @@
   @media (prefers-reduced-motion: reduce){
     #pd-hero .pd-megaInner{transform:none; transition:none}
     #pd-hero .pd-megaBody::before{animation:none}
-    #pd-hero .pd-colTitle, #pd-hero .pd-colTag,
-    #pd-hero .pd-list li, #pd-hero .pd-thumb, #pd-hero .pd-sector{
+    #pd-hero .pd-cols > *{
       opacity:1 !important; transform:none !important; transition-delay:0s !important;
     }
     #pd-hero .pd-mega.open .pd-colTitle::after{transition:none}
@@ -503,7 +475,7 @@
         <div class="pd-col">
           <a class="pd-colTitle" style="--g:0,220,255" href="#"><svg viewBox="0 0 24 24"><path d="M2.5 5h19v14h-19z"/><path d="M7 5v14M17 5v14M2.5 12h19M2.5 8.5h4.5M2.5 15.5h4.5M17 8.5h4.5M17 15.5h4.5"/></svg>live-action</a>
           <p class="pd-colTag">Real people, real places, real good.</p>
-          <ul class="pd-list split">
+          <ul class="pd-list">
             <li><a style="--g:0,220,255" href="#">Activations and Launches</a></li>
             <li><a style="--g:0,220,255" href="#">Automotive</a></li>
             <li><a style="--g:0,220,255" href="#">Aerial/Drone</a></li>
@@ -521,6 +493,14 @@
           </ul>
         </div>
         <div class="pd-col">
+          <a class="pd-colTitle" style="--g:0,160,255" href="#"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="14" height="14" rx="3"/><path d="m8.5 8.5 4.5 2.5-4.5 2.5z"/><path d="M20 8.5v7M22.5 10.5v3"/></svg>2d animation</a>
+          <p class="pd-colTag">For when reality needs a rewrite.</p>
+          <ul class="pd-list">
+            <li><a style="--g:0,160,255" href="#">Explainer</a></li>
+            <li><a style="--g:0,160,255" href="#">Character</a></li>
+          </ul>
+        </div>
+        <div class="pd-col">
           <a class="pd-colTitle" style="--g:48,216,240" href="#"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h2.2l1.2-2h6.8l1.2 2H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.6"/></svg>photography</a>
           <p class="pd-colTag">Stills that stop the scroll.</p>
           <ul class="pd-list">
@@ -531,20 +511,6 @@
             <li><a style="--g:48,216,240" href="#">Live-event</a></li>
           </ul>
         </div>
-        <div class="pd-colGroup">
-          <div>
-            <a class="pd-colTitle" style="--g:0,160,255" href="#"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="14" height="14" rx="3"/><path d="m8.5 8.5 4.5 2.5-4.5 2.5z"/><path d="M20 8.5v7M22.5 10.5v3"/></svg>2d animation</a>
-            <p class="pd-colTag">For when reality needs a rewrite.</p>
-            <ul class="pd-list">
-              <li><a style="--g:0,160,255" href="#">Explainer</a></li>
-              <li><a style="--g:0,160,255" href="#">Character</a></li>
-            </ul>
-          </div>
-          <div>
-            <a class="pd-colTitle" style="--g:168,216,255" href="#"><svg viewBox="0 0 24 24"><path d="m12 3 1.9 4.6 4.6 1.9-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="m18.2 15.4.75 1.85 1.85.75-1.85.75-.75 1.85-.75-1.85-1.85-.75 1.85-.75z"/></svg>ai video production</a>
-            <p class="pd-colTag">New tools. Same high bar.</p>
-          </div>
-        </div>
         <div class="pd-col">
           <a class="pd-colTitle" style="--g:110,150,255" href="#"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2.2"/><circle cx="15" cy="12" r="2.2"/><circle cx="8" cy="18" r="2.2"/></svg>post-production</a>
           <p class="pd-colTag">Where it all comes together.</p>
@@ -554,6 +520,10 @@
             <li><a style="--g:110,150,255" href="#">Subtitling and Transcription</a></li>
             <li><a style="--g:110,150,255" href="#">British Sign Language (BSL)</a></li>
           </ul>
+        </div>
+        <div class="pd-col">
+          <a class="pd-colTitle" style="--g:168,216,255" href="#"><svg viewBox="0 0 24 24"><path d="m12 3 1.9 4.6 4.6 1.9-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="m18.2 15.4.75 1.85 1.85.75-1.85.75-.75 1.85-.75-1.85-1.85-.75 1.85-.75z"/></svg>ai video production</a>
+          <p class="pd-colTag">New tools. Same high bar.</p>
         </div>
         </div>
       </div>
