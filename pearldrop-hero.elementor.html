@@ -161,7 +161,7 @@
   }
   #pd-hero .pd-mega.open .pd-megaInner{
     transform:none;
-    transition:transform .42s cubic-bezier(.25,.9,.3,1);
+    transition:transform .38s cubic-bezier(.25,.9,.3,1);
   }
   #pd-hero .pd-megaBody{
     position:relative; overflow:hidden;
@@ -196,18 +196,20 @@
   }
   #pd-hero .pd-col{min-width:0}
   /* whole columns arrive one at a time, left to right - fast, but far
-     enough apart that you register each one landing */
+     enough apart that you register each one landing. The first delay
+     clears the bar's own slide (.38s) so nothing is already on screen
+     by the time the bar finishes coming down. */
   #pd-hero .pd-cols > *{
     opacity:0; transform:translateY(-12px);
     transition:opacity .26s ease var(--d,0s), transform .32s cubic-bezier(.25,.9,.3,1) var(--d,0s);
   }
   #pd-hero .pd-mega.open .pd-cols > *{opacity:1; transform:none}
-  #pd-hero .pd-cols > *:nth-child(1){--d:.02s}
-  #pd-hero .pd-cols > *:nth-child(2){--d:.13s}
-  #pd-hero .pd-cols > *:nth-child(3){--d:.24s}
-  #pd-hero .pd-cols > *:nth-child(4){--d:.35s}
-  #pd-hero .pd-cols > *:nth-child(5){--d:.46s}
-  #pd-hero .pd-cols > *:nth-child(6){--d:.57s}
+  #pd-hero .pd-cols > *:nth-child(1){--d:.34s}
+  #pd-hero .pd-cols > *:nth-child(2){--d:.45s}
+  #pd-hero .pd-cols > *:nth-child(3){--d:.56s}
+  #pd-hero .pd-cols > *:nth-child(4){--d:.67s}
+  #pd-hero .pd-cols > *:nth-child(5){--d:.78s}
+  #pd-hero .pd-cols > *:nth-child(6){--d:.89s}
 
   #pd-hero .pd-colTitle{
     --g:var(--neon-rgb);
@@ -237,6 +239,11 @@
   }
 
   #pd-hero .pd-list{list-style:none; display:grid; gap:2px}
+  /* the long live-action list flows into two columns without gaps; the
+     gap must clear the hover bar's left overhang so the second column's
+     highlight never reaches into the first column's text */
+  #pd-hero .pd-list.split{display:block; columns:2; column-gap:clamp(26px,2vw,38px)}
+  #pd-hero .pd-list.split li{break-inside:avoid}
   /* The label sits flush with the heading's icon: the negative margin and
      matching padding cancel out, so text starts at the column edge while
      the hover bar and its droplet hang out to the left of everything. */
@@ -475,7 +482,7 @@
         <div class="pd-col">
           <a class="pd-colTitle" style="--g:0,220,255" href="#"><svg viewBox="0 0 24 24"><path d="M2.5 5h19v14h-19z"/><path d="M7 5v14M17 5v14M2.5 12h19M2.5 8.5h4.5M2.5 15.5h4.5M17 8.5h4.5M17 15.5h4.5"/></svg>live-action</a>
           <p class="pd-colTag">Real people, real places, real good.</p>
-          <ul class="pd-list">
+          <ul class="pd-list split">
             <li><a style="--g:0,220,255" href="#">Activations and Launches</a></li>
             <li><a style="--g:0,220,255" href="#">Automotive</a></li>
             <li><a style="--g:0,220,255" href="#">Aerial/Drone</a></li>
@@ -519,11 +526,8 @@
             <li><a style="--g:110,150,255" href="#">VFX</a></li>
             <li><a style="--g:110,150,255" href="#">Subtitling and Transcription</a></li>
             <li><a style="--g:110,150,255" href="#">British Sign Language (BSL)</a></li>
+            <li><a style="--g:110,150,255" href="#">AI Video Production</a></li>
           </ul>
-        </div>
-        <div class="pd-col">
-          <a class="pd-colTitle" style="--g:168,216,255" href="#"><svg viewBox="0 0 24 24"><path d="m12 3 1.9 4.6 4.6 1.9-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="m18.2 15.4.75 1.85 1.85.75-1.85.75-.75 1.85-.75-1.85-1.85-.75 1.85-.75z"/></svg>ai video production</a>
-          <p class="pd-colTag">New tools. Same high bar.</p>
         </div>
         </div>
       </div>
@@ -656,16 +660,14 @@
       <a href="#">Company Profiles</a><a href="#">Internal Communications</a><a href="#">Landing Pages</a>
       <a href="#">Live Events</a><a href="#">Live-streaming</a><a href="#">Product</a>
       <a href="#">Promotional</a><a href="#">Training</a>
+      <h5>2D Animation</h5>
+      <a href="#">Explainer</a><a href="#">Character</a>
       <h5>Photography</h5>
       <a href="#">Architectural</a><a href="#">Automotive</a><a href="#">Headshots</a>
       <a href="#">Lifestyle</a><a href="#">Live-event</a>
-      <h5>2D Animation</h5>
-      <a href="#">Explainer</a><a href="#">Character</a>
       <h5>Post-Production</h5>
       <a href="#">Editing</a><a href="#">VFX</a><a href="#">Subtitling and Transcription</a>
-      <a href="#">British Sign Language (BSL)</a>
-      <h5>AI Video Production</h5>
-      <a href="#">AI Video Production</a>
+      <a href="#">British Sign Language (BSL)</a><a href="#">AI Video Production</a>
     </div></div>
 
     <div class="pd-mRow"><a href="#">Portfolio</a><button class="pd-mToggle" type="button" aria-label="Toggle Portfolio submenu"></button></div>
