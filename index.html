@@ -841,10 +841,20 @@
       return -1;
     }
 
+    // Rebuild the backing store only when the canvas box really changed.
+    // iOS reports the pre-rotation box while a rotation is settling, so a
+    // single resize on the event can lock in the old dimensions - CSS then
+    // stretches that buffer to the new box and the picture looks squashed
+    // until a reload. lastW/lastH also stop the iOS URL bar's constant
+    // height nudges from clearing the canvas on every scroll.
+    var lastW = 0, lastH = 0;
     function resize(){
       var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      canvas.width = Math.round(canvas.clientWidth * dpr);
-      canvas.height = Math.round(canvas.clientHeight * dpr);
+      var w = Math.round(canvas.clientWidth * dpr);
+      var h = Math.round(canvas.clientHeight * dpr);
+      if(!w || !h || (w === lastW && h === lastH)) return;
+      lastW = w; lastH = h;
+      canvas.width = w; canvas.height = h;
       drawnFrame = -1; draw();
     }
 
@@ -983,6 +993,18 @@
     function requestTick(){ if(!ticking){ ticking = true; requestAnimationFrame(function(){ onScroll(); ticking=false; }); } }
     window.addEventListener('scroll', requestTick, {passive:true});
     window.addEventListener('resize', function(){ resize(); requestTick(); });
+    // the element's own box is the reliable signal - it fires once the
+    // rotation has actually settled, whatever the window event reported
+    if(window.ResizeObserver){
+      new ResizeObserver(function(){ resize(); requestTick(); }).observe(canvas);
+    } else {
+      // older iOS: re-measure a few times while the rotation settles
+      window.addEventListener('orientationchange', function(){
+        [0, 120, 350, 700].forEach(function(d){
+          setTimeout(function(){ resize(); requestTick(); }, d);
+        });
+      });
+    }
     setSeg(0); resize(); onScroll(); pump();
   }
   if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); } else { init(); }
