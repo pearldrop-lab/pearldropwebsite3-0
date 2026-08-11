@@ -46,34 +46,46 @@
   #pd-hero .pd-nav a::after{content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px; background:var(--neon); border-radius:2px; transform:scaleX(0); transform-origin:left; transition:transform .28s cubic-bezier(.5,0,.1,1); box-shadow:var(--glow-neon)}
   #pd-hero .pd-nav a:hover{opacity:1; color:#fff; text-shadow:0 0 10px rgba(var(--neon-rgb),.5)}
   #pd-hero .pd-nav a:hover::after{transform:scaleX(1)}
+  /* A solid pill rather than a neon outline: it holds its own against both
+     the dark grade and the bright sky behind the header without needing a
+     glow, and the only motion is a response to the pointer. */
   #pd-hero .pd-nav a.pd-cta{
-    margin-left:18px; padding:14px 34px; border-radius:999px;
-    border:1px solid rgba(var(--neon-rgb),.85); color:#fff; opacity:1;
-    font-weight:600; letter-spacing:.4px; text-shadow:none;
-    background:linear-gradient(180deg, rgba(var(--neon-rgb),.42), rgba(var(--neon-rgb),.16));
-    box-shadow:inset 0 0 14px rgba(var(--neon-rgb),.28);
-    transition:background .25s ease, transform .25s ease;
-  }
-  /* separate glow layer: only opacity animates, so it breathes smoothly
-     instead of stepping the way an animated box-shadow blur does */
-  #pd-hero .pd-nav a.pd-cta::before{
-    content:""; position:absolute; inset:-2px; border-radius:999px; pointer-events:none;
-    box-shadow:0 0 16px 2px rgba(var(--neon-rgb),.95), 0 0 44px 12px rgba(var(--neon-rgb),.6);
-    opacity:.12; transform:scale(.97);
-    animation:pd-pulse 3.4s ease-in-out infinite; will-change:opacity,transform;
+    display:inline-flex; align-items:center; gap:10px;
+    margin-left:18px; padding:13px 26px; border-radius:999px;
+    border:0; opacity:1;
+    background:#fff; color:#061426;
+    font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:16px;
+    letter-spacing:.1px; text-shadow:none;
+    box-shadow:0 10px 24px -12px rgba(0,0,0,.85);
+    transition:background .22s ease, color .22s ease,
+      transform .24s cubic-bezier(.3,.9,.3,1), box-shadow .24s ease;
   }
   #pd-hero .pd-nav a.pd-cta::after{display:none}
+  /* two arrows in a 16px window: the first leaves right as the second
+     arrives from the left, so the mark keeps travelling forward */
+  #pd-hero .pd-ctaArrow{
+    position:relative; display:block; width:16px; height:16px;
+    overflow:hidden; flex:0 0 auto;
+  }
+  #pd-hero .pd-ctaArrow svg{
+    position:absolute; top:0; left:0; width:16px; height:16px;
+    fill:none; stroke:currentColor; stroke-width:1.9;
+    stroke-linecap:round; stroke-linejoin:round;
+    transition:transform .36s cubic-bezier(.3,.9,.3,1);
+  }
+  #pd-hero .pd-ctaArrow svg + svg{transform:translateX(-100%)}
   #pd-hero .pd-nav a.pd-cta:hover{
-    background:linear-gradient(180deg, rgba(var(--neon-rgb),.8), rgba(var(--neon-rgb),.4));
-    transform:translateY(-1px);
+    background:var(--neon); color:#04101f;
+    transform:translateY(-2px);
+    box-shadow:0 16px 30px -14px rgba(0,0,0,.9);
   }
-  #pd-hero .pd-nav a.pd-cta:hover::before{animation-play-state:paused; opacity:.95}
-  @keyframes pd-pulse{
-    0%,100%{ opacity:.12; transform:scale(.97) }
-    50%    { opacity:1;   transform:scale(1.07) }
-  }
+  #pd-hero .pd-nav a.pd-cta:hover .pd-ctaArrow svg{transform:translateX(100%)}
+  #pd-hero .pd-nav a.pd-cta:hover .pd-ctaArrow svg + svg{transform:translateX(0)}
+  #pd-hero .pd-nav a.pd-cta:focus-visible{outline:2px solid #fff; outline-offset:3px}
   @media (prefers-reduced-motion:reduce){
-    #pd-hero .pd-nav a.pd-cta::before{animation:none; opacity:.55; transform:none}
+    #pd-hero .pd-nav a.pd-cta{transition:background .2s ease, color .2s ease}
+    #pd-hero .pd-nav a.pd-cta:hover{transform:none}
+    #pd-hero .pd-ctaArrow svg{transition:none}
   }
 
   /* burger (mobile only) */
@@ -504,7 +516,7 @@
       <span class="pd-hasMenu" data-menu="sectors"><a href="#">Sectors<i class="pd-chev"></i></a></span>
       <a href="#">Case Studies</a>
       <a href="#">Blog</a>
-      <a href="#" class="pd-cta">Contact</a>
+      <a href="#" class="pd-cta">Contact<span class="pd-ctaArrow" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2.5 8h10M8.8 4.3 12.5 8l-3.7 3.7"/></svg><svg viewBox="0 0 16 16"><path d="M2.5 8h10M8.8 4.3 12.5 8l-3.7 3.7"/></svg></span></a>
     </nav>
     <button class="pd-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="pd-mobileNav">
       <span></span><span></span><span></span>
