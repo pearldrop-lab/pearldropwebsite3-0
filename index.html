@@ -321,10 +321,27 @@
   #pd-hero .pd-svc:hover .pd-svcName{color:rgb(var(--g))}
 
   /* --- live-action: the film keeps running through the gate --- */
-  #pd-hero .pd-film rect{fill:rgb(var(--g)); stroke:none}
-  #pd-hero .pd-filmPlay{fill:rgb(var(--g)); stroke:none; opacity:.9}
-  #pd-hero .pd-mega.open .pd-film{animation:pd-reel 1.1s linear infinite}
-  @keyframes pd-reel{to{transform:translateX(-11px)}}
+  /* the arm hinges at the left corner of the board, not its own centre */
+  #pd-hero .pd-clapArm{transform-box:view-box; transform-origin:10px 27.5px}
+  #pd-hero .pd-clap{transform-box:view-box}
+  #pd-hero .pd-clapPivot{fill:rgb(var(--g)); stroke:none}
+  #pd-hero .pd-mega.open .pd-clapArm{animation:pd-clapArm 2.8s infinite}
+  #pd-hero .pd-mega.open .pd-clap{animation:pd-clapFloat 2.8s ease-in-out infinite}
+  /* lifts open, snaps shut, then a small rebound off the strike */
+  @keyframes pd-clapArm{
+    0%,18%  {transform:rotate(0deg); animation-timing-function:cubic-bezier(.25,.8,.4,1)}
+    32%     {transform:rotate(-34deg); animation-timing-function:cubic-bezier(.75,0,.9,.35)}
+    36%     {transform:rotate(0deg); animation-timing-function:cubic-bezier(.3,0,.4,1)}
+    41%     {transform:rotate(-6deg)}
+    46%,100%{transform:rotate(0deg)}
+  }
+  /* the clap kicks it off the ground, then it drifts up and settles back */
+  @keyframes pd-clapFloat{
+    0%,34% {transform:translateY(0)}
+    39%    {transform:translateY(-2.5px)}
+    62%    {transform:translateY(-6px)}
+    100%   {transform:translateY(0)}
+  }
 
   /* --- animation: squash and stretch, the first thing you learn --- */
   #pd-hero .pd-ball{fill:rgb(var(--g)); stroke:none; transform-box:fill-box; transform-origin:50% 100%}
@@ -370,7 +387,8 @@
   @keyframes pd-levels{from{transform:scaleY(.22)} to{transform:scaleY(1)}}
 
   @media (prefers-reduced-motion: reduce){
-    #pd-hero .pd-mega.open .pd-film,
+    #pd-hero .pd-mega.open .pd-clap,
+    #pd-hero .pd-mega.open .pd-clapArm,
     #pd-hero .pd-mega.open .pd-ball,
     #pd-hero .pd-mega.open .pd-ballShadow,
     #pd-hero .pd-mega.open .pd-iris,
@@ -625,7 +643,7 @@
       <div class="pd-megaBody">
         <div class="pd-cols">
         <a class="pd-svc" style="--g:0,220,255" href="#">
-          <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="pdClipFilm"><rect x="5" y="16" width="54" height="32" rx="5"/></clipPath></defs><rect x="5" y="16" width="54" height="32" rx="5"/><g clip-path="url(#pdClipFilm)"><g class="pd-film"><rect x="2" y="19" width="5" height="4" rx="1.2"/><rect x="13" y="19" width="5" height="4" rx="1.2"/><rect x="24" y="19" width="5" height="4" rx="1.2"/><rect x="35" y="19" width="5" height="4" rx="1.2"/><rect x="46" y="19" width="5" height="4" rx="1.2"/><rect x="57" y="19" width="5" height="4" rx="1.2"/><rect x="68" y="19" width="5" height="4" rx="1.2"/><rect x="2" y="41" width="5" height="4" rx="1.2"/><rect x="13" y="41" width="5" height="4" rx="1.2"/><rect x="24" y="41" width="5" height="4" rx="1.2"/><rect x="35" y="41" width="5" height="4" rx="1.2"/><rect x="46" y="41" width="5" height="4" rx="1.2"/><rect x="57" y="41" width="5" height="4" rx="1.2"/><rect x="68" y="41" width="5" height="4" rx="1.2"/></g></g><path class="pd-filmPlay" d="M28 27.5 39.5 32 28 36.5z"/></svg></span>
+          <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="pdClipClap"><rect x="7" y="16.5" width="50" height="11" rx="2.5"/></clipPath></defs><g class="pd-clap"><rect x="8" y="28.5" width="48" height="25" rx="4"/><path d="M16 38h17M16 45.5h25"/><g class="pd-clapArm"><rect x="8" y="16.5" width="48" height="11" rx="2.5"/><g clip-path="url(#pdClipClap)"><path d="M18 28.5 24 15.5M28 28.5 34 15.5M38 28.5 44 15.5M48 28.5 54 15.5"/></g></g><circle class="pd-clapPivot" cx="10.5" cy="27.5" r="1.6"/></g></svg></span>
           <span class="pd-svcName">Live-Action Video</span>
           <span class="pd-colTag">Real people, real places, real good.</span>
         </a>
