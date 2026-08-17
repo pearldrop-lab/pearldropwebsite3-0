@@ -263,11 +263,6 @@
   }
 
   #pd-hero .pd-list{list-style:none; display:grid; gap:2px}
-  /* the long live-action list flows into two columns without gaps; the
-     gap must clear the hover bar's left overhang so the second column's
-     highlight never reaches into the first column's text */
-  #pd-hero .pd-list.split{display:block; columns:2; column-gap:clamp(26px,2vw,38px)}
-  #pd-hero .pd-list.split li{break-inside:avoid}
   /* The label sits flush with the heading's icon: the negative margin and
      matching padding cancel out, so text starts at the column edge while
      the hover bar and its droplet hang out to the left of everything. */
@@ -289,6 +284,102 @@
   }
   #pd-hero .pd-list a:hover{color:#fff; background:rgba(var(--g),.1)}
   #pd-hero .pd-list a:hover::before{opacity:1; transform:none}
+  /* == Services: four doors, each with an icon that keeps moving =========
+     No sub-items - the overview pages carry the catalogue. Every animation
+     is scoped to .pd-mega.open, so the icons run only while the menu is
+     showing and cost nothing the rest of the time. */
+  #pd-hero .pd-svc{
+    display:flex; flex-direction:column; align-items:flex-start; gap:20px;
+    width:clamp(196px,15.5vw,232px); text-decoration:none;
+  }
+  /* the name sits close to its tagline, not adrift between the two */
+  #pd-hero .pd-svcName + .pd-colTag{margin-top:-12px}
+  #pd-hero .pd-svcIcon{
+    position:relative; width:128px; height:128px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(120% 120% at 32% 26%, rgba(var(--g),.26), rgba(var(--g),.04) 66%);
+    border:1px solid rgba(var(--g),.34);
+    transition:transform .35s cubic-bezier(.3,1.35,.4,1), box-shadow .3s ease, border-color .3s ease;
+  }
+  /* the logo's off-centre ring, hung around the pearl */
+  #pd-hero .pd-svcIcon::before{
+    content:""; position:absolute; inset:-11px -6px -6px -11px; border-radius:50%;
+    border:1.5px solid rgba(var(--g),.34); border-top-color:transparent;
+    transition:transform .6s cubic-bezier(.35,0,.2,1);
+  }
+  #pd-hero .pd-svc:hover .pd-svcIcon{
+    transform:translateY(-6px) scale(1.05);
+    border-color:rgb(var(--g));
+    box-shadow:0 22px 44px -16px rgba(var(--g),.9);
+  }
+  #pd-hero .pd-svc:hover .pd-svcIcon::before{transform:rotate(210deg)}
+  #pd-hero .pd-svcIcon svg{
+    width:66px; height:66px; overflow:visible;
+    fill:none; stroke:rgb(var(--g));
+    stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+  }
+  #pd-hero .pd-svcName{
+    font-family:'Space Grotesk',sans-serif; font-weight:700;
+    font-size:clamp(19px,1.55vw,23px); line-height:1.15; letter-spacing:-.5px;
+    color:#fff;
+    transition:color .2s ease;
+  }
+  #pd-hero .pd-svc:hover .pd-svcName{color:rgb(var(--g))}
+
+  /* --- live-action: the film keeps running through the gate --- */
+  #pd-hero .pd-film rect{fill:rgb(var(--g)); stroke:none}
+  #pd-hero .pd-filmPlay{fill:rgb(var(--g)); stroke:none; opacity:.9}
+  #pd-hero .pd-mega.open .pd-film{animation:pd-reel 1.1s linear infinite}
+  @keyframes pd-reel{to{transform:translateX(-11px)}}
+
+  /* --- animation: squash and stretch, the first thing you learn --- */
+  #pd-hero .pd-ball{fill:rgb(var(--g)); stroke:none; transform-box:fill-box; transform-origin:50% 100%}
+  #pd-hero .pd-ballShadow{fill:rgb(var(--g)); stroke:none; opacity:.3; transform-box:fill-box; transform-origin:50% 50%}
+  #pd-hero .pd-mega.open .pd-ball{animation:pd-bounce 1.15s infinite}
+  #pd-hero .pd-mega.open .pd-ballShadow{animation:pd-bounceShadow 1.15s infinite}
+  @keyframes pd-bounce{
+    0%  {transform:translateY(-7px) scale(1,1); animation-timing-function:cubic-bezier(.36,0,.9,.55)}
+    42% {transform:translateY(13px) scale(1,1)}
+    50% {transform:translateY(13px) scale(1.3,.7); animation-timing-function:cubic-bezier(.1,.45,.6,1)}
+    58% {transform:translateY(13px) scale(1,1)}
+    100%{transform:translateY(-7px) scale(1,1)}
+  }
+  @keyframes pd-bounceShadow{
+    0%,100%{transform:scaleX(.62); opacity:.18}
+    50%    {transform:scaleX(1.12); opacity:.5}
+  }
+
+  /* --- photography: the iris breathes and the blades turn --- */
+  #pd-hero .pd-iris{transform-box:fill-box; transform-origin:50% 50%}
+  #pd-hero .pd-irisHole{transform-box:fill-box; transform-origin:50% 50%}
+  #pd-hero .pd-mega.open .pd-iris{animation:pd-spin 9s linear infinite}
+  #pd-hero .pd-mega.open .pd-irisHole{animation:pd-stop 3.2s ease-in-out infinite}
+  #pd-hero .pd-mega.open .pd-flash{animation:pd-twinkle 3.2s ease-in-out infinite}
+  @keyframes pd-spin{to{transform:rotate(360deg)}}
+  @keyframes pd-stop{0%,100%{transform:scale(1)} 50%{transform:scale(.45)}}
+  @keyframes pd-twinkle{0%,72%,100%{opacity:0; transform:scale(.5)} 82%{opacity:1; transform:scale(1)}}
+
+  /* --- post-production: levels moving on the timeline --- */
+  #pd-hero .pd-bars rect{fill:rgb(var(--g)); stroke:none; transform-box:fill-box; transform-origin:50% 50%}
+  #pd-hero .pd-mega.open .pd-bars rect{animation:pd-levels 1.05s ease-in-out infinite alternate}
+  #pd-hero .pd-mega.open .pd-bars rect:nth-child(1){animation-delay:-.10s; animation-duration:.95s}
+  #pd-hero .pd-mega.open .pd-bars rect:nth-child(2){animation-delay:-.45s; animation-duration:1.25s}
+  #pd-hero .pd-mega.open .pd-bars rect:nth-child(3){animation-delay:-.75s; animation-duration:.85s}
+  #pd-hero .pd-mega.open .pd-bars rect:nth-child(4){animation-delay:-.30s; animation-duration:1.15s}
+  #pd-hero .pd-mega.open .pd-bars rect:nth-child(5){animation-delay:-.60s; animation-duration:1s}
+  @keyframes pd-levels{from{transform:scaleY(.22)} to{transform:scaleY(1)}}
+
+  @media (prefers-reduced-motion: reduce){
+    #pd-hero .pd-mega.open .pd-film,
+    #pd-hero .pd-mega.open .pd-ball,
+    #pd-hero .pd-mega.open .pd-ballShadow,
+    #pd-hero .pd-mega.open .pd-iris,
+    #pd-hero .pd-mega.open .pd-irisHole,
+    #pd-hero .pd-mega.open .pd-flash,
+    #pd-hero .pd-mega.open .pd-bars rect{animation:none}
+    #pd-hero .pd-mega.open .pd-flash{opacity:1}
+  }
+
   /* sectors: three big icon blocks rather than a short list */
   /* a sector block is itself a column, so .pd-cols handles its entrance */
   #pd-hero .pd-sector{
@@ -530,56 +621,26 @@
     <div class="pd-megaInner">
       <div class="pd-megaBody">
         <div class="pd-cols">
-        <div class="pd-col">
-          <a class="pd-colTitle" style="--g:0,220,255" href="#"><svg viewBox="0 0 24 24"><path d="M2.5 5h19v14h-19z"/><path d="M7 5v14M17 5v14M2.5 12h19M2.5 8.5h4.5M2.5 15.5h4.5M17 8.5h4.5M17 15.5h4.5"/></svg>live-action</a>
-          <p class="pd-colTag">Real people, real places, real good.</p>
-          <ul class="pd-list split">
-            <li><a style="--g:0,220,255" href="#">Activations and Launches</a></li>
-            <li><a style="--g:0,220,255" href="#">Automotive</a></li>
-            <li><a style="--g:0,220,255" href="#">Aerial/Drone</a></li>
-            <li><a style="--g:0,220,255" href="#">Case Studies</a></li>
-            <li><a style="--g:0,220,255" href="#">Conferences and Ceremonies</a></li>
-            <li><a style="--g:0,220,255" href="#">Charity</a></li>
-            <li><a style="--g:0,220,255" href="#">Company Profiles</a></li>
-            <li><a style="--g:0,220,255" href="#">Internal Communications</a></li>
-            <li><a style="--g:0,220,255" href="#">Landing Pages</a></li>
-            <li><a style="--g:0,220,255" href="#">Live Events</a></li>
-            <li><a style="--g:0,220,255" href="#">Live-streaming</a></li>
-            <li><a style="--g:0,220,255" href="#">Product</a></li>
-            <li><a style="--g:0,220,255" href="#">Promotional</a></li>
-            <li><a style="--g:0,220,255" href="#">Training</a></li>
-          </ul>
-        </div>
-        <div class="pd-col">
-          <a class="pd-colTitle" style="--g:0,160,255" href="#"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="14" height="14" rx="3"/><path d="m8.5 8.5 4.5 2.5-4.5 2.5z"/><path d="M20 8.5v7M22.5 10.5v3"/></svg>2d animation</a>
-          <p class="pd-colTag">For when reality needs a rewrite.</p>
-          <ul class="pd-list">
-            <li><a style="--g:0,160,255" href="#">Explainer</a></li>
-            <li><a style="--g:0,160,255" href="#">Character</a></li>
-          </ul>
-        </div>
-        <div class="pd-col">
-          <a class="pd-colTitle" style="--g:48,216,240" href="#"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h2.2l1.2-2h6.8l1.2 2H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.6"/></svg>photography</a>
-          <p class="pd-colTag">Stills that stop the scroll.</p>
-          <ul class="pd-list">
-            <li><a style="--g:48,216,240" href="#">Architectural</a></li>
-            <li><a style="--g:48,216,240" href="#">Automotive</a></li>
-            <li><a style="--g:48,216,240" href="#">Headshots</a></li>
-            <li><a style="--g:48,216,240" href="#">Lifestyle</a></li>
-            <li><a style="--g:48,216,240" href="#">Live-event</a></li>
-          </ul>
-        </div>
-        <div class="pd-col">
-          <a class="pd-colTitle" style="--g:110,150,255" href="#"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2.2"/><circle cx="15" cy="12" r="2.2"/><circle cx="8" cy="18" r="2.2"/></svg>post-production</a>
-          <p class="pd-colTag">Where it all comes together.</p>
-          <ul class="pd-list">
-            <li><a style="--g:110,150,255" href="#">Editing</a></li>
-            <li><a style="--g:110,150,255" href="#">VFX</a></li>
-            <li><a style="--g:110,150,255" href="#">Subtitling and Transcription</a></li>
-            <li><a style="--g:110,150,255" href="#">British Sign Language (BSL)</a></li>
-            <li><a style="--g:110,150,255" href="#">AI Video Production</a></li>
-          </ul>
-        </div>
+        <a class="pd-svc" style="--g:0,220,255" href="#">
+          <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="pdClipFilm"><rect x="5" y="16" width="54" height="32" rx="5"/></clipPath></defs><rect x="5" y="16" width="54" height="32" rx="5"/><g clip-path="url(#pdClipFilm)"><g class="pd-film"><rect x="2" y="19" width="5" height="4" rx="1.2"/><rect x="13" y="19" width="5" height="4" rx="1.2"/><rect x="24" y="19" width="5" height="4" rx="1.2"/><rect x="35" y="19" width="5" height="4" rx="1.2"/><rect x="46" y="19" width="5" height="4" rx="1.2"/><rect x="57" y="19" width="5" height="4" rx="1.2"/><rect x="68" y="19" width="5" height="4" rx="1.2"/><rect x="2" y="41" width="5" height="4" rx="1.2"/><rect x="13" y="41" width="5" height="4" rx="1.2"/><rect x="24" y="41" width="5" height="4" rx="1.2"/><rect x="35" y="41" width="5" height="4" rx="1.2"/><rect x="46" y="41" width="5" height="4" rx="1.2"/><rect x="57" y="41" width="5" height="4" rx="1.2"/><rect x="68" y="41" width="5" height="4" rx="1.2"/></g></g><path class="pd-filmPlay" d="M28 27.5 39.5 32 28 36.5z"/></svg></span>
+          <span class="pd-svcName">Live-Action Video</span>
+          <span class="pd-colTag">Real people, real places, real good.</span>
+        </a>
+        <a class="pd-svc" style="--g:0,160,255" href="#">
+          <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M13 51h38"/><ellipse class="pd-ballShadow" cx="32" cy="51" rx="9" ry="2.2"/><circle class="pd-ball" cx="32" cy="29" r="9"/></svg></span>
+          <span class="pd-svcName">Animation</span>
+          <span class="pd-colTag">For when reality needs a rewrite.</span>
+        </a>
+        <a class="pd-svc" style="--g:48,216,240" href="#">
+          <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="21"/><g class="pd-iris"><path d="M32 12v10"/><path d="M32 12v10" transform="rotate(60 32 32)"/><path d="M32 12v10" transform="rotate(120 32 32)"/><path d="M32 12v10" transform="rotate(180 32 32)"/><path d="M32 12v10" transform="rotate(240 32 32)"/><path d="M32 12v10" transform="rotate(300 32 32)"/></g><circle class="pd-irisHole" cx="32" cy="32" r="8.5"/><path class="pd-flash" d="M52 12v7M48.5 15.5h7"/></svg></span>
+          <span class="pd-svcName">Photography</span>
+          <span class="pd-colTag">Stills that stop the scroll.</span>
+        </a>
+        <a class="pd-svc" style="--g:110,150,255" href="#">
+          <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><g class="pd-bars"><rect x="9" y="17" width="6" height="30" rx="3"/><rect x="19" y="17" width="6" height="30" rx="3"/><rect x="29" y="17" width="6" height="30" rx="3"/><rect x="39" y="17" width="6" height="30" rx="3"/><rect x="49" y="17" width="6" height="30" rx="3"/></g></svg></span>
+          <span class="pd-svcName">Post-Production</span>
+          <span class="pd-colTag">Where it all comes together.</span>
+        </a>
         </div>
       </div>
     </div>
@@ -706,8 +767,8 @@
     <div class="pd-mRow"><a href="#">Services</a><button class="pd-mToggle" type="button" aria-label="Toggle Services submenu"></button></div>
     <div class="pd-mSub"><div class="pd-mSubInner">
       <!-- overview pages only: the full service lists live on those pages -->
-      <a class="pd-mHead" href="#">Live-Action</a>
-      <a class="pd-mHead" href="#">2D Animation</a>
+      <a class="pd-mHead" href="#">Live-Action Video</a>
+      <a class="pd-mHead" href="#">Animation</a>
       <a class="pd-mHead" href="#">Photography</a>
       <a class="pd-mHead" href="#">Post-Production</a>
     </div></div>
