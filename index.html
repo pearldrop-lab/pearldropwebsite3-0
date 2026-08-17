@@ -308,7 +308,7 @@
   }
   #pd-hero .pd-svc:hover .pd-svcIcon::before{transform:rotate(210deg)}
   #pd-hero .pd-svcIcon svg{
-    width:66px; height:66px; overflow:visible;
+    width:60px; height:60px; overflow:visible;
     fill:none; stroke:rgb(var(--g));
     stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
   }
@@ -320,27 +320,35 @@
   }
   #pd-hero .pd-svc:hover .pd-svcName{color:rgb(var(--g))}
 
-  /* --- live-action: the film keeps running through the gate --- */
-  /* the arm hinges at the left corner of the board, not its own centre */
+  /* --- live-action: the board climbs, claps at the top, drifts back ---
+     The board swings up about its own bottom-left corner while it rises,
+     the arm opens on the way, the clap lands at the peak, and the arm's
+     descent is what carries the board back down. */
+  #pd-hero .pd-clap{transform-box:view-box; transform-origin:8px 53.5px}
   #pd-hero .pd-clapArm{transform-box:view-box; transform-origin:10px 27.5px}
-  #pd-hero .pd-clap{transform-box:view-box}
   #pd-hero .pd-clapPivot{fill:rgb(var(--g)); stroke:none}
-  #pd-hero .pd-mega.open .pd-clapArm{animation:pd-clapArm 2.8s infinite}
-  #pd-hero .pd-mega.open .pd-clap{animation:pd-clapFloat 2.8s ease-in-out infinite}
-  /* lifts open, snaps shut, then a small rebound off the strike */
-  @keyframes pd-clapArm{
-    0%,18%  {transform:rotate(0deg); animation-timing-function:cubic-bezier(.25,.8,.4,1)}
-    32%     {transform:rotate(-34deg); animation-timing-function:cubic-bezier(.75,0,.9,.35)}
-    36%     {transform:rotate(0deg); animation-timing-function:cubic-bezier(.3,0,.4,1)}
-    41%     {transform:rotate(-6deg)}
-    46%,100%{transform:rotate(0deg)}
-  }
-  /* the clap kicks it off the ground, then it drifts up and settles back */
+  #pd-hero .pd-mega.open .pd-clap{animation:pd-clapFloat 3.2s infinite}
+  #pd-hero .pd-mega.open .pd-clapArm{animation:pd-clapArm 3.2s infinite}
   @keyframes pd-clapFloat{
-    0%,34% {transform:translateY(0)}
-    39%    {transform:translateY(-2.5px)}
-    62%    {transform:translateY(-6px)}
-    100%   {transform:translateY(0)}
+    /* climb: eased out so it slows as it reaches the top */
+    0%      {transform:translateY(0) rotate(0deg);
+             animation-timing-function:cubic-bezier(.3,.65,.35,1)}
+    44%     {transform:translateY(-5px) rotate(-7deg)}
+    /* hangs at the peak just long enough for the clap to land */
+    54%     {transform:translateY(-5px) rotate(-7deg);
+             animation-timing-function:cubic-bezier(.45,.02,.35,1)}
+    90%     {transform:translateY(0) rotate(0deg)}
+    100%    {transform:translateY(0) rotate(0deg)}
+  }
+  @keyframes pd-clapArm{
+    /* opens as the board climbs */
+    0%      {transform:rotate(0deg); animation-timing-function:cubic-bezier(.3,.65,.35,1)}
+    42%     {transform:rotate(-30deg)}
+    48%     {transform:rotate(-30deg); animation-timing-function:cubic-bezier(.8,0,.9,.4)}
+    /* the clap, at the height of the climb */
+    54%     {transform:rotate(0deg); animation-timing-function:cubic-bezier(.3,0,.4,1)}
+    59%     {transform:rotate(-6deg)}
+    66%,100%{transform:rotate(0deg)}
   }
 
   /* --- animation: squash and stretch, the first thing you learn --- */
