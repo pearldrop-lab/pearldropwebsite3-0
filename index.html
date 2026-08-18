@@ -218,11 +218,10 @@
   @media (max-width:1400px){
     #pd-hero .pd-cols{--colgap:clamp(22px,2.6vw,40px)}
     #pd-hero .pd-megaBody{padding-left:clamp(18px,2.4vw,40px); padding-right:clamp(18px,2.4vw,40px)}
-    #pd-hero .pd-list.split{column-gap:26px}
   }
   /* last resort on a short window: scroll inside the block, with room at
      the top so the clapperboard's climb is never clipped */
-  @media (max-height:720px){
+  @media (max-height:800px){
     #pd-hero .pd-cols{
       max-height:calc(100vh - 180px); overflow-y:auto; overflow-x:hidden;
       padding-top:14px; margin-top:-14px;
@@ -247,7 +246,7 @@
   #pd-hero .pd-colTitle{
     --g:var(--neon-rgb);
     position:relative; display:flex; align-items:center; gap:11px;
-    padding-bottom:13px; margin-bottom:8px;
+    padding-bottom:11px; margin-bottom:6px;
     font-family:'Space Grotesk',sans-serif; font-weight:700;
     font-size:clamp(20px,1.75vw,26px); line-height:1; letter-spacing:-.5px;
     white-space:nowrap;
@@ -268,21 +267,10 @@
   #pd-hero .pd-mega.open .pd-colHead:hover .pd-colTitle::after{width:100%; transition-delay:0s}
   #pd-hero .pd-colTag{
     font-size:12.5px; line-height:1.35; color:var(--muted); font-style:italic; opacity:.85;
-    margin-bottom:14px;
+    margin-bottom:10px;
   }
 
   #pd-hero .pd-list{list-style:none; display:grid; gap:2px}
-  /* the long live-action list flows into two columns without gaps; the gap
-     must clear the hover bar's left overhang so the second column's
-     highlight never reaches into the first column's text */
-  #pd-hero .pd-list.split{display:block; columns:2; column-gap:clamp(26px,2vw,38px)}
-  #pd-hero .pd-list.split li{break-inside:avoid}
-  /* narrower still: rather than wrap and orphan a column onto its own row,
-     run live-action as a single column - it costs height but keeps all
-     four services side by side with nothing below the fold */
-  @media (max-width:1240px){
-    #pd-hero .pd-list.split{columns:1}
-  }
   /* The label sits flush with the heading's icon: the negative margin and
      matching padding cancel out, so text starts at the column edge while
      the hover bar and its droplet hang out to the left of everything. */
@@ -290,8 +278,8 @@
     --g:var(--neon-rgb); --ov:18px;
     position:relative; display:block; text-decoration:none;
     margin-left:calc(var(--ov) * -1);
-    padding:6.5px 8px 6.5px var(--ov); border-radius:8px;
-    font-size:15px; line-height:1.35; color:var(--ink);
+    padding:4.5px 8px 4.5px var(--ov); border-radius:8px;
+    font-size:15px; line-height:1.3; color:var(--ink);
     transition:color .18s ease, background .18s ease;
   }
   /* a droplet lands beside whatever you're about to click */
@@ -310,11 +298,11 @@
      showing and cost nothing the rest of the time. */
   /* the animated pearl heads its column, with the service list beneath */
   #pd-hero .pd-colHead{
-    display:flex; flex-direction:column; align-items:flex-start; gap:15px;
+    display:flex; flex-direction:column; align-items:flex-start; gap:12px;
     text-decoration:none;
   }
   #pd-hero .pd-svcIcon{
-    position:relative; width:78px; height:78px; border-radius:50%;
+    position:relative; width:68px; height:68px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
     background:radial-gradient(120% 120% at 32% 26%, rgba(var(--g),.26), rgba(var(--g),.04) 66%);
     border:1px solid rgba(var(--g),.34);
@@ -333,7 +321,7 @@
   }
   #pd-hero .pd-colHead:hover .pd-svcIcon::before{transform:rotate(210deg)}
   #pd-hero .pd-svcIcon svg{
-    width:40px; height:40px; overflow:visible;
+    width:36px; height:36px; overflow:visible;
     fill:none; stroke:rgb(var(--g));
     stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
   }
@@ -674,7 +662,7 @@
             <span class="pd-colTitle">Live-Action Video</span>
           </a>
           <p class="pd-colTag">Real people, real places, real good.</p>
-          <ul class="pd-list split">
+          <ul class="pd-list">
             <li><a style="--g:0,220,255" href="#">Activations and Launches</a></li>
             <li><a style="--g:0,220,255" href="#">Automotive</a></li>
             <li><a style="--g:0,220,255" href="#">Aerial/Drone</a></li>
