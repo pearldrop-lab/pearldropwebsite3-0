@@ -383,10 +383,14 @@
   /* --- photography: the iris breathes and the blades turn --- */
   /* the glint travels round the barrel, so it turns about the lens centre
      rather than its own bounding box */
+  #pd-hero .pd-cam{transform-box:view-box; transform-origin:32px 40px}
+  #pd-hero .pd-lens{transform-box:view-box; transform-origin:32px 38px}
   #pd-hero .pd-iris{transform-box:view-box; transform-origin:32px 38px}
   #pd-hero .pd-irisHole{transform-box:fill-box; transform-origin:50% 50%}
   #pd-hero .pd-flashLamp{fill:rgb(var(--g)); stroke:none}
   #pd-hero .pd-flash{opacity:0}
+  #pd-hero .pd-mega.open .pd-cam{animation:pd-camBody 3.2s infinite}
+  #pd-hero .pd-mega.open .pd-lens{animation:pd-camFocus 3.2s ease-in-out infinite}
   #pd-hero .pd-mega.open .pd-iris{animation:pd-spin 7s linear infinite}
   #pd-hero .pd-mega.open .pd-irisHole{animation:pd-stop 3.2s ease-in-out infinite}
   /* fires at the moment the aperture is stopped down - both run on the
@@ -395,6 +399,24 @@
   @keyframes pd-spin{to{transform:rotate(360deg)}}
   @keyframes pd-stop{0%,100%{transform:scale(1)} 50%{transform:scale(.42)}}
   @keyframes pd-twinkle{0%,44%,100%{opacity:0} 48%,54%{opacity:1} 64%{opacity:0}}
+  /* raised, held steady, then kicked back by the flash and settled */
+  @keyframes pd-camBody{
+    0%   {transform:translateY(0) rotate(0deg); animation-timing-function:cubic-bezier(.35,.7,.4,1)}
+    30%  {transform:translateY(-2px) rotate(1.6deg)}
+    46%  {transform:translateY(-3px) rotate(0deg); animation-timing-function:cubic-bezier(.6,0,.75,.4)}
+    52%  {transform:translateY(-7px) rotate(-4.5deg); animation-timing-function:cubic-bezier(.2,.6,.35,1)}
+    64%  {transform:translateY(-1px) rotate(.8deg)}
+    80%  {transform:translateY(0) rotate(0deg)}
+    100% {transform:translateY(0) rotate(0deg)}
+  }
+  /* the barrel racks in as it finds focus, and relaxes after the shot */
+  @keyframes pd-camFocus{
+    0%,14% {transform:scale(1)}
+    36%    {transform:scale(1.14)}
+    46%    {transform:scale(1.06)}
+    56%    {transform:scale(1)}
+    100%   {transform:scale(1)}
+  }
 
   /* --- post-production: levels moving on the timeline --- */
   #pd-hero .pd-bars rect{fill:rgb(var(--g)); stroke:none; transform-box:fill-box; transform-origin:50% 50%}
@@ -411,6 +433,8 @@
     #pd-hero .pd-mega.open .pd-clapArm,
     #pd-hero .pd-mega.open .pd-ball,
     #pd-hero .pd-mega.open .pd-ballShadow,
+    #pd-hero .pd-mega.open .pd-cam,
+    #pd-hero .pd-mega.open .pd-lens,
     #pd-hero .pd-mega.open .pd-iris,
     #pd-hero .pd-mega.open .pd-irisHole,
     #pd-hero .pd-mega.open .pd-flash,
@@ -695,7 +719,7 @@
         </div>
         <div class="pd-col">
           <a class="pd-colHead" style="--g:48,216,240" href="#">
-            <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M23.5 22.5 27 16.5h10l3.5 6"/><rect x="5" y="22.5" width="54" height="30" rx="6"/><rect x="43.5" y="16.5" width="8" height="5" rx="1.7"/><g class="pd-flash"><rect class="pd-flashLamp" x="44.8" y="17.8" width="5.4" height="2.4" rx="1"/><path d="M47.5 12.6V9.6M43.2 13.9l-2.1-2.2M51.8 13.9l2.1-2.2"/></g><circle cx="32" cy="38" r="11"/><g class="pd-iris"><path d="M32 30.4a7.6 7.6 0 0 1 5.4 2.2"/></g><circle class="pd-irisHole" cx="32" cy="38" r="5.2"/></svg></span>
+            <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><g class="pd-cam"><path d="M23.5 22.5 27 16.5h10l3.5 6"/><rect x="5" y="22.5" width="54" height="30" rx="6"/><rect x="43.5" y="16.5" width="8" height="5" rx="1.7"/><g class="pd-flash"><rect class="pd-flashLamp" x="44.8" y="17.8" width="5.4" height="2.4" rx="1"/><path d="M47.5 12.6V9.6M43.2 13.9l-2.1-2.2M51.8 13.9l2.1-2.2"/></g><g class="pd-lens"><circle cx="32" cy="38" r="11"/><g class="pd-iris"><path d="M32 30.4a7.6 7.6 0 0 1 5.4 2.2"/></g><circle class="pd-irisHole" cx="32" cy="38" r="5.2"/></g></g></svg></span>
             <span class="pd-colTitle">Photography</span>
           </a>
           <p class="pd-colTag">Stills that stop the scroll.</p>
