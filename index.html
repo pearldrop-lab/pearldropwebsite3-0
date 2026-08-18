@@ -213,6 +213,21 @@
       rgba(255,255,255,.14) 88%, rgba(255,255,255,0));
   }
   #pd-hero .pd-cols > *.pd-rowStart::before{display:none}
+  /* the four columns are only a few px too wide to hold one row on a
+     1280 screen, so tighten the gutters rather than let them wrap */
+  @media (max-width:1400px){
+    #pd-hero .pd-cols{--colgap:clamp(22px,2.6vw,40px)}
+    #pd-hero .pd-megaBody{padding-left:clamp(18px,2.4vw,40px); padding-right:clamp(18px,2.4vw,40px)}
+    #pd-hero .pd-list.split{column-gap:26px}
+  }
+  /* last resort on a short window: scroll inside the block, with room at
+     the top so the clapperboard's climb is never clipped */
+  @media (max-height:720px){
+    #pd-hero .pd-cols{
+      max-height:calc(100vh - 180px); overflow-y:auto; overflow-x:hidden;
+      padding-top:14px; margin-top:-14px;
+    }
+  }
   /* whole columns arrive one at a time, left to right - fast, but far
      enough apart that you register each one landing. The first delay
      clears the bar's own slide (.38s) so nothing is already on screen
@@ -250,13 +265,24 @@
     transition:width .4s cubic-bezier(.3,0,.2,1);
   }
   #pd-hero .pd-mega.open .pd-colTitle::after{width:34px; transition-delay:calc(var(--d,0s) + .18s)}
-  #pd-hero .pd-mega.open .pd-colTitle:hover::after{width:100%; transition-delay:0s}
+  #pd-hero .pd-mega.open .pd-colHead:hover .pd-colTitle::after{width:100%; transition-delay:0s}
   #pd-hero .pd-colTag{
     font-size:12.5px; line-height:1.35; color:var(--muted); font-style:italic; opacity:.85;
     margin-bottom:14px;
   }
 
   #pd-hero .pd-list{list-style:none; display:grid; gap:2px}
+  /* the long live-action list flows into two columns without gaps; the gap
+     must clear the hover bar's left overhang so the second column's
+     highlight never reaches into the first column's text */
+  #pd-hero .pd-list.split{display:block; columns:2; column-gap:clamp(26px,2vw,38px)}
+  #pd-hero .pd-list.split li{break-inside:avoid}
+  /* narrower still: rather than wrap and orphan a column onto its own row,
+     run live-action as a single column - it costs height but keeps all
+     four services side by side with nothing below the fold */
+  @media (max-width:1240px){
+    #pd-hero .pd-list.split{columns:1}
+  }
   /* The label sits flush with the heading's icon: the negative margin and
      matching padding cancel out, so text starts at the column edge while
      the hover bar and its droplet hang out to the left of everything. */
@@ -282,14 +308,13 @@
      No sub-items - the overview pages carry the catalogue. Every animation
      is scoped to .pd-mega.open, so the icons run only while the menu is
      showing and cost nothing the rest of the time. */
-  #pd-hero .pd-svc{
-    display:flex; flex-direction:column; align-items:flex-start; gap:20px;
-    width:clamp(196px,15.5vw,232px); text-decoration:none;
+  /* the animated pearl heads its column, with the service list beneath */
+  #pd-hero .pd-colHead{
+    display:flex; flex-direction:column; align-items:flex-start; gap:15px;
+    text-decoration:none;
   }
-  /* the name sits close to its tagline, not adrift between the two */
-  #pd-hero .pd-svcName + .pd-colTag{margin-top:-12px}
   #pd-hero .pd-svcIcon{
-    position:relative; width:128px; height:128px; border-radius:50%;
+    position:relative; width:78px; height:78px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
     background:radial-gradient(120% 120% at 32% 26%, rgba(var(--g),.26), rgba(var(--g),.04) 66%);
     border:1px solid rgba(var(--g),.34);
@@ -297,28 +322,21 @@
   }
   /* the logo's off-centre ring, hung around the pearl */
   #pd-hero .pd-svcIcon::before{
-    content:""; position:absolute; inset:-11px -6px -6px -11px; border-radius:50%;
+    content:""; position:absolute; inset:-8px -4px -4px -8px; border-radius:50%;
     border:1.5px solid rgba(var(--g),.34); border-top-color:transparent;
     transition:transform .6s cubic-bezier(.35,0,.2,1);
   }
-  #pd-hero .pd-svc:hover .pd-svcIcon{
-    transform:translateY(-6px) scale(1.05);
+  #pd-hero .pd-colHead:hover .pd-svcIcon{
+    transform:translateY(-4px) scale(1.05);
     border-color:rgb(var(--g));
-    box-shadow:0 22px 44px -16px rgba(var(--g),.9);
+    box-shadow:0 16px 32px -12px rgba(var(--g),.9);
   }
-  #pd-hero .pd-svc:hover .pd-svcIcon::before{transform:rotate(210deg)}
+  #pd-hero .pd-colHead:hover .pd-svcIcon::before{transform:rotate(210deg)}
   #pd-hero .pd-svcIcon svg{
-    width:60px; height:60px; overflow:visible;
+    width:40px; height:40px; overflow:visible;
     fill:none; stroke:rgb(var(--g));
     stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
   }
-  #pd-hero .pd-svcName{
-    font-family:'Space Grotesk',sans-serif; font-weight:700;
-    font-size:clamp(19px,1.55vw,23px); line-height:1.15; letter-spacing:-.5px;
-    color:#fff;
-    transition:color .2s ease;
-  }
-  #pd-hero .pd-svc:hover .pd-svcName{color:rgb(var(--g))}
 
   /* --- live-action: the board climbs, claps at the top, drifts back ---
      The board swings up about its own bottom-left corner while it rises,
@@ -650,26 +668,68 @@
     <div class="pd-megaInner">
       <div class="pd-megaBody">
         <div class="pd-cols">
-        <a class="pd-svc" style="--g:0,220,255" href="#">
-          <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="pdClipClap"><rect x="7" y="16.5" width="50" height="11" rx="2.5"/></clipPath></defs><g class="pd-clap"><rect x="8" y="28.5" width="48" height="25" rx="4"/><path d="M16 38h17M16 45.5h25"/><g class="pd-clapArm"><rect x="8" y="16.5" width="48" height="11" rx="2.5"/><g clip-path="url(#pdClipClap)"><path d="M18 28.5 24 15.5M28 28.5 34 15.5M38 28.5 44 15.5M48 28.5 54 15.5"/></g></g><circle class="pd-clapPivot" cx="10.5" cy="27.5" r="1.6"/></g></svg></span>
-          <span class="pd-svcName">Live-Action Video</span>
-          <span class="pd-colTag">Real people, real places, real good.</span>
-        </a>
-        <a class="pd-svc" style="--g:0,160,255" href="#">
-          <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M13 51h38"/><ellipse class="pd-ballShadow" cx="32" cy="51" rx="9" ry="2.2"/><circle class="pd-ball" cx="32" cy="29" r="9"/></svg></span>
-          <span class="pd-svcName">Animation</span>
-          <span class="pd-colTag">For when reality needs a rewrite.</span>
-        </a>
-        <a class="pd-svc" style="--g:48,216,240" href="#">
-          <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M23.5 22.5 27 16.5h10l3.5 6"/><rect x="5" y="22.5" width="54" height="30" rx="6"/><rect x="43.5" y="16.5" width="8" height="5" rx="1.7"/><g class="pd-flash"><rect class="pd-flashLamp" x="44.8" y="17.8" width="5.4" height="2.4" rx="1"/><path d="M47.5 12.6V9.6M43.2 13.9l-2.1-2.2M51.8 13.9l2.1-2.2"/></g><circle cx="32" cy="38" r="11"/><g class="pd-iris"><path d="M32 30.4a7.6 7.6 0 0 1 5.4 2.2"/></g><circle class="pd-irisHole" cx="32" cy="38" r="5.2"/></svg></span>
-          <span class="pd-svcName">Photography</span>
-          <span class="pd-colTag">Stills that stop the scroll.</span>
-        </a>
-        <a class="pd-svc" style="--g:110,150,255" href="#">
-          <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><g class="pd-bars"><rect x="9" y="17" width="6" height="30" rx="3"/><rect x="19" y="17" width="6" height="30" rx="3"/><rect x="29" y="17" width="6" height="30" rx="3"/><rect x="39" y="17" width="6" height="30" rx="3"/><rect x="49" y="17" width="6" height="30" rx="3"/></g></svg></span>
-          <span class="pd-svcName">Post-Production</span>
-          <span class="pd-colTag">Where it all comes together.</span>
-        </a>
+        <div class="pd-col">
+          <a class="pd-colHead" style="--g:0,220,255" href="#">
+            <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="pdClipClap"><rect x="7" y="16.5" width="50" height="11" rx="2.5"/></clipPath></defs><g class="pd-clap"><rect x="8" y="28.5" width="48" height="25" rx="4"/><path d="M16 38h17M16 45.5h25"/><g class="pd-clapArm"><rect x="8" y="16.5" width="48" height="11" rx="2.5"/><g clip-path="url(#pdClipClap)"><path d="M18 28.5 24 15.5M28 28.5 34 15.5M38 28.5 44 15.5M48 28.5 54 15.5"/></g></g><circle class="pd-clapPivot" cx="10.5" cy="27.5" r="1.6"/></g></svg></span>
+            <span class="pd-colTitle">Live-Action Video</span>
+          </a>
+          <p class="pd-colTag">Real people, real places, real good.</p>
+          <ul class="pd-list split">
+            <li><a style="--g:0,220,255" href="#">Activations and Launches</a></li>
+            <li><a style="--g:0,220,255" href="#">Automotive</a></li>
+            <li><a style="--g:0,220,255" href="#">Aerial/Drone</a></li>
+            <li><a style="--g:0,220,255" href="#">Case Studies</a></li>
+            <li><a style="--g:0,220,255" href="#">Conferences and Ceremonies</a></li>
+            <li><a style="--g:0,220,255" href="#">Charity</a></li>
+            <li><a style="--g:0,220,255" href="#">Company Profiles</a></li>
+            <li><a style="--g:0,220,255" href="#">Internal Communications</a></li>
+            <li><a style="--g:0,220,255" href="#">Landing Pages</a></li>
+            <li><a style="--g:0,220,255" href="#">Live Events</a></li>
+            <li><a style="--g:0,220,255" href="#">Live-streaming</a></li>
+            <li><a style="--g:0,220,255" href="#">Product</a></li>
+            <li><a style="--g:0,220,255" href="#">Promotional</a></li>
+            <li><a style="--g:0,220,255" href="#">Training</a></li>
+          </ul>
+        </div>
+        <div class="pd-col">
+          <a class="pd-colHead" style="--g:0,160,255" href="#">
+            <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M13 51h38"/><ellipse class="pd-ballShadow" cx="32" cy="51" rx="9" ry="2.2"/><circle class="pd-ball" cx="32" cy="29" r="9"/></svg></span>
+            <span class="pd-colTitle">Animation</span>
+          </a>
+          <p class="pd-colTag">For when reality needs a rewrite.</p>
+          <ul class="pd-list">
+            <li><a style="--g:0,160,255" href="#">Explainer</a></li>
+            <li><a style="--g:0,160,255" href="#">Character</a></li>
+          </ul>
+        </div>
+        <div class="pd-col">
+          <a class="pd-colHead" style="--g:48,216,240" href="#">
+            <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M23.5 22.5 27 16.5h10l3.5 6"/><rect x="5" y="22.5" width="54" height="30" rx="6"/><rect x="43.5" y="16.5" width="8" height="5" rx="1.7"/><g class="pd-flash"><rect class="pd-flashLamp" x="44.8" y="17.8" width="5.4" height="2.4" rx="1"/><path d="M47.5 12.6V9.6M43.2 13.9l-2.1-2.2M51.8 13.9l2.1-2.2"/></g><circle cx="32" cy="38" r="11"/><g class="pd-iris"><path d="M32 30.4a7.6 7.6 0 0 1 5.4 2.2"/></g><circle class="pd-irisHole" cx="32" cy="38" r="5.2"/></svg></span>
+            <span class="pd-colTitle">Photography</span>
+          </a>
+          <p class="pd-colTag">Stills that stop the scroll.</p>
+          <ul class="pd-list">
+            <li><a style="--g:48,216,240" href="#">Architectural</a></li>
+            <li><a style="--g:48,216,240" href="#">Automotive</a></li>
+            <li><a style="--g:48,216,240" href="#">Headshots</a></li>
+            <li><a style="--g:48,216,240" href="#">Lifestyle</a></li>
+            <li><a style="--g:48,216,240" href="#">Live-event</a></li>
+          </ul>
+        </div>
+        <div class="pd-col">
+          <a class="pd-colHead" style="--g:110,150,255" href="#">
+            <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><g class="pd-bars"><rect x="9" y="17" width="6" height="30" rx="3"/><rect x="19" y="17" width="6" height="30" rx="3"/><rect x="29" y="17" width="6" height="30" rx="3"/><rect x="39" y="17" width="6" height="30" rx="3"/><rect x="49" y="17" width="6" height="30" rx="3"/></g></svg></span>
+            <span class="pd-colTitle">Post-Production</span>
+          </a>
+          <p class="pd-colTag">Where it all comes together.</p>
+          <ul class="pd-list">
+            <li><a style="--g:110,150,255" href="#">Editing</a></li>
+            <li><a style="--g:110,150,255" href="#">VFX</a></li>
+            <li><a style="--g:110,150,255" href="#">Subtitling and Transcription</a></li>
+            <li><a style="--g:110,150,255" href="#">British Sign Language (BSL)</a></li>
+            <li><a style="--g:110,150,255" href="#">AI Video Production</a></li>
+          </ul>
+        </div>
         </div>
       </div>
     </div>
@@ -795,11 +855,20 @@
 
     <div class="pd-mRow"><a href="#">Services</a><button class="pd-mToggle" type="button" aria-label="Toggle Services submenu"></button></div>
     <div class="pd-mSub"><div class="pd-mSubInner">
-      <!-- overview pages only: the full service lists live on those pages -->
-      <a class="pd-mHead" href="#">Live-Action Video</a>
-      <a class="pd-mHead" href="#">Animation</a>
-      <a class="pd-mHead" href="#">Photography</a>
-      <a class="pd-mHead" href="#">Post-Production</a>
+      <h5>Live-Action Video</h5>
+      <a href="#">Activations and Launches</a><a href="#">Automotive</a><a href="#">Aerial/Drone</a>
+      <a href="#">Case Studies</a><a href="#">Conferences and Ceremonies</a><a href="#">Charity</a>
+      <a href="#">Company Profiles</a><a href="#">Internal Communications</a><a href="#">Landing Pages</a>
+      <a href="#">Live Events</a><a href="#">Live-streaming</a><a href="#">Product</a>
+      <a href="#">Promotional</a><a href="#">Training</a>
+      <h5>Animation</h5>
+      <a href="#">Explainer</a><a href="#">Character</a>
+      <h5>Photography</h5>
+      <a href="#">Architectural</a><a href="#">Automotive</a><a href="#">Headshots</a>
+      <a href="#">Lifestyle</a><a href="#">Live-event</a>
+      <h5>Post-Production</h5>
+      <a href="#">Editing</a><a href="#">VFX</a><a href="#">Subtitling and Transcription</a>
+      <a href="#">British Sign Language (BSL)</a><a href="#">AI Video Production</a>
     </div></div>
 
     <div class="pd-mRow"><a href="#">Portfolio</a><button class="pd-mToggle" type="button" aria-label="Toggle Portfolio submenu"></button></div>
