@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Drone video production — Pearldrop service page design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+/* =====================================================================
+   PEARLDROP — service page: Aerial / drone
+   Scoped to #pd-drone with .pd-* names, same as #pd-hero, because this
+   lands inside WordPress/Elementor and must not collide.
+   Palette and the scrim recipe come from CLAUDE.md "The site look":
+   one hue (~205deg), many depths, dark navy overlay never neutral black.
+   ===================================================================== */
+
+html,body{margin:0;padding:0;background:#050b1f}
+
+#pd-drone{
+  /* ---- the palette, as channel triples so they work with alpha ---- */
+  --sky:3,120,207;          /* the anchor, H205 S97 L41 */
+  --sky-hi:96,175,232;
+  --cloud:204,227,249;
+  --scrim:3,8,24;           /* navy, never neutral */
+  --pool:10,28,80;
+  --ground:5,11,31;
+  --neon:0,220,255;
+  --ink:234,242,255;
+  --muted:147,169,207;
+
+  /* ---- the hero's own recipe, reused verbatim ---- */
+  --pd-scrim:
+    linear-gradient(95deg, rgba(3,8,24,.80) 0%, rgba(3,8,24,.42) 22%, rgba(3,8,24,0) 50%),
+    linear-gradient(0deg,  rgba(3,8,24,.72) 0%, rgba(3,8,24,.18) 26%, rgba(3,8,24,0) 48%);
+  --pd-vignette:
+    radial-gradient(60% 45% at 12% 50%, rgba(5,11,31,.55), transparent 60%),
+    radial-gradient(70% 60% at 92% 62%, rgba(5,11,31,.50), transparent 62%),
+    radial-gradient(120% 120% at 50% 120%, rgba(0,220,255,.16), transparent 55%),
+    linear-gradient(180deg, rgba(5,11,31,.25), transparent 22%, transparent 72%, rgba(5,11,31,.55));
+
+  --rail: 92px;             /* altitude rail gutter */
+  position:relative;
+  background:rgb(var(--ground));
+  color:rgb(var(--ink));
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  font-size:17px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:clip;
+}
+#pd-drone *{box-sizing:border-box; margin:0; padding:0}
+
+#pd-drone .pd-wrap{
+  max-width:1180px; margin:0 auto;
+  padding-left:clamp(20px,4vw,52px); padding-right:clamp(20px,4vw,52px);
+}
+
+/* ---------------- type scale ---------------- */
+#pd-drone h1,#pd-drone h2,#pd-drone h3{text-wrap:balance; line-height:1.06; letter-spacing:-.035em}
+#pd-drone h1{font-size:clamp(2.9rem,7.4vw,6rem); font-weight:800}
+#pd-drone h2{font-size:clamp(1.8rem,3.6vw,2.9rem); font-weight:800}
+#pd-drone h3{font-size:1.06rem; font-weight:700; letter-spacing:-.012em; line-height:1.3}
+#pd-drone p{max-width:60ch}
+
+#pd-drone .pd-kicker{
+  font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  font-size:.72rem; font-weight:500; letter-spacing:.24em; text-transform:uppercase;
+  color:rgb(var(--neon));
+}
+#pd-drone .pd-lede{font-size:clamp(1.08rem,1.9vw,1.34rem); color:rgba(var(--cloud),.95); font-weight:400}
+#pd-drone .pd-body p + p{margin-top:1.05em}
+#pd-drone .pd-body{color:rgba(var(--muted),1)}
+#pd-drone .pd-body strong{color:rgb(var(--ink)); font-weight:600}
+
+/* ---------------- altitude rail ----------------
+   The service is defined by height, so the page keeps a running
+   altitude. Decorative but honest: it is a height readout, not a
+   claim about permissions. */
+#pd-drone .pd-rail{
+  position:fixed; left:0; top:0; bottom:0; width:var(--rail);
+  z-index:40; pointer-events:none;
+  display:flex; flex-direction:column; align-items:center;
+  padding:26px 0;
+  border-right:1px solid rgba(var(--muted),.13);
+  background:linear-gradient(90deg, rgba(3,8,24,.72), rgba(3,8,24,.18));
+  backdrop-filter:blur(6px);
+  opacity:0; transition:opacity .5s ease;
+}
+#pd-drone .pd-rail.on{opacity:1}
+#pd-drone .pd-railTicks{position:relative; flex:1; width:100%; margin:16px 0}
+#pd-drone .pd-tick{
+  position:absolute; left:50%; transform:translateX(-50%);
+  width:100%; display:flex; align-items:center; gap:7px; justify-content:center;
+}
+#pd-drone .pd-tick i{display:block; width:9px; height:1px; background:rgba(var(--muted),.4)}
+#pd-drone .pd-tick b{
+  font-family:'JetBrains Mono',monospace; font-size:.6rem; font-weight:500;
+  color:rgba(var(--muted),.62); font-variant-numeric:tabular-nums; letter-spacing:.04em;
+}
+#pd-drone .pd-alt{
+  position:absolute; left:0; right:0; display:flex; flex-direction:column;
+  align-items:center; gap:2px; transition:top .12s linear;
+}
+#pd-drone .pd-alt b{
+  font-family:'JetBrains Mono',monospace; font-size:.92rem; font-weight:700;
+  color:rgb(var(--neon)); font-variant-numeric:tabular-nums;
+  text-shadow:0 0 12px rgba(var(--neon),.75);
+}
+#pd-drone .pd-alt i{
+  display:block; width:34px; height:2px; border-radius:2px;
+  background:rgb(var(--neon)); box-shadow:0 0 12px rgba(var(--neon),.9);
+}
+#pd-drone .pd-railCap{
+  font-family:'JetBrains Mono',monospace; font-size:.58rem; letter-spacing:.2em;
+  color:rgba(var(--muted),.5); writing-mode:vertical-rl; text-transform:uppercase;
+}
+
+#pd-drone .pd-shift{padding-left:var(--rail)}
+
+/* ---------------- HERO ---------------- */
+#pd-drone .pd-hero{
+  position:relative; min-height:100svh; display:flex; align-items:flex-end;
+  overflow:hidden; isolation:isolate;
+  background:radial-gradient(120% 90% at 50% 40%, rgb(var(--pool)) 0%, rgb(var(--ground)) 70%);
+}
+/* the bright element. A flat sky field stands in for the hero video —
+   same treatment, so the design reads true before the footage exists. */
+#pd-drone .pd-sky{
+  position:absolute; inset:-4%; z-index:0;
+  background:
+    radial-gradient(90% 70% at 74% 16%, rgba(var(--cloud),.42), transparent 58%),
+    radial-gradient(70% 55% at 30% 8%,  rgba(var(--sky-hi),.34), transparent 62%),
+    linear-gradient(172deg, rgb(var(--sky)) 0%, #0a6fc0 44%, #064a92 100%);
+  animation:pd-drift 26s ease-in-out infinite alternate;
+}
+#pd-drone .pd-lay{position:absolute; inset:0; pointer-events:none}
+#pd-drone .pd-lay.v{background:var(--pd-vignette); z-index:1}
+#pd-drone .pd-lay.s{background:var(--pd-scrim);   z-index:2}
+@keyframes pd-drift{
+  0%{transform:translate3d(0,0,0) scale(1)}
+  100%{transform:translate3d(2.2%,1.6%,0) scale(1.07)}
+}
+
+/* video slot marker — this is a mockup, say so honestly */
+#pd-drone .pd-slot{
+  position:absolute; z-index:3; right:clamp(18px,3vw,40px); top:clamp(88px,11vh,124px);
+  display:flex; align-items:center; gap:9px;
+  padding:8px 13px; border-radius:999px;
+  border:1px dashed rgba(var(--ink),.42); background:rgba(3,8,24,.42);
+  font-family:'JetBrains Mono',monospace; font-size:.66rem; letter-spacing:.1em;
+  color:rgba(var(--ink),.82); text-transform:uppercase;
+}
+#pd-drone .pd-slot span{
+  width:7px;height:7px;border-radius:50%;background:rgb(var(--neon));
+  box-shadow:0 0 9px rgba(var(--neon),.9); animation:pd-blink 2.4s ease-in-out infinite;
+}
+@keyframes pd-blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* telemetry strip — a pilot's readout, kept thin so it stays instrument
+   rather than videogame */
+#pd-drone .pd-tele{
+  position:absolute; z-index:3; left:0; right:0; top:0;
+  /* right padding reserves the slot pill's lane so the two can never
+     overlap, rather than chasing breakpoints */
+  padding:clamp(84px,10vh,112px) calc(clamp(18px,3vw,40px) + 168px) 0
+          calc(var(--rail) + clamp(20px,4vw,52px));
+  display:flex; flex-wrap:wrap; gap:10px 30px;
+  font-family:'JetBrains Mono',monospace; font-size:.66rem; letter-spacing:.13em;
+  color:rgba(var(--ink),.62); text-transform:uppercase;
+}
+#pd-drone .pd-tele b{color:rgba(var(--ink),.95); font-weight:500}
+
+#pd-drone .pd-heroIn{
+  position:relative; z-index:4; width:100%;
+  padding-bottom:clamp(56px,9vh,104px); padding-top:clamp(150px,22vh,230px);
+}
+#pd-drone .pd-hero h1{color:#fff; margin:.26em 0 .34em; max-width:15ch;
+  text-shadow:0 3px 40px rgba(2,18,46,.55)}
+#pd-drone .pd-hero .pd-lede{color:rgba(255,255,255,.94); max-width:46ch; font-weight:450}
+
+#pd-drone .pd-cta{
+  display:inline-flex; align-items:center; gap:11px; margin-top:34px;
+  padding:15px 26px; border-radius:999px; text-decoration:none;
+  background:rgb(var(--neon)); color:#031226;
+  font-weight:700; font-size:.97rem; letter-spacing:-.01em;
+  box-shadow:0 0 0 0 rgba(var(--neon),.5), 0 16px 40px -18px rgba(0,0,0,.9);
+  transition:transform .22s cubic-bezier(.5,0,.1,1), box-shadow .22s ease;
+}
+#pd-drone .pd-cta:hover{transform:translateY(-2px); box-shadow:0 0 34px -6px rgba(var(--neon),.75), 0 18px 44px -18px rgba(0,0,0,.9)}
+#pd-drone .pd-cta:focus-visible{outline:2px solid #fff; outline-offset:3px}
+#pd-drone .pd-cta svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2}
+
+/* ---------------- the weight moment: the one bold thing ---------------- */
+#pd-drone .pd-weight{
+  position:relative; overflow:hidden;
+  border-top:1px solid rgba(var(--neon),.22);
+  background:
+    radial-gradient(90% 130% at 78% 0%, rgba(var(--sky),.30), transparent 62%),
+    radial-gradient(70% 120% at 8% 100%, rgba(var(--neon),.10), transparent 60%),
+    rgb(var(--ground));
+  padding:clamp(64px,10vw,124px) 0;
+}
+#pd-drone .pd-weightGrid{
+  display:grid; grid-template-columns:minmax(0,1.18fr) minmax(0,1fr);
+  gap:clamp(28px,5vw,72px); align-items:center;
+}
+#pd-drone .pd-big{line-height:.84; letter-spacing:-.055em; font-weight:900;
+  font-size:clamp(3.6rem,10.2vw,11rem); white-space:nowrap;
+  background:linear-gradient(168deg,#fff 8%, rgb(var(--sky-hi)) 58%, rgb(var(--sky)) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+#pd-drone .pd-bigSub{
+  font-family:'JetBrains Mono',monospace; font-size:.74rem; letter-spacing:.26em;
+  text-transform:uppercase; color:rgb(var(--neon)); margin-bottom:14px;
+}
+#pd-drone .pd-weight p{font-size:clamp(1.04rem,1.6vw,1.2rem); color:rgba(var(--cloud),.92)}
+#pd-drone .pd-weight p + p{margin-top:1em}
+
+/* ---------------- body + Great for box-out ---------------- */
+#pd-drone .pd-main{padding:clamp(60px,9vw,108px) 0}
+#pd-drone .pd-mainGrid{
+  display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,.95fr);
+  gap:clamp(32px,5vw,74px); align-items:start;
+}
+#pd-drone .pd-sectionHead{margin-bottom:28px}
+#pd-drone .pd-sectionHead h2{max-width:20ch}
+
+/* the box-out. Screen-right, bold, and the boldest surface on the page
+   after the hero — the sky field itself rather than another dark card. */
+#pd-drone .pd-box{
+  position:relative; overflow:hidden; border-radius:20px;
+  padding:clamp(28px,3.4vw,42px);
+  background:linear-gradient(165deg, rgb(var(--sky)) 0%, #0a67b4 52%, #06478d 100%);
+  box-shadow:0 34px 80px -34px rgba(0,0,0,.95), inset 0 0 0 1px rgba(255,255,255,.13);
+}
+#pd-drone .pd-box::after{ /* the uplight, so the box belongs to the hero */
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 118%, rgba(var(--neon),.30), transparent 58%);
+}
+#pd-drone .pd-box > *{position:relative; z-index:1}
+#pd-drone .pd-boxTag{
+  font-family:'JetBrains Mono',monospace; font-size:.68rem; letter-spacing:.24em;
+  text-transform:uppercase; color:rgba(255,255,255,.82);
+}
+#pd-drone .pd-box h2{color:#fff; font-size:clamp(1.7rem,2.6vw,2.3rem); margin:.34em 0 1.05em}
+#pd-drone .pd-boxList{list-style:none; display:flex; flex-direction:column; gap:20px}
+#pd-drone .pd-boxList li{padding-left:26px; position:relative; color:rgba(255,255,255,.9); font-size:.99rem}
+#pd-drone .pd-boxList li::before{
+  content:""; position:absolute; left:0; top:.62em; width:13px; height:2px;
+  border-radius:2px; background:#fff; opacity:.85;
+}
+#pd-drone .pd-boxList b{display:block; color:#fff; font-weight:700; margin-bottom:3px; font-size:1.03rem}
+
+/* ---------------- films ---------------- */
+#pd-drone .pd-films{padding:0 0 clamp(60px,9vw,108px)}
+#pd-drone .pd-filmGrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(266px,1fr)); gap:20px}
+#pd-drone .pd-film{
+  position:relative; border-radius:16px; overflow:hidden; text-decoration:none; display:block;
+  background:rgba(10,28,80,.42); border:1px solid rgba(var(--muted),.16);
+  transition:transform .3s cubic-bezier(.5,0,.1,1), border-color .3s ease, box-shadow .3s ease;
+}
+#pd-drone .pd-film:hover{transform:translateY(-5px); border-color:rgba(var(--neon),.5);
+  box-shadow:0 26px 60px -30px rgba(0,0,0,.95)}
+#pd-drone .pd-film:focus-visible{outline:2px solid rgb(var(--neon)); outline-offset:3px}
+#pd-drone .pd-thumb{
+  position:relative; aspect-ratio:16/9;
+  background:
+    radial-gradient(80% 70% at 70% 18%, rgba(var(--cloud),.34), transparent 60%),
+    linear-gradient(168deg, rgb(var(--sky)), #06478d);
+}
+#pd-drone .pd-thumb::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(0deg, rgba(3,8,24,.72), rgba(3,8,24,.05) 62%);
+}
+#pd-drone .pd-play{
+  position:absolute; z-index:2; left:18px; bottom:16px;
+  width:42px; height:42px; border-radius:50%;
+  background:rgba(255,255,255,.94); display:grid; place-items:center;
+  box-shadow:0 8px 22px -8px rgba(0,0,0,.9);
+  transition:transform .3s cubic-bezier(.5,0,.1,1);
+}
+#pd-drone .pd-film:hover .pd-play{transform:scale(1.09)}
+#pd-drone .pd-play svg{width:13px;height:13px;fill:#04162f;margin-left:2px}
+#pd-drone .pd-filmMeta{padding:18px 20px 21px}
+#pd-drone .pd-filmMeta h3{color:rgb(var(--ink))}
+#pd-drone .pd-filmMeta p{font-size:.88rem; color:rgba(var(--muted),1); margin-top:6px}
+#pd-drone .pd-proof{
+  margin-top:26px; padding:17px 22px; border-left:2px solid rgb(var(--neon));
+  background:rgba(var(--neon),.06); border-radius:0 10px 10px 0;
+}
+#pd-drone .pd-proof p{color:rgba(var(--cloud),.95); font-size:.99rem; max-width:none}
+#pd-drone .pd-proof strong{color:#fff; font-weight:700}
+
+/* ---------------- testimonial ---------------- */
+#pd-drone .pd-quote{
+  border-top:1px solid rgba(var(--muted),.14); border-bottom:1px solid rgba(var(--muted),.14);
+  background:radial-gradient(80% 130% at 22% 0%, rgba(var(--pool),.6), transparent 62%);
+  padding:clamp(56px,8vw,96px) 0;
+}
+#pd-drone .pd-quote blockquote{
+  font-size:clamp(1.24rem,2.5vw,1.86rem); line-height:1.42; font-weight:500;
+  letter-spacing:-.02em; color:rgb(var(--ink)); max-width:24ch; max-width:min(100%,44ch);
+}
+#pd-drone .pd-mark{
+  font-family:'JetBrains Mono',monospace; font-size:2.6rem; line-height:1;
+  color:rgb(var(--neon)); opacity:.65; display:block; margin-bottom:10px;
+}
+#pd-drone .pd-attr{display:flex; align-items:center; gap:14px; margin-top:26px; flex-wrap:wrap}
+#pd-drone .pd-attr b{font-weight:700; color:rgb(var(--ink)); font-size:.98rem}
+#pd-drone .pd-attr span{color:rgba(var(--muted),1); font-size:.92rem}
+#pd-drone .pd-stars{color:rgb(var(--neon)); letter-spacing:.16em; font-size:.84rem}
+
+/* ---------------- form ---------------- */
+#pd-drone .pd-end{padding:clamp(60px,9vw,110px) 0 clamp(72px,11vw,132px)}
+#pd-drone .pd-endGrid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:clamp(32px,5vw,72px); align-items:start}
+#pd-drone .pd-form{display:flex; flex-direction:column; gap:14px}
+#pd-drone .pd-field{display:flex; flex-direction:column; gap:7px}
+#pd-drone .pd-field label{
+  font-family:'JetBrains Mono',monospace; font-size:.65rem; letter-spacing:.18em;
+  text-transform:uppercase; color:rgba(var(--muted),1);
+}
+#pd-drone .pd-field input,#pd-drone .pd-field textarea{
+  font-family:inherit; font-size:1rem; color:rgb(var(--ink));
+  background:rgba(10,28,80,.34); border:1px solid rgba(var(--muted),.22);
+  border-radius:11px; padding:13px 15px; transition:border-color .2s ease, background .2s ease;
+}
+#pd-drone .pd-field input:focus,#pd-drone .pd-field textarea:focus{
+  outline:none; border-color:rgb(var(--neon)); background:rgba(10,28,80,.55);
+  box-shadow:0 0 0 3px rgba(var(--neon),.16);
+}
+#pd-drone .pd-field textarea{resize:vertical; min-height:92px}
+#pd-drone .pd-postcode{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+
+/* ---------------- responsive ---------------- */
+@media (max-width:980px){
+  #pd-drone .pd-weightGrid,#pd-drone .pd-mainGrid,#pd-drone .pd-endGrid{grid-template-columns:1fr}
+  #pd-drone .pd-box{order:2}
+}
+@media (max-width:760px){
+  #pd-drone{--rail:0px}
+  #pd-drone .pd-rail{display:none}
+  #pd-drone .pd-tele{padding-left:clamp(20px,4vw,52px);
+    padding-right:clamp(20px,4vw,52px); gap:8px 18px}
+  /* the slot pill collided with the telemetry strip on narrow screens */
+  #pd-drone .pd-slot{top:auto; bottom:18px; right:16px}
+  #pd-drone .pd-postcode{grid-template-columns:1fr}
+  #pd-drone .pd-hero{min-height:92svh}
+}
+@media (prefers-reduced-motion:reduce){
+  #pd-drone *,#pd-drone *::before,#pd-drone *::after{
+    animation:none!important; transition:none!important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div id="pd-drone">
+
+  <!-- altitude rail -->
+  <aside class="pd-rail" aria-hidden="true">
+    <span class="pd-railCap">Altitude</span>
+    <div class="pd-railTicks" id="pdTicks">
+      <div class="pd-alt" id="pdAlt"><b>0m</b><i></i></div>
+    </div>
+    <span class="pd-railCap">AGL</span>
+  </aside>
+
+  <!-- ============ HERO ============ -->
+  <header class="pd-hero">
+    <div class="pd-sky"></div>
+    <div class="pd-lay v"></div>
+    <div class="pd-lay s"></div>
+
+    <div class="pd-tele">
+      <span>Pearldrop <b>Aerial</b></span>
+      <span>Airframe <b>&lt;250g</b></span>
+      <span>Base <b>Stevenage, Herts</b></span>
+      <span>Flying since <b>2014</b></span>
+    </div>
+
+    <div class="pd-slot"><span></span>Hero video</div>
+
+    <div class="pd-heroIn pd-shift">
+      <div class="pd-wrap">
+        <p class="pd-kicker">Services / Aerial &amp; drone</p>
+        <h1>Drone video production small enough to fly in town.</h1>
+        <p class="pd-lede">Flying since 2014, these days on a drone lighter than a can of drink.</p>
+        <a class="pd-cta" href="#enquire">
+          Send us a postcode
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ THE WEIGHT MOMENT ============ -->
+  <section class="pd-weight pd-shift">
+    <div class="pd-wrap pd-weightGrid">
+      <div>
+        <p class="pd-bigSub">The whole argument</p>
+        <div class="pd-big">&lt;250g</div>
+      </div>
+      <div>
+        <p>People assume that means a compromise, and for a windswept coastal
+           survey it would be. For the work most clients actually want — a reveal
+           off the front of a building, a tracking shot down a drive, a site seen
+           whole for the first time — it is the drone that gets airborne while a
+           heavier one is still waiting on paperwork.</p>
+        <p>Weight is the point. Sub-250g sits in the lightest class the rules
+           recognise, which is what makes it realistic to fly where corporate
+           filming actually happens.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BODY + GREAT FOR ============ -->
+  <section class="pd-main pd-shift">
+    <div class="pd-wrap pd-mainGrid">
+
+      <div class="pd-body">
+        <div class="pd-sectionHead">
+          <p class="pd-kicker">What we bring</p>
+          <h2 style="margin-top:.4em">The lightest drone in the bag is usually the one that gets the shot</h2>
+        </div>
+        <p>Business parks, town centres, school grounds, a courtyard with people
+           in it. A heavier aircraft in the same spot turns into a planning
+           exercise measured in weeks — ours turns into a pre-flight check and a
+           take-off.</p>
+        <p>It flies with the rest of the shoot, too. We are already on site with
+           cameras, so the aerials are <strong>half a day's extension</strong>
+           rather than a separate crew, a separate call-out and a separate
+           invoice. 4K video and stills from the same flight.</p>
+        <p>We are also <strong>JOSCAR accredited</strong> — the supply-chain
+           standard for aerospace, defence and security — so if your site
+           involves a gate, a badge and a briefing, we have been through that
+           process before.</p>
+      </div>
+
+      <aside class="pd-box">
+        <p class="pd-boxTag">Great for</p>
+        <h2>Three reasons clients book the small one.</h2>
+        <ul class="pd-boxList">
+          <li><b>Getting up quickly</b>A light aircraft and a short pre-flight check, rather than a permission process measured in weeks.</li>
+          <li><b>Tight and built-up locations</b>Business parks, town centres and courtyards, where a heavier drone becomes a planning exercise.</li>
+          <li><b>Adding air to a shoot you're already booking</b>Half a day on top of the ground crew, not a second company and a second invoice.</li>
+        </ul>
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- ============ FILMS ============ -->
+  <section class="pd-films pd-shift">
+    <div class="pd-wrap">
+      <div class="pd-sectionHead">
+        <p class="pd-kicker">Recent flights</p>
+        <h2 style="margin-top:.4em">Some we've made</h2>
+      </div>
+
+      <div class="pd-filmGrid">
+        <a class="pd-film" href="https://www.youtube.com/embed/QmSspwhQ43g">
+          <div class="pd-thumb">
+            <div class="pd-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></div>
+          </div>
+          <div class="pd-filmMeta">
+            <h3>St John's College Cambridge — May Ball 2024</h3>
+            <p>Aerials over a historic Cambridge site at night.</p>
+          </div>
+        </a>
+        <a class="pd-film" href="https://www.youtube.com/embed/A3bwHOjlMhI">
+          <div class="pd-thumb">
+            <div class="pd-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></div>
+          </div>
+          <div class="pd-filmMeta">
+            <h3>Hertfordshire County Show 2024</h3>
+            <p>The sheer size of a showground, which you cannot photograph from the ground.</p>
+          </div>
+        </a>
+        <a class="pd-film" href="#">
+          <div class="pd-thumb">
+            <div class="pd-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></div>
+          </div>
+          <div class="pd-filmMeta">
+            <h3>The Grand Union Boat Race 2023</h3>
+            <p>A moving event on open water, tracked from above.</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="pd-proof">
+        <p><strong>Every one of these was flown on the sub-250g setup</strong> —
+          including a Cambridge college at night and a moving race on open water.
+          The small drone is not a budget fallback; it is the one that did all of this.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TESTIMONIAL ============ -->
+  <section class="pd-quote pd-shift">
+    <div class="pd-wrap">
+      <span class="pd-mark" aria-hidden="true">&ldquo;</span>
+      <blockquote>The care and attention to detail is second to none. Being able
+        to &lsquo;tell the story&rsquo; through video really brings it to life.</blockquote>
+      <div class="pd-attr">
+        <b>Sarah Moreland</b>
+        <span>Hertfordshire County Show</span>
+        <span class="pd-stars" aria-label="Rated 5 out of 5">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FORM ============ -->
+  <section class="pd-end pd-shift" id="enquire">
+    <div class="pd-wrap pd-endGrid">
+      <div>
+        <p class="pd-kicker">Enquire</p>
+        <h2 style="margin:.4em 0 .6em">Send us a postcode.</h2>
+        <p class="pd-body">Tell us where, when and what you need to see. We'll
+          check the airspace and come back with a yes, a no, or the conditions
+          that make it a yes.</p>
+      </div>
+      <form class="pd-form" onsubmit="return false">
+        <div class="pd-postcode">
+          <div class="pd-field">
+            <label for="pdName">Your name</label>
+            <input id="pdName" type="text" autocomplete="name">
+          </div>
+          <div class="pd-field">
+            <label for="pdPost">Site postcode</label>
+            <input id="pdPost" type="text" autocomplete="postal-code">
+          </div>
+        </div>
+        <div class="pd-field">
+          <label for="pdEmail">Email</label>
+          <input id="pdEmail" type="email" autocomplete="email">
+        </div>
+        <div class="pd-field">
+          <label for="pdWhat">What do you need to see?</label>
+          <textarea id="pdWhat"></textarea>
+        </div>
+        <button class="pd-cta" style="border:0;cursor:pointer;align-self:flex-start;margin-top:6px">
+          Check my site
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </form>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  var root = document.getElementById('pd-drone');
+  var rail = root.querySelector('.pd-rail');
+  var ticks = document.getElementById('pdTicks');
+  var alt = document.getElementById('pdAlt');
+  var MAX = 120;                       // metres shown across the page
+  var reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  // build the tick marks once
+  [0,30,60,90,120].forEach(function(m){
+    var t = document.createElement('div');
+    t.className = 'pd-tick';
+    t.style.top = (100 - (m/MAX)*100) + '%';
+    t.innerHTML = '<i></i><b>' + m + '</b><i></i>';
+    ticks.appendChild(t);
+  });
+
+  var ticking = false;
+  function update(){
+    ticking = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    var p = h > 0 ? Math.min(1, Math.max(0, window.scrollY / h)) : 0;
+    var m = Math.round(p * MAX);
+    alt.style.top = (100 - p*100) + '%';
+    alt.querySelector('b').textContent = m + 'm';
+    rail.classList.toggle('on', window.scrollY > 40);
+  }
+  function onScroll(){
+    if(reduce){ update(); return; }
+    if(!ticking){ ticking = true; requestAnimationFrame(update); }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  update();
+})();
+</script>
+</body>
+</html>
