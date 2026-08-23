@@ -114,11 +114,9 @@ body{
    poster behind the video so there is never an empty box while it loads, and
    so the composition survives if the embed is blocked. */
 .hero__plate{
-  position:absolute; inset:0 0 0 42%; overflow:hidden;
+  position:absolute; inset:0; overflow:hidden;
   background-image:url('img/drone-hero-placeholder.webp');
   background-size:cover; background-position:center 38%;
-  -webkit-mask-image:linear-gradient(100deg, transparent 0%, #000 26%, #000 100%);
-  mask-image:linear-gradient(100deg, transparent 0%, #000 26%, #000 100%);
 }
 /* cover-fit a 16:9 embed into a box of any shape */
 .hero__plate iframe{
@@ -130,11 +128,13 @@ body{
 .hero__scrim{
   position:absolute; inset:0; pointer-events:none;
   background:
-    linear-gradient(96deg, rgba(var(--deep),.94) 0%, rgba(var(--deep),.72) 32%, rgba(var(--deep),.1) 64%),
-    linear-gradient(270deg, rgba(var(--deep),.62) 0%, rgba(var(--deep),.12) 26%, rgba(var(--deep),0) 46%),
+    linear-gradient(96deg,
+      rgba(var(--deep),.97) 0%, rgba(var(--deep),.95) 22%, rgba(var(--deep),.78) 38%,
+      rgba(var(--deep),.42) 52%, rgba(var(--deep),.12) 66%, rgba(var(--deep),0) 80%),
+    linear-gradient(270deg, rgba(var(--deep),.55) 0%, rgba(var(--deep),.1) 24%, rgba(var(--deep),0) 44%),
     radial-gradient(120% 120% at 50% 124%, rgba(var(--cyan),.18), transparent 56%),
-    linear-gradient(180deg, rgba(var(--deep),.6) 0%, rgba(var(--deep),0) 22%),
-    linear-gradient(0deg, rgba(var(--deep),.72) 0%, rgba(var(--deep),0) 34%);
+    linear-gradient(180deg, rgba(var(--deep),.72) 0%, rgba(var(--deep),.1) 18%, rgba(var(--deep),0) 30%),
+    linear-gradient(0deg, rgba(var(--deep),.7) 0%, rgba(var(--deep),0) 32%);
 }
 
 /* nav lives inside the hero card, as in the reference */
@@ -398,7 +398,6 @@ body{
   .stats{flex-direction:row; border-left:0; border-top:1px solid rgba(var(--ice),.22);
     padding-left:0; padding-top:22px; gap:30px; flex-wrap:wrap}
   .stat__l{max-width:none}
-  .hero__plate{inset:0 0 0 30%; opacity:.75}
   .work{grid-template-columns:1fr}
   .hero__script{right:clamp(16px,6vw,60px)}
 }
