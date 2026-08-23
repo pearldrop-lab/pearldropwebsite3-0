@@ -64,12 +64,15 @@ greenscreen when the background is a distraction.
 
 ### 5 — Testimonial
 
-> "We have worked in partnership with Pearldrop for many years and together we
-> have produced some fantastic projects for schools. Every member of their team
-> is always professional and will stop at nothing to get the job done . We would
-> highly recommend their services."
+> "Pearldrop are fantastic! The whole team are friendly, accommodating and
+> always go above and beyond to get the perfect result. We are delighted with
+> our final films, and cannot wait to work with Pearldrop again – they just make
+> everything so easy!"
 >
-> **Hayley Sherwood**, 1Decision Ltd · Rated 5 out of 5
+> **Heather Almond**, North Hertfordshire College · Rated 5 out of 5
+
+*(A college: an organisation whose entire output is teaching the same thing
+well, repeatedly. Verbatim from the testimonials page.)*
 
 ### 6 — Form
 

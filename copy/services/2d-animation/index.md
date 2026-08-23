@@ -2,9 +2,8 @@
 
 **URL** `/services/2d-animation/`
 
-*Family landing page. Follows the approved service-page format, with one added
-block (3b) that routes to the two child pages instead of selling a single
-service.*
+*Family landing page. Standard blocks throughout; 3b is the extra one, routing
+to the two child pages rather than selling one service.*
 
 ### SEO
 
@@ -17,7 +16,7 @@ service.*
 
 > **Kicker:** Animation · 2D animation
 >
-> **H1:** 2D animation that makes the unfilmable easy to grasp
+> **H1:** 2D animation makes the complicated suddenly obvious
 >
 > **Sub-deck:** A bus timetable. A virus. A feeling. Some things you draw, because you can't film them.
 >
@@ -25,14 +24,14 @@ service.*
 
 ### 2 — Body
 
-**H2: Some things can't be filmed.**
+**H2: How would you film a bus network?**
 
 A bus network being redesigned. How a virus travels round a Christmas dinner
 table. The moment a young person works out they're about to lose their housing.
 Point a camera at any of those and you get a shrug, a shot of an empty bus stop,
 and a film nobody watches twice.
 
-That's where 2D animation earns its keep. Every frame is drawn and animated here
+That's where a pencil beats a camera. Every frame is drawn and animated here
 by Tom Fuller, our animator — no template packs, no character rigs rented by the
 hour. Which means the exact pink in your brand guide is the pink on screen, and
 when someone decides on Thursday that the orange wants to be warmer, that's a
@@ -84,10 +83,7 @@ Working the other way round — real people, real places? That's
 > "I recently had the pleasure of working with Pearldrop on a campaign. From
 > start to finish, the team was professional, creative, and a pleasure to work
 > with. Their attention to detail and willingness to go above and beyond
-> exceeded my expectations. The final product was even better than I could have
-> imagined, and I've already received numerous compliments on the videos. I
-> highly recommend Pearldrop for anyone looking for a high-quality, professional
-> video production experience."
+> exceeded my expectations."
 >
 > **Jesse Eyoma**, Hertfordshire County Council · Rated 5 out of 5
 
@@ -99,6 +95,6 @@ animation, so this is the right quote for the family page.)*
 **H2: What are you trying to get across?**
 
 Tell us the thing that's hard to explain, and roughly when you need it. We'll
-come back with a route, a running time and a price.
+say whether it wants an explainer, a character, or ninety seconds of both.
 
 **Button:** Start an animation

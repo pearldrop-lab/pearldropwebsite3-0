@@ -41,6 +41,9 @@ Commerce, biz4Biz and the Borough of Broxbourne, and our work has run on
 screens at Mobile World Congress in Barcelona and at events across the US,
 Australia, the Middle East and Europe.
 
+TODO(simon): the live page says "Mobile World Conference". We've written the
+event's actual name, Mobile World Congress — confirm that's the one you mean.
+
 You'll have a highlights cut to sell next year's tickets — and the speeches in
 full, for the people who insist.
 
@@ -64,20 +67,23 @@ full, for the people who insist.
 
 ### 5 — Testimonial
 
-> "Pearldrop have created some truly amazing videos for Hertfordshire Chamber of
-> Commerce over the last few years. They are very creative, always coming up
-> with new ideas and their graphics are excellent. Pearldrop also offer high
-> quality photography services and are particularly good at putting subjects at
-> their ease in advance of photo shoots!"
+> "I have worked with Pearldrop for a number of years on the video content for
+> the Community Business Awards I manage at the St Albans District Chamber of
+> Commerce. Denise and Simon are experts at what they do. Their videos perfectly
+> capture the inspiring stories and achievements of our finalists which play a
+> big part in creating the feel-good factor of our annual awards night."
 >
-> **Sarah Castleman**, Hertfordshire Chamber of Commerce · Rated 5 out of 5
+> **Emma Fisher**, St Albans District Chamber of Commerce · Rated 5 out of 5
+
+*(Emma runs an awards programme and is describing the nominee films
+specifically — the exact thing section 2 is selling.)*
 
 ### 6 — Form
 
 **H2: When's the big night?**
 
-Send us the date, the venue and how many categories. We'll come back with a
-crew plan and a price.
+Date, venue, number of categories. We'll tell you how many cameras that needs
+and what the nominee films add, before you commit to either.
 
 **Button:** Check our availability
 

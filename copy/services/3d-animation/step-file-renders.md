@@ -2,9 +2,8 @@
 
 **URL** `/services/3d-animation/step-file-renders/`
 
-*Note: audience here is engineers and product marketers, so the voice stays warm
-but the claims stay precise. Section 4 is flagged — no real 3D films with embed
-URLs exist in SOURCE-FACTS.md.*
+*Note: read by engineers and product marketers, so the voice stays warm and the
+claims stay checkable. Section 4 is empty pending real render examples.*
 
 ### SEO
 
@@ -17,7 +16,7 @@ URLs exist in SOURCE-FACTS.md.*
 
 > **Kicker:** 3D animation · STEP-file renders
 >
-> **H1:** STEP file rendering that turns CAD into product film
+> **H1:** STEP file rendering: photoreal product film from your CAD
 >
 > **Sub-deck:** The geometry is already right. All it's ever been missing is a lighting rig.
 >
@@ -61,24 +60,21 @@ mounting boss, we re-import rather than re-model.
 
 **H2: Some we've made**
 
-`TODO(simon): need 3 real STEP-file / product render examples + embed URLs.
-Nothing in the approved source list is 3D, and borrowing 2D films here would
-mislead a technical reader. Worth pulling from the 3D showreel if the individual
-pieces have URLs.`
+`TODO(simon): three CAD-to-render examples with embed URLs. Borrowing a 2D film
+here would insult the reader, so the block stays empty until we have the real
+thing. If the 3D showreel can be split into its individual pieces, those would
+do it.`
 
 ### 5 — Testimonial
 
-> "We found Pearldrop using Bark and the whole process was great. Having spoken
-> with Denise and Simon over the phone to discuss our project, the energy shared
-> by the Pearldrop team made hiring them an easy decision. The team worked well
-> with ours, based across three different countries, to storyboard, workshop and
-> deliver 3 promotional films for our company's latest launch. We look forward to
-> the next opportunity to work with the team again."
+> "The team worked well with ours, based across three different countries, to
+> storyboard, workshop and deliver 3 promotional films for our company's latest
+> launch. We look forward to the next opportunity to work with the team again."
 >
 > **Callum Huthwaite**, Scarab Sweepers · Rated 5 out of 5
 
-*(Scarab build road sweepers — an engineering manufacturer running a product
-launch across three countries. Closest real match to this page's audience.)*
+*(Verbatim extract. Scarab are an engineering manufacturer who launched a
+product across three countries and three time zones — this page's reader.)*
 
 ### 6 — Form
 

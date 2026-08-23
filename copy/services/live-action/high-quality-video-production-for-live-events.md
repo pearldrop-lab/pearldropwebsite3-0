@@ -13,7 +13,7 @@
 
 > **Kicker:** Live-action · Live events
 >
-> **H1:** Live event video production that keeps the day alive
+> **H1:** Live event video production for the day you only get once
 >
 > **Sub-deck:** We have stood in a Hertfordshire field in horizontal rain and still got the shot.
 >
@@ -23,13 +23,14 @@
 
 **H2: It happens once, and then it's gone**
 
-Twelve months of committee meetings, a marquee, four hundred volunteers and a
-weather forecast you refreshed every hour. It runs from ten till six, and by
-seven the car park is empty and the whole thing exists in your head.
+Ten till six, one Saturday. The judging ring at eleven, the tug of war at two,
+the raffle nobody can hear over the tannoy. By seven it is a field with tyre
+tracks in it, and the only record is whatever four hundred volunteers happened
+to point a phone at.
 
 Filming an event is mostly about anticipation. We walk the site beforehand and
-work out where the day will actually happen — the finish line, the judging
-ring, the bit where the queue forms — because you cannot chase a moment you
+work out where the day will actually happen — the finish line, the podium,
+the bit where the queue forms — because you cannot chase a moment you
 haven't predicted. On the day it's small, mobile kit: gimbals rather than
 tripods, radio mics on the compère, long lenses for the faces in the crowd who
 would freeze if you got close.
@@ -76,8 +77,8 @@ the same week while the goodwill is still warm.
 
 **H2: Tell us about the day**
 
-Date, site, running order and how many hours you need covering. We'll come back
-with a crew size and a price.
+Date, site and running order. Tell us the hour the day peaks and we'll build
+the crew around it.
 
 **Button:** Get event coverage quoted
 

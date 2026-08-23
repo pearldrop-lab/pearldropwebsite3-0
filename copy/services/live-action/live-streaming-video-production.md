@@ -42,6 +42,10 @@ dial-in disasters are prevented.
 Afterwards you keep the recording. The same footage cuts into a highlights
 film, so the stream isn't the only thing you get for the money.
 
+TODO(simon): confirm we can state bonded 4G/5G backup and a desk feed for
+slides as standard kit — the live page describes none of it, and this is the
+paragraph a technical buyer will check.
+
 ### 3 — Great for
 
 **Great for:**

@@ -2,10 +2,9 @@
 
 **URL** `/services/3d-animation/`
 
-*Family landing page. Follows the approved service-page format, with one added
-block (3b) that routes to the two child pages instead of selling a single
-service. Section 4 is flagged for Simon — there are no real 3D films with embed
-URLs in SOURCE-FACTS.md.*
+*Family landing page: the standard blocks, plus routing block 3b for the two
+child pages. Section 4 is empty and flagged — SOURCE-FACTS.md lists no 3D film
+with an embed URL.*
 
 ### SEO
 
@@ -18,7 +17,7 @@ URLs in SOURCE-FACTS.md.*
 
 > **Kicker:** Animation · 3D animation
 >
-> **H1:** 3D animation that shows what no camera could reach
+> **H1:** Unbuilt, sealed, microscopic — 3D animation gets you inside
 >
 > **Sub-deck:** Inside the housing, above the unbuilt site, down at transistor level.
 >
@@ -73,30 +72,26 @@ thing on camera? [Live-action](https://pearldrop.com/services/live-action/).
 
 **H2: Some we've made**
 
-`TODO(simon): need 3 real 3D film examples + embed URLs. The live site shows
-three 3D pieces with no embeds captured — Pearldrop Christmas animation,
-Hertfordshire County Council Fire Stations "Future Vision", and HCC Fire
-Stations Training Centre. Send the Vimeo/YouTube URLs and we'll drop them in,
-plus a one-line description each.`
+`TODO(simon): three 3D examples and their embed URLs, please. Our audit found
+titles but no players: Pearldrop Christmas animation, HCC Fire Stations "Future
+Vision", HCC Fire Stations Training Centre. URLs are all we need — we'll write
+the lines.`
 
 ### 5 — Testimonial
 
-> "Simon, Denise and their team at Pearldrop are absolute magic makers. Ours is
-> not an easy business to showcase but Pearldrop understood the what and how of
-> our business almost instantly, capturing our ethos and business personality as
-> easily as they did our product. Their work is pristine and bang on point. I
-> cannot recommend them more highly."
+> "Simon, Denise and their team at Pearldrop are absolute magic makers. I cannot
+> recommend them more highly."
 >
 > **Philippa Davis**, Helical Former · Rated 5 out of 5
 
-*(Helical Former is an engineering manufacturer — "not an easy business to
-showcase" is exactly the problem this page solves.)*
+*(Verbatim extract. Helical Former build forming machinery; the longer version
+of this quote sits on the product video page, so the two don't overlap.)*
 
 ### 6 — Form
 
 **H2: Tell us what we're building**
 
-A product, a place or something in between. Send the files or just describe it,
-and we'll come back with an approach and a price.
+A product, a place or something in between. Send the files or just describe it
+— we'll say which of the two routes above it wants, and what that costs.
 
 **Button:** Start a 3D project

@@ -13,7 +13,7 @@
 
 > **Kicker:** Live-action · Company & brand
 >
-> **H1:** Corporate video production that wins the second meeting
+> **H1:** Corporate video production people watch to the end
 >
 > **Sub-deck:** "Corporate video" is two words that make a whole room sigh. This isn't that.
 >
@@ -65,14 +65,15 @@ Body Healthy Mind trailer. Confirm the correct Novogene URL.
 
 ### 5 — Testimonial
 
-> "We were referred to Pearldrop by a trusted contact and from the first
-> interaction the team have been excellent. It was reassuring for everyone to
-> work with experienced professionals throughout and the resulting video and
-> photos exceeded all our expectations. I have already recommended Pearldrop to
-> others and look forward to working with Denise, Simon and the team many more
-> times."
+> "Amthal Fire & Security have used Pearl Drop for many many years. We have
+> always received a fully structured & professional service, starting with a
+> detailed plan of the process & content to be achieved which is agreed in
+> advance and always results in fantastic end results."
 >
-> **Simon Littlewood**, Estu Global Ltd · Rated 5 out of 5
+> **Jamie Allam**, Amthal Fire and Security · Rated 5 out of 5
+
+*(Verbatim, including their spelling of our name. A client of many years
+describing the planning a company profile lives or dies on.)*
 
 ### 6 — Form
 

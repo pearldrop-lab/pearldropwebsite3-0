@@ -13,7 +13,7 @@
 
 > **Kicker:** Post-production · VFX
 >
-> **H1:** VFX production that puts you anywhere in the world
+> **H1:** VFX production, from a blurred number plate to a battle robot
 >
 > **Sub-deck:** Filmed in Stevenage. Apparently standing on a Norwegian fjord.
 >
@@ -61,16 +61,15 @@ the one you were hoping for.
 
 ### 5 — Testimonial
 
-> "Simon, Denise and their team at Pearldrop are absolute magic makers. Ours is
-> not an easy business to showcase but Pearldrop understood the what and how of
-> our business almost instantly, capturing our ethos and business personality as
-> easily as they did our product. Their work is pristine and bang on point. I
-> cannot recommend them more highly."
+> "A great team that mix a relaxed attitude with totally professional results.
+> I've worked with these guys for over 10 years and they never disappoint.
+> Highly recommend."
 >
-> **Philippa Davis**, Helical Former · Rated 5 out of 5
+> **Marcus Hoare**, STM Marketing · Rated 5 out of 5
 
-*(A manufacturer whose product is genuinely hard to show on camera — which is
-usually the point at which VFX earns its place.)*
+*(An agency that has briefed us for a decade. "Relaxed attitude, totally
+professional results" is roughly the job description for a VFX brief that
+includes a battle robot.)*
 
 ### 6 — Form
 

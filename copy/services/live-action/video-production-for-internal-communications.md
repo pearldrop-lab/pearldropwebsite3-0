@@ -15,7 +15,7 @@
 >
 > **H1:** Internal communications video your team will actually watch
 >
-> **Sub-deck:** All-staff email. 900 recipients. 11% opened it. Twelve read past the first line.
+> **Sub-deck:** An all-staff email is a message you have sent. It isn't a message anyone has heard.
 >
 > **CTA:** Fix our all-staff comms
 
@@ -62,13 +62,13 @@ Whatever it is, it won't be Death By PowerPoint. That remains the house rule.
 
 ### 5 — Testimonial
 
-> "We have been delighted to recently work with Pearldrop (across Bedfordshire
-> Hospitals NHS Foundation Trust) on a number of videos. They are extremely
-> professional, putting nervous colleagues at ease and creating engaging and
-> relevant content – going above our expectations from the original briefs. We
-> are looking forward to working with the Pearldrop team in the future!"
+> "Pearldrop were a fantastic team to work with on our site tour video. Really
+> efficient, accommodating and professional – thank you so much for all your
+> hard work on the project"
 >
-> **Courtney Black**, Luton and Dunstable University Hospital · Rated 5 out of 5
+> **Ellie Weston**, Fareshare · Rated 5 out of 5
+
+*(The Fareshare site tour listed above is hers.)*
 
 ### 6 — Form
 

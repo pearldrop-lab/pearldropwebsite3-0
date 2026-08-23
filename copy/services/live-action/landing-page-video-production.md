@@ -13,20 +13,20 @@
 
 > **Kicker:** Live-action · Landing pages
 >
-> **H1:** Landing page video production that converts more visitors
+> **H1:** Landing page video production earns back the click you bought
 >
-> **Sub-deck:** Put a video on the page and roughly 80% more visitors become customers. That's the whole pitch.
+> **Sub-deck:** Add a film and the numbers say 80% more of them convert. That is the entire pitch.
 >
 > **CTA:** Get a landing page film
 
 ### 2 — Body
 
-**H2: Eight seconds, one decision**
+**H2: You have already paid for this visitor**
 
-You're paying for the click. Someone lands, and within about eight seconds
-decides whether this page is for them. Text asks them to work for the answer.
-A film above the fold hands it over while they're still deciding whether to
-scroll.
+The click cost money. What happens next is free and decides everything: they
+either get the offer or they go, and that happens before anyone has read a
+full paragraph. Text makes them work for the answer. A film above the fold
+hands it over while the thumb is still hovering.
 
 Landing page films are their own discipline, and shorter than clients expect.
 Sixty to ninety seconds, one proposition, one call to action, and no company
@@ -47,7 +47,7 @@ kit and same crew.
 
 **Great for:**
 
-- **Paid campaigns** — you've already bought the click, so give it the best chance of converting
+- **Paid campaigns** — the ad spend has already gone; the film decides whether it bought you anything
 - **Complex products** — thirty seconds of showing beats four paragraphs of explaining, every time
 - **A/B testing** — two versions from one shoot lets the data pick the winner rather than the committee
 
@@ -63,15 +63,15 @@ kit and same crew.
 
 ### 5 — Testimonial
 
-> "We have know Pearldrop as fellow Herts Chamber of Commerce Patrons for a
-> number of years and we have collaborated on a number of projects. However, we
-> have only recently had an opportunity to work with them on our own video
-> content. So how was the experience? Well, WOW!! That's all I can say really.
-> The attention to detail for planning, the set up, direction and then of course
-> the quality of the editing were all of the highest standards and impressed our
-> entire team immensely."
+> "However, we have only recently had an opportunity to work with them on our
+> own video content. So how was the experience? Well, WOW!! Not only would I
+> have no problem recommending Pearldrop, I would highly suggest that you
+> engage them."
 >
 > **Nick Silverstone**, Wagada · Rated 5 out of 5
+
+*(Wagada are a digital marketing agency. They build landing pages for a living,
+which makes them a fair judge of what belongs at the top of one.)*
 
 ### 6 — Form
 

@@ -2,8 +2,8 @@
 
 **URL** `/services/3d-animation/world-building/`
 
-*Note: section 4 is flagged — no real 3D films with embed URLs exist in
-SOURCE-FACTS.md.*
+*Note: the examples block is empty on purpose, pending real embed URLs from
+Simon.*
 
 ### SEO
 
@@ -59,27 +59,28 @@ was cleared.
 
 **H2: Some we've built**
 
-`TODO(simon): need 3 real 3D world-building examples + embed URLs. The live page
-names three with no embeds captured — Pearldrop Christmas animation,
-Hertfordshire County Council Fire Stations "Future Vision", and HCC Fire
-Stations Training Centre. Send URLs and we'll write the lines.`
+`TODO(simon): embed URLs for the two HCC Fire Stations pieces ("Future Vision"
+and the Training Centre) and the Pearldrop Christmas animation. The live page
+shows all three as stills only.`
 
 ### 5 — Testimonial
 
-> "We have used Pearldrop Productions for a number of events and we have always
-> been extremely impressed with the results. They are a company that always
-> exceeds expectations and are a pleasure to work with."
+> "The final product was even better than I could have imagined, and I've
+> already received numerous compliments on the videos. I highly recommend
+> Pearldrop for anyone looking for a high-quality, professional video production
+> experience."
 >
-> **Lucy Gravatt**, Hertfordshire Local Enterprise Partnership · Rated 5 out of 5
+> **Jesse Eyoma**, Hertfordshire County Council · Rated 5 out of 5
 
-*(Carried over from the live world-building page — the LEP's work covers
-development and infrastructure, which is what most of these renders are for.)*
+*(Verbatim extract. The council commissioned the fire station films described
+above — the buildings in the last paragraph are theirs.)*
 
 ### 6 — Form
 
 **H2: What's the shot you can't get?**
 
-Describe the place, the scale or the thing that hasn't been built. Plans, BIM
-files and rough sketches all help. We'll come back with a treatment and a price.
+Describe the place, the scale, or the thing that hasn't been built yet. Plans,
+BIM files and a sketch on the back of an agenda all help. You'll get a
+treatment back, not a brochure.
 
 **Button:** Ask for a treatment

@@ -39,9 +39,8 @@ it off before a single frame is animated, which is the point at which changes
 cost nothing but an email.
 
 You get versions cut for the website, for social, and for the pitch deck that
-somebody will inevitably open on a laptop with the sound off. Most clients are
-still using theirs three years later, which is more than can be said for the
-brochure.
+somebody will inevitably open on a laptop with the sound off. Same script,
+three lengths, no reshoot.
 
 ### 3 — Great for
 
@@ -49,7 +48,7 @@ brochure.
 
 - **Shortening the sales conversation** — prospects turn up already understanding what you do, so the call starts further down the page
 - **One message, said the same way twice** — the site, the stand and the paid ad all explain it identically
-- **Aging well** — no haircuts, no lanyards, no discontinued kit on screen: re-voice it in three years and it's current
+- **Ageing well** — no haircuts, no lanyards, no discontinued kit on screen: re-voice it in three years and it's current
 
 ### 4 — Video examples
 
@@ -66,22 +65,19 @@ Croft Communications.*
 
 ### 5 — Testimonial
 
-> "Pearldrop have created some truly amazing videos for Hertfordshire Chamber of
-> Commerce over the last few years. They are very creative, always coming up
-> with new ideas and their graphics are excellent. Pearldrop also offer high
-> quality photography services and are particularly good at putting subjects at
-> their ease in advance of photo shoots!"
+> "They are very creative, always coming up with new ideas and their graphics
+> are excellent."
 >
 > **Sarah Castleman**, Hertfordshire Chamber of Commerce · Rated 5 out of 5
 
-*(Chosen for "their graphics are excellent" — the closest thing in the
-testimonials to a direct endorsement of the animation and motion graphics work.)*
+*(A verbatim extract. "Their graphics are excellent" is the nearest thing on the
+testimonials page to a direct endorsement of the animation work.)*
 
 ### 6 — Form
 
 **H2: Send us the bit nobody understands**
 
 Paste in the paragraph you're tired of rewriting. We'll tell you how long the
-film wants to be and what it costs — usually the same day.
+film wants to be, and what it costs to stop rewriting it.
 
 **Button:** Get a script and a price

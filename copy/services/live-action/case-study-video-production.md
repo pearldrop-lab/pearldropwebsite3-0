@@ -40,7 +40,8 @@ pay slip. We film the doing as well as the telling, because a talking head on
 its own is a podcast with worse lighting.
 
 One shoot day usually yields the three-minute film for the sales deck, a
-ninety-second web cut and four vertical clips for LinkedIn.
+ninety-second web cut, and four vertical clips for LinkedIn that your customer
+will post themselves — which is the bit no advertising budget buys.
 
 ### 3 — Great for
 
@@ -67,6 +68,9 @@ ninety-second web cut and four vertical clips for LinkedIn.
 > their product/service."
 >
 > **Sophie Hudson**, Sherrards · Rated 5 out of 5
+
+*(A law firm recommending us to other businesses is, structurally, a case
+study. Verbatim from the live testimonials page.)*
 
 ### 6 — Form
 

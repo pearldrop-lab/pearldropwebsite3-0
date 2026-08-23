@@ -39,8 +39,10 @@ Campers and made a bus company genuinely funny for Grant Palmer, including
 racing one of their buses across town against a man on foot. Fleets, LCVs,
 plant and public transport all sell better in motion.
 
-Drone work is available where the CAA permissions allow it — we hold Specific
-Category UKPDRA-01 and have been flying commercially since 2016.
+Drone work too, where the airspace allows it, which is most places. A
+pull-back off a moving vehicle is the cheapest sense of scale money can buy,
+and our CAA authorisation covers the flying near people and property that
+usually kills the idea.
 
 ### 3 — Great for
 
@@ -67,11 +69,12 @@ and we'll swap it in.
 
 > "We found Pearldrop using Bark and the whole process was great. Having spoken
 > with Denise and Simon over the phone to discuss our project, the energy shared
-> by the Pearldrop team made hiring them an easy decision. The team worked well
-> with ours, based across three different countries, to storyboard, workshop and
-> deliver 3 promotional films for our company's latest launch."
+> by the Pearldrop team made hiring them an easy decision."
 >
 > **Callum Huthwaite**, Scarab Sweepers · Rated 5 out of 5
+
+*(Scarab build road sweepers. Of everyone on the testimonials page, they are
+the client whose product this page is about.)*
 
 ### 6 — Form
 

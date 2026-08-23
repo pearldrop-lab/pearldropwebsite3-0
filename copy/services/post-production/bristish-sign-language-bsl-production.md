@@ -16,9 +16,9 @@ The copy itself spells British correctly throughout.)*
 
 > **Kicker:** Post-production · British Sign Language
 >
-> **H1:** BSL video production that includes your whole audience
+> **H1:** BSL video production: a translation, not an afterthought
 >
-> **Sub-deck:** A signed overlay, prepared properly, by interpreters who are certified.
+> **Sub-deck:** Certified interpreters, given the script in advance, overlaid on any film you have.
 >
 > **CTA:** Talk to us about BSL
 
@@ -51,7 +51,7 @@ it.
 
 **Great for:**
 
-- **Reaching deaf audiences properly** — a prepared, certified interpretation rather than captions standing in for a first language
+- **Reaching BSL users properly** — a prepared, certified interpretation instead of captions standing in for someone's first language
 - **Public sector and healthcare communication** — information people rely on, delivered in the language they actually think in
 - **Showing inclusion in practice** — a signed film says more about an organisation's values than a statement about them ever will
 
@@ -62,7 +62,7 @@ it.
 | Film | Line | Embed |
 | --- | --- | --- |
 | ENHHT appeal | A hospital trust asking the public for support — information nobody should miss. | `https://www.youtube.com/embed/R5wERU7-oxg` |
-| Citizens Advice East Herts | Practical guidance for people who need it, which means everyone needs to follow it. | `https://www.youtube.com/embed/qS3O84T3QeI` |
+| Citizens Advice East Herts | Practical advice that only works if everyone it is aimed at can follow it. | `https://www.youtube.com/embed/qS3O84T3QeI` |
 | Herts Young Homeless: Beth's story | A personal story carried entirely by language — the case for signing in one film. | `https://www.youtube.com/embed/MVQfxMimRiI` |
 
 *These are examples of the kind of public-facing work a BSL overlay belongs on,
@@ -70,18 +70,17 @@ not films we have already signed.*
 
 ### 5 — Testimonial
 
-> "I recently had the pleasure of working with Pearldrop on a campaign. From
-> start to finish, the team was professional, creative, and a pleasure to work
-> with. Their attention to detail and willingness to go above and beyond
-> exceeded my expectations. The final product was even better than I could have
-> imagined, and I've already received numerous compliments on the videos. I
-> highly recommend Pearldrop for anyone looking for a high-quality, professional
-> video production experience."
+> "We have been delighted to recently work with Pearldrop (across Bedfordshire
+> Hospitals NHS Foundation Trust) on a number of videos. They are extremely
+> professional, putting nervous colleagues at ease and creating engaging and
+> relevant content – going above our expectations from the original briefs. We
+> are looking forward to working with the Pearldrop team in the future!"
 >
-> **Jesse Eyoma**, Hertfordshire County Council · Rated 5 out of 5
+> **Courtney Black**, Luton and Dunstable University Hospital · Rated 5 out of 5
 
-*(Local authority communications carry an accessibility duty, so this is the
-right organisation to speak for a BSL page.)*
+*(NHS trusts publish health information the public has to be able to act on.
+Of the organisations on the testimonials page, they carry this duty most
+directly.)*
 
 ### 6 — Form
 

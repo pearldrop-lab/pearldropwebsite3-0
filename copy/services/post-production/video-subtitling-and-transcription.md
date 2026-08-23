@@ -13,9 +13,9 @@
 
 > **Kicker:** Post-production · Subtitling & transcription
 >
-> **H1:** Video subtitling services that stop people scrolling past
+> **H1:** Video subtitling services for everyone watching on mute
 >
-> **Sub-deck:** On a packed 7:42 into Kings Cross, your voiceover does not exist.
+> **Sub-deck:** You paid for a voiceover. On a silent phone screen it may as well not exist.
 >
 > **CTA:** Get your videos captioned
 
@@ -63,16 +63,16 @@ will quote on request.
 
 ### 5 — Testimonial
 
-> "We have been delighted to recently work with Pearldrop (across Bedfordshire
-> Hospitals NHS Foundation Trust) on a number of videos. They are extremely
-> professional, putting nervous colleagues at ease and creating engaging and
-> relevant content – going above our expectations from the original briefs. We
-> are looking forward to working with the Pearldrop team in the future!"
+> "It doesn't feel like you're working with an external company, it feels like
+> they are part of the team alongside you."
 >
-> **Courtney Black**, Luton and Dunstable University Hospital · Rated 5 out of 5
+> **Heather Almond**, North Hertfordshire College · Rated 5 out of 5
 
-*(NHS communications sits squarely under the public sector accessibility duty,
-so this is the right organisation for a captions page.)*
+*(Verbatim extract; the longer version is on the training page, and the two
+share no sentence. North Herts College is precisely the kind of body the
+paragraph above is about — but the fit here is the organisation, not the words.
+If you'd prefer, Courtney Black's NHS quote could move across from the BSL
+page.)*
 
 ### 6 — Form
 

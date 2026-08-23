@@ -17,9 +17,9 @@ spec.*
 
 > **Kicker:** Services · Post-production
 >
-> **H1:** Video post-production that makes the footage worth it
+> **H1:** Video post-production is where the film actually happens
 >
-> **Sub-deck:** The shoot lasts a day. Post-production is where it becomes a film.
+> **Sub-deck:** A day of rushes goes in. Two minutes worth watching come out. That gap is the work.
 >
 > **CTA:** Send us your footage
 
@@ -28,20 +28,20 @@ spec.*
 **H2: Nobody is ever going to watch your rushes**
 
 They'll watch the two minutes that come out the other end. Everything between
-those two facts is post-production, and it is where most of the difference
-between a good film and a forgettable one actually happens — the cut, the
-grade, the sound, the graphics, the moment you decide to lose your favourite
-shot because it slows the whole thing down.
+those two facts is post-production: the cut, the grade, the sound, the
+graphics, and the moment somebody decides to lose your favourite shot because
+it slows the whole thing down. That decision is worth more than a second
+camera.
 
 We do all of it in-house in Hertfordshire, on footage we shot or footage you
 send us. Any camera, any format, any codec our system can ingest — and it can
 ingest most things, including the phone clips someone grabbed on the day that
 turn out to be the best moment in the film.
 
-Post is also where a film becomes usable by everyone who was going to watch it.
-Subtitles for the 6am commuter with the sound off, a British Sign Language
-overlay for deaf viewers, transcripts for the search engines. That is not an
-extra at the end. It is part of finishing the job properly.
+Post is also where a film becomes usable by everyone it was made for. Captions,
+a British Sign Language overlay, a transcript the search engines can read —
+none of that is a line item bolted on at the end. It is part of finishing the
+job, and we would rather build it in than retrofit it in March.
 
 **Where to go next**
 
@@ -55,7 +55,7 @@ extra at the end. It is part of finishing the job properly.
 **Great for:**
 
 - **Rescuing footage you already paid for** — old rushes, event coverage and abandoned projects, recut into something you can publish
-- **One supplier instead of four** — edit, effects, subtitles and BSL under one roof, one schedule and one invoice
+- **One supplier instead of four** — edit, effects, captions and signing on one schedule, not four companies waiting on each other
 - **Reaching everybody** — captions and signing built in, so nobody is left guessing what your film just said
 
 ### 4 — Video examples

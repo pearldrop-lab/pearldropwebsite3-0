@@ -29,11 +29,11 @@ until the day a drone operator looks at your site, your event or your proximity
 to a controlled airspace boundary and quietly withdraws.
 
 We hold a CAA Unmanned Aircraft Operational Authorisation in the Specific
-Category, UKPDRA-01. It is one of the wider authorisations available in the UK,
-and it lets us operate closer to people and property than a standard licence
-allows. We're also JOSCAR accredited, which is the supply-chain standard for
-aerospace, defence and security — so if your site has a gate, a badge and a
-briefing, we've already been through that process.
+Category, UKPDRA-01 — the one that covers filming close to people and property,
+where the everyday Open-category rules run out. We're also JOSCAR accredited,
+which is the supply-chain standard for aerospace, defence and security, so if
+your site has a gate, a badge and a briefing, we have already been through that
+process once.
 
 None of that is the fun part. The fun part is the shot: the reveal that pulls
 back off your building to show the whole estate, a construction site tracked
@@ -43,11 +43,15 @@ month by month, an event photographed from an angle nobody in the field had.
 Send us a postcode before you send us a brief. We'll check the airspace, the
 permissions and the ground risk, and tell you straight away whether it flies.
 
+TODO(simon): you're the pilot — confirm how precisely we can describe the
+UKPDRA-01 limits (separation distances, congested-area work). A number here
+would be worth more than the adjective.
+
 ### 3 — Great for
 
 **Great for:**
 
-- **Sites other operators decline** — a UKPDRA-01 authorisation covers work near people and property that a standard licence won't
+- **Sites other operators decline** — a Specific Category authorisation covers flights the Open-category rules put out of reach
 - **Secure and regulated environments** — JOSCAR accreditation means defence and aerospace clients can clear us through procurement
 - **Showing scale** — estates, developments, farms and festivals make sense from 100 metres up and nowhere else
 

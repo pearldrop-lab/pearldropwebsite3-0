@@ -63,12 +63,13 @@ a fresh cut is usually the cheapest video you'll make all year.
 
 > "The attention to detail for planning, the set up, direction and then of
 > course the quality of the editing were all of the highest standards and
-> impressed our entire team immensely."
+> impressed our entire team immensely. The results we pretty much perfect and
+> captured the culture, values and approach of Wagada Digital perfectly."
 >
 > **Nick Silverstone**, Wagada · Rated 5 out of 5
 
-*(Verbatim extract from the live testimonials page. Wagada's own film is first
-in the list above, and the quote names the editing specifically.)*
+*(Verbatim extract, typo and all. Wagada's own film is first in the list above,
+and this is the only quote we have that names the editing.)*
 
 ### 6 — Form
 

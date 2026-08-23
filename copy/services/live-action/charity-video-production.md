@@ -63,11 +63,13 @@ filming buys, and where a second day genuinely pays for itself.
 
 ### 5 — Testimonial
 
-> "Pearldrop were a fantastic team to work with on our site tour video. Really
-> efficient, accommodating and professional – thank you so much for all your
-> hard work on the project"
+> "Great to work with, highly recommend."
 >
-> **Ellie Weston**, Fareshare · Rated 5 out of 5
+> **Mark Hanna**, Age UK Hertfordshire · Rated 5 out of 5
+
+*(Age UK Hertfordshire is named in the body copy above. Eight words, verbatim,
+five stars. If you want more length on this page, Ellie Weston's Fareshare
+quote is on the internal communications page and could swap back.)*
 
 ### 6 — Form
 

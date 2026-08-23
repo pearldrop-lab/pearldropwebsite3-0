@@ -13,7 +13,7 @@
 
 > **Kicker:** Services · AI video production
 >
-> **H1:** AI video production that saves money, not standards
+> **H1:** AI video production. Same standards, a fraction of the budget.
 >
 > **Sub-deck:** Yes, we've seen the bad AI videos too. We're not making one of those.
 >
@@ -30,7 +30,7 @@ without a filmmaking habit are pointing it at things it can't do yet.
 
 Here's the version that works. The Hertfordshire Chamber of Commerce needed a
 1920s-themed film for the Inspiring Hertfordshire Awards. The one usable piece
-of archive footage we found cost £283 to licence, plus £3,000 to indemnify us
+of archive footage we found cost £283 to license, plus £3,000 to indemnify us
 against copyright claims — for 25 seconds. Instead we generated the period
 imagery in Midjourney, wrote and produced a 1920s jazz track in Udio in about
 fifteen minutes, and made the New York voiceover in ElevenLabs. Total tool cost:
@@ -68,15 +68,12 @@ please send it.
 ### 5 — Testimonial
 
 > "Pearldrop have created some truly amazing videos for Hertfordshire Chamber of
-> Commerce over the last few years. They are very creative, always coming up
-> with new ideas and their graphics are excellent. Pearldrop also offer high
-> quality photography services and are particularly good at putting subjects at
-> their ease in advance of photo shoots!"
+> Commerce over the last few years."
 >
 > **Sarah Castleman**, Hertfordshire Chamber of Commerce · Rated 5 out of 5
 
-*(The Chamber commissioned the 1920s AI film described above, so this quote
-belongs to the same client relationship.)*
+*(Verbatim extract. The Chamber commissioned the 1920s film described above, so
+the client and the story on this page are the same one.)*
 
 ### 6 — Form
 

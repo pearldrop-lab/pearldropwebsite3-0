@@ -17,9 +17,9 @@ extra routing table that only this page carries.*
 
 > **Kicker:** Services · Live-action
 >
-> **H1:** Live-action video production that earns its keep
+> **H1:** Fourteen kinds of live-action video production, one crew
 >
-> **Sub-deck:** Real people, real places, real cameras. Fourteen ways of pointing one at your business.
+> **Sub-deck:** Real people, real places, real cameras. Tell us the problem and we'll name the film.
 >
 > **CTA:** Find the right film
 
@@ -39,7 +39,7 @@ that sounds like your problem and go straight there.
 What they share is us: a Hertfordshire crew filming since 2003, with a
 greenscreen studio and white infinity cove at Stevenage Arts & Leisure Centre
 for anything that's easier indoors. Same team plans it, shoots it and edits it,
-so nothing gets lost in the handover between three companies.
+in the same building the kit goes home to.
 
 If you genuinely can't tell which page you want, ignore all of them and just
 tell us what's happening. We've been doing this long enough to recognise a
@@ -62,14 +62,14 @@ case study wearing a promo's clothing.
 | The same process taught the same way, every time | [Training video](/services/live-action/training-video-production/) |
 | Donors, funders and members moved to act | [Charity video](/services/live-action/charity-video-production/) |
 | Vehicles made to look like they're worth the money | [Automotive video](/services/live-action/automotive/) |
-| Height, scale or a site seen from above | TODO(simon): confirm the live slug for the aerial/drone page |
+| Height, scale or a site seen from above | [Aerial and drone video](/services/aerial-drone-video-production/) |
 
 ### 4 — Great for
 
 **Great for:**
 
-- **Trusting what you see** — real staff, real premises and real customers beat any stock library you could licence
-- **One crew, one invoice** — planning, filming, editing and graphics under one roof in Stevenage
+- **Trusting what you see** — real staff, real premises and real customers beat any stock library you could license
+- **Nobody passing the parcel** — one supplier for the plan, the shoot and the edit, so a delay has exactly one owner
 - **Getting years out of one shoot day** — a single visit usually feeds a homepage film, social cutdowns and next year's deck
 
 ### 5 — Video examples
@@ -84,11 +84,15 @@ case study wearing a promo's clothing.
 
 ### 6 — Testimonial
 
-> "A great team that mix a relaxed attitude with totally professional results.
-> I've worked with these guys for over 10 years and they never disappoint.
-> Highly recommend."
+> "We were referred to Pearldrop by a trusted contact and from the first
+> interaction the team have been excellent. It was reassuring for everyone to
+> work with experienced professionals throughout and the resulting video and
+> photos exceeded all our expectations."
 >
-> **Marcus Hoare**, STM Marketing · Rated 5 out of 5
+> **Simon Littlewood**, Estu Global Ltd · Rated 5 out of 5
+
+*(A first-time client describing the bit this page is really about: knowing
+which film you need before you commission it.)*
 
 ### 7 — Form
 

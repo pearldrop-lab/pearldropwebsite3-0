@@ -13,7 +13,7 @@
 
 > **Kicker:** 2D animation · Animated characters
 >
-> **H1:** Animated character videos that people actually warm to
+> **H1:** Give your message a face: animated character video
 >
 > **Sub-deck:** A presenter who never fluffs a line, never needs a lav mic and never leaves the company.
 >
@@ -48,7 +48,7 @@ diary clash, no re-shoot when they move jobs.
 
 **Great for:**
 
-- **Difficult subjects** — a drawn character can tell a story about debt or bereavement without exposing a real person to a camera
+- **Difficult subjects** — debt, bereavement, safeguarding: the story gets told without a real person having to sit in front of a lens
 - **Younger audiences** — a face on screen that a Year 7 will watch to the end and then quote back at you
 - **A presenter you own outright** — build once, reuse across the induction film, the campaign and next year's update
 

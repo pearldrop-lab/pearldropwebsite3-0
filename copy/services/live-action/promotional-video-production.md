@@ -29,9 +29,9 @@ Everything about a promo follows from that constraint.
 
 Which is why promos are made differently from every other film on this site. No
 interviews — talking heads die on social. Strong images, a proper music track,
-big legible graphics for everyone watching muted, and a cut that opens on the
-best shot rather than saving it for the end. Thirty to sixty seconds for social,
-with square and vertical versions delivered alongside the landscape one.
+graphics big enough to read at arm's length, and a cut that opens on the best
+shot instead of saving it for an ending nobody reaches. Thirty to sixty seconds,
+framed so it survives being cropped to a square and a phone screen.
 
 The other half of the job is having an idea worth three seconds. We raced a man
 against a bus for Grant Palmer, and we've made their Christmas campaign year

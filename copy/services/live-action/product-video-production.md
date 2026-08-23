@@ -13,9 +13,9 @@
 
 > **Kicker:** Live-action · Product
 >
-> **H1:** Product video production that sells and cuts returns
+> **H1:** Product video production: the closest thing to holding it
 >
-> **Sub-deck:** Nobody can pick your product up through a screen. This is the next best thing.
+> **Sub-deck:** Weight, finish, the way the lid closes. Everything a photograph quietly leaves out.
 >
 > **CTA:** Get your product filmed
 
@@ -46,7 +46,7 @@ part is inside the casing.
 
 **Great for:**
 
-- **Boosting sales** — a film on the product page turns browsers into buyers at a measurably higher rate
+- **Boosting sales** — a shopper who watches the film is roughly three times likelier to reach the checkout
 - **Fewer returns** — customers who saw the real size and finish are far less likely to send it back
 - **Product-page SEO** — a page built around a specific product film competes for the searches that matter
 
@@ -62,13 +62,15 @@ part is inside the casing.
 
 ### 5 — Testimonial
 
-> "Simon, Denise and their team at Pearldrop are absolute magic makers. Ours is
-> not an easy business to showcase but Pearldrop understood the what and how of
-> our business almost instantly, capturing our ethos and business personality as
-> easily as they did our product. Their work is pristine and bang on point. I
-> cannot recommend them more highly."
+> "Ours is not an easy business to showcase but Pearldrop understood the what
+> and how of our business almost instantly, capturing our ethos and business
+> personality as easily as they did our product. Their work is pristine and bang
+> on point."
 >
 > **Philippa Davis**, Helical Former · Rated 5 out of 5
+
+*(Helical Former make forming machinery. "As easily as they did our product" is
+the whole job of this page.)*
 
 ### 6 — Form
 
