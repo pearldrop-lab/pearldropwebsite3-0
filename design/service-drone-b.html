@@ -32,6 +32,8 @@
   --peri:110,150,255;
   --ice:168,216,255;
   --deep:3,8,24;
+
+  --gutter:clamp(10px,1.4vw,20px);
 }
 
 html,body{background:var(--ground)}
@@ -41,12 +43,19 @@ body{
   display:flex; flex-direction:column;
 }
 
-/* sections butt straight up against one another - the page is continuous,
-   and the separation comes from tone rather than from an edge */
+/* The hero runs flush to the top and the page edges. Everything below it is a
+   rounded window inset from the edge, as in the reference. */
 .card{
   position:relative; overflow:hidden;
   background:var(--card);
 }
+.card:not(.hero), .foot{
+  margin:0 var(--gutter) var(--gutter);
+  border-radius:clamp(18px,2vw,30px);
+}
+.card:not(.hero){border:1px solid rgba(var(--peri),.12)}
+.hero + .card{margin-top:var(--gutter)}
+.hero{border-radius:0; border:0}
 
 /* --- display type -------------------------------------------------------- */
 .display{
@@ -386,7 +395,7 @@ body{
 }
 
 .foot{
-  background:#070c1e;
+  background:#070c1e; border:1px solid rgba(var(--peri),.12);
   display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:space-between;
   padding:20px clamp(20px,3vw,44px); color:var(--muted); font-size:13px;
 }
