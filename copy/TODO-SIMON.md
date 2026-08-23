@@ -8,21 +8,21 @@ mechanical checks pass. These are the holes only you can fill.
 
 ---
 
-## 1. Missing embed URLs (8)
+## 1. Missing embed URLs (7)
 
-The single biggest gap. Three pages currently have an **empty examples block**
-because SOURCE-FACTS.md contains no 3D film with a player URL.
+3D animation has been dropped as a service (Simon, Aug 2026), so the three 3D
+pages and the three missing-example TODOs that went with them are gone. Five
+gaps remain from the original set, plus two on the new vodcast page.
 
 | # | Page | What we need |
 | --- | --- | --- |
-| 1.1 | `3d-animation/index.md` | Three 3D films with embed URLs. Titles we know exist: Pearldrop Christmas animation, HCC Fire Stations "Future Vision", HCC Fire Stations Training Centre. URLs only — we'll write the one-line descriptions. |
-| 1.2 | `3d-animation/world-building.md` | Embed URLs for the two HCC Fire Stations pieces and the Christmas animation. The live page shows all three as stills. |
-| 1.3 | `3d-animation/step-file-renders.md` | Three **CAD-to-render** examples with URLs. Reusing a 2D film here would be spotted instantly by this page's reader, so the block stays empty until we have real ones. If the 3D showreel can be split into its component pieces, those would do. |
-| 1.4 | `aerial-drone-video-production.md` | Embed URL for **The Grand Union Boat Race 2023**. It's on the live aerial page but not in SOURCE-FACTS.md. This is the only TODO sitting inside a table row. |
-| 1.5 | `live-action/automotive.md` | Embed URL for the **Nissan Serena** film shown on the live page. |
-| 1.6 | `ai-video-production.md` | Embed URL for the **1920s Inspiring Hertfordshire Awards** film. It is the strongest example on the page — the whole body copy is the story of making it — and it currently has no player. |
-| 1.7 | `live-action/live-streaming-video-production.md` | One **genuinely streamed** job we can link to. The three films listed are events we filmed, not confirmed streams. The FareShare Sussex & Surrey stream would be ideal. |
-| 1.8 | `post-production/bristish-sign-language-bsl-production.md` | A link to any client film that **already carries a Pearldrop BSL overlay**. The three films listed are examples of work that *should* be signed, and the page says so — one real signed film would be far stronger. |
+| 1.1 | `aerial-drone-video-production.md` | Embed URL for **The Grand Union Boat Race 2023**. It's on the live aerial page but not in SOURCE-FACTS.md. This is the only TODO sitting inside a table row. |
+| 1.2 | `live-action/automotive.md` | Embed URL for the **Nissan Serena** film shown on the live page. |
+| 1.3 | `ai-video-production.md` | Embed URL for the **1920s Inspiring Hertfordshire Awards** film. It is the strongest example on the page — the whole body copy is the story of making it — and it currently has no player. |
+| 1.4 | `live-action/live-streaming-video-production.md` | One **genuinely streamed** job we can link to. The three films listed are events we filmed, not confirmed streams. The FareShare Sussex & Surrey stream would be ideal. |
+| 1.5 | `post-production/bristish-sign-language-bsl-production.md` | A link to any client film that **already carries a Pearldrop BSL overlay**. The three films listed are examples of work that *should* be signed, and the page says so — one real signed film would be far stronger. |
+| 1.6 | `live-action/video-podcast-production.md` | **Embed URL for the Heart Radio vodcast with the UK VP of Warner Bros.** This is the page's only example and its whole argument. |
+| 1.7 | `live-action/video-podcast-production.md` | **Two more vodcast examples.** Left short rather than padded with unrelated live-action work — a buyer looking for podcast production will spot that instantly. Two more episodes from the Heart Radio run would do. |
 
 ## 2. Source-data errors to resolve (1)
 
@@ -57,7 +57,13 @@ your name on it before it ships.
 | 4.5 | `aerial-drone-video-production.md` | How far we can go describing **UKPDRA-01** | We've toned the first draft down to "filming close to people and property, where the everyday Open-category rules run out". You're the pilot: give us the actual separation distances and congested-area permissions and we'll put a number in. A number beats an adjective. |
 | 4.6 | `post-production/video-subtitling-and-transcription.md` and `post-production/bristish-sign-language-bsl-production.md` | WCAG captions requirement + the UK public-sector accessibility duty; the British Sign Language Act 2022 | Both accurate as written, both **new to these pages**. Flagging because they are legal statements on pages read by compliance people. |
 
-## 5. Fixed in this pass — no action needed
+## 5. Decisions needed on the new vodcast page (1)
+
+| # | Page | What we need |
+| --- | --- | --- |
+| 5.1 | `live-action/video-podcast-production.md` | **The slug.** You said "vodcasts" and the copy uses that word, but search volume is overwhelmingly on *"video podcast"* — hardly anyone types "vodcast". The page is written for `/services/live-action/video-podcast-production/`. Choosing `vodcast-production` instead will cost real traffic. Your call, but it needs making before the page is created in WordPress. |
+
+## 6. Fixed in this pass — no action needed
 
 - **Invented statistic removed.** The internal communications sub-deck read
   "All-staff email. 900 recipients. 11% opened it. Twelve read past the first
@@ -69,3 +75,11 @@ your name on it before it ships.
   table — worth a glance to confirm it matches WordPress.
 - **Unverifiable longevity claim removed** from the explainer page ("most
   clients are still using theirs three years later").
+- **3D animation dropped.** `copy/services/3d-animation/` deleted (family page,
+  STEP-file renders, world-building). Two cross-references removed: the product
+  page's "3D from a STEP file" line and the 2D index's link to 3D. 3D was never
+  in the header menu, so no navigation change was needed.
+- **Vodcasts added** as the fifteenth live-action service. The live-action index
+  H1 counted the children, so it now reads "Fifteen kinds…", and a routing row
+  was added. The menu item was added to both the desktop mega menu and the
+  mobile mirror.

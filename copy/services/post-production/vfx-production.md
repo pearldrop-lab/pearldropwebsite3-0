@@ -61,8 +61,7 @@ the one you were hoping for.
 
 ### 5 — Testimonial
 
-> "A great team that mix a relaxed attitude with totally professional results.
-> I've worked with these guys for over 10 years and they never disappoint.
+> "I've worked with these guys for over 10 years and they never disappoint.
 > Highly recommend."
 >
 > **Marcus Hoare**, STM Marketing · Rated 5 out of 5

@@ -288,6 +288,12 @@
     font-size:15px; line-height:1.3; color:var(--ink);
     transition:color .18s ease, background .18s ease;
   }
+  /* Live-Action carries 15 items since Vodcasts was added, which overflowed the
+     scroll cap at 1366x768 and hid the last item. Buying back 3px a row clears
+     it without touching the single-column layout. Must sit AFTER .pd-list a. */
+  @media (max-height:800px){
+    #pd-hero .pd-list a{padding-top:3px; padding-bottom:3px}
+  }
   /* a droplet lands beside whatever you're about to click */
   #pd-hero .pd-list a::before{
     content:""; position:absolute; left:4px; top:50%; width:7px; height:7px;
@@ -704,6 +710,7 @@
             <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/product-video-production/">Product</a></li>
             <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/promotional-video-production/">Promotional</a></li>
             <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/training-video-production/">Training</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/video-podcast-production/">Vodcasts</a></li>
           </ul>
         </div>
         <div class="pd-col">
@@ -875,7 +882,7 @@
       <a href="https://pearldrop.com/services/live-action/case-study-video-production/">Case Studies</a><a href="https://pearldrop.com/services/live-action/video-production-for-ceremonies-and-conferences/">Conferences and Ceremonies</a><a href="https://pearldrop.com/services/live-action/charity-video-production/">Charity</a>
       <a href="https://pearldrop.com/services/live-action/company-and-brand-video-production/">Company Profiles</a><a href="https://pearldrop.com/services/live-action/video-production-for-internal-communications/">Internal Communications</a><a href="https://pearldrop.com/services/live-action/landing-page-video-production/">Landing Pages</a>
       <a href="https://pearldrop.com/services/live-action/high-quality-video-production-for-live-events/">Live Events</a><a href="https://pearldrop.com/services/live-action/live-streaming-video-production/">Live-streaming</a><a href="https://pearldrop.com/services/live-action/product-video-production/">Product</a>
-      <a href="https://pearldrop.com/services/live-action/promotional-video-production/">Promotional</a><a href="https://pearldrop.com/services/live-action/training-video-production/">Training</a>
+      <a href="https://pearldrop.com/services/live-action/promotional-video-production/">Promotional</a><a href="https://pearldrop.com/services/live-action/training-video-production/">Training</a><a href="https://pearldrop.com/services/live-action/video-podcast-production/">Vodcasts</a>
       <h5>Animation</h5>
       <a href="https://pearldrop.com/services/2d-animation/animated-explainer-video-production/">Explainer</a><a href="https://pearldrop.com/services/2d-animation/animated-character-video-production/">Character</a>
       <h5>Photography</h5>

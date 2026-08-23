@@ -39,7 +39,7 @@ the product needs some drama. Turntables, macro passes for texture and detail,
 and slow moves that let a surface catch the light properly. If the product is
 bolted to a floor or the size of a shed, we come to you instead.
 
-Add a voiceover, on-screen callouts or 3D from a STEP file where the interesting
+Add a voiceover, on-screen callouts or a cutaway animation where the interesting
 part is inside the casing.
 
 ### 3 — Great for

@@ -199,9 +199,20 @@ stability, `document.getAnimations()` counts when the menu is open vs closed.
   Simon's call. `legal` is also `#`, but deliberately: it is a column heading.
 - Live Sectors are **Science & Technology, Education, Golf Courses**. The menu
   invents *Healthcare* and omits *Golf Courses*. Worth reconciling.
-- The menu's Services column has no **3D Animation**, though
-  `/services/3d-animation/` exists live with two children (STEP-file renders,
-  world-building). Deliberate omission or oversight?
+- **3D animation is not a service any more** (Simon, Aug 2026). It was never in
+  the header menu, and the copy for it has been deleted. The three live pages
+  (`/services/3d-animation/` + STEP-file renders + world-building) still exist
+  on pearldrop.com and should be unpublished or redirected — most sensibly to
+  `/services/2d-animation/`.
+- **Vodcasts is a new live-action service**, written as
+  `/services/live-action/video-podcast-production/`. **The WordPress page does
+  not exist yet** — it has to be created before the menu link resolves. Note
+  the slug deliberately says "video podcast", not "vodcast": the house word is
+  vodcast but the search volume is all on video podcast. See `copy/TODO-SIMON.md`.
+- Live-Action is now **15 items**, not 14. The 15th overflowed the
+  `max-height:800px` scroll cap at 1366x768 and silently hid the last item, so
+  `.pd-list a` loses 3px of vertical padding at short heights. That override
+  must stay *after* the base `.pd-list a` rule to win.
 - Portfolio thumbnails in `menu-thumbs/` are **placeholder crops from the hero
   video**, not real portfolio work. 560x350 WebP. The audit collected 643 real
   portfolio image URLs — see `site-audit/INDEX.md` on `claude/site-audit`.

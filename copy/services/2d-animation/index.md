@@ -65,8 +65,9 @@ it's patronising.
 | Animated character video production | Give the message a face — a presenter, a mascot, a story told safely. | `/services/2d-animation/animated-character-video-production/` |
 
 Working the other way round — real people, real places? That's
-[live-action](https://pearldrop.com/services/live-action/). Need it in 3D?
-[3D animation](https://pearldrop.com/services/3d-animation/).
+[live-action](https://pearldrop.com/services/live-action/). Need the finished
+film cut, graded and subtitled? That's
+[post-production](https://pearldrop.com/services/post-production/).
 
 ### 4 — Video examples
 
