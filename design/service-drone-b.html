@@ -40,22 +40,17 @@ html,body{background:var(--ground)}
 body{
   font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   color:var(--ink); -webkit-font-smoothing:antialiased;
-  display:flex; flex-direction:column;
+  padding:var(--gutter);
+  display:flex; flex-direction:column; gap:var(--gutter);
 }
 
-/* The hero runs flush to the top and the page edges. Everything below it is a
-   rounded window inset from the edge, as in the reference. */
-.card{
+/* every section, the hero included, is a rounded window on the dark ground */
+.card, .foot{
   position:relative; overflow:hidden;
-  background:var(--card);
-}
-.card:not(.hero), .foot{
-  margin:0 var(--gutter) var(--gutter);
   border-radius:clamp(18px,2vw,30px);
+  background:var(--card);
+  border:1px solid rgba(var(--peri),.12);
 }
-.card:not(.hero){border:1px solid rgba(var(--peri),.12)}
-.hero + .card{margin-top:var(--gutter)}
-.hero{border-radius:0; border:0}
 
 /* --- display type -------------------------------------------------------- */
 .display{
@@ -110,7 +105,7 @@ body{
 
 /* =====================  1. HERO  ========================================== */
 .hero{
-  min-height:min(880px,94vh);
+  min-height:min(820px,88vh);
   display:flex; flex-direction:column;
   background:
     radial-gradient(90% 70% at 82% 30%, rgba(var(--azure),.30), transparent 62%),
