@@ -179,10 +179,18 @@ body{
     padding:22px clamp(20px,4vw,54px);
     background:transparent; transition:background .35s ease;
   }
-  #pd-hero .pd-header.scrolled{background:linear-gradient(180deg, rgba(4,10,26,.55), rgba(4,10,26,0))}
+  /* Once scrolled, the header needs to be a real backdrop, not a wash: on an
+     inner page with body copy, text slides underneath and 55% is not enough to
+     keep either legible. Solid through the band, soft only at its lower edge. */
+  #pd-hero .pd-header.scrolled{
+    background:linear-gradient(180deg,
+      rgba(4,10,26,.97) 0%, rgba(4,10,26,.94) 58%,
+      rgba(4,10,26,.6) 84%, rgba(4,10,26,0) 100%);
+    backdrop-filter:blur(12px) saturate(1.08);
+  }
   /* an open menu supplies the header's background itself, so drop the
      scroll gradient rather than banding the top of the panel */
-  #pd-hero:has(.pd-mega.open) .pd-header.scrolled{background:transparent}
+  #pd-hero:has(.pd-mega.open) .pd-header.scrolled{background:transparent; backdrop-filter:none}
   #pd-hero .pd-brand{display:flex; align-items:center; gap:13px; text-decoration:none; flex:0 0 auto}
   #pd-hero .pd-brand__logo{height:40px; width:auto; display:block; filter:drop-shadow(0 2px 12px rgba(0,0,0,.4))}
   #pd-hero .pd-word{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:26px; letter-spacing:-.5px; color:var(--cyan); text-shadow:var(--glow-cyan)}
@@ -859,10 +867,10 @@ body{
 /* =====================  2. WORK TILES  ==================================== */
 .work{
   background:var(--tone);
-  display:grid; grid-template-columns:minmax(280px,.85fr) minmax(0,1.15fr);
-  gap:clamp(20px,3vw,50px);
+  display:grid; grid-template-columns:minmax(300px,1fr) minmax(0,1.04fr);
+  gap:clamp(26px,4vw,70px);
   padding:clamp(46px,5.4vw,88px) clamp(20px,3vw,44px);
-  align-items:center;
+  align-items:start;
 }
 .work h2{font-size:clamp(34px,4.4vw,64px); margin:14px 0 0}
 .work__p{margin-top:20px; color:var(--muted); font-size:15.5px; line-height:1.6; max-width:38ch}
@@ -946,6 +954,18 @@ body{
 }
 @media (prefers-reduced-motion:reduce){
   .scene .rotor, .scene .drone{animation:none}
+}
+
+.prose{max-width:46ch}
+.prose h2{font-size:clamp(30px,3.4vw,50px); margin:14px 0 0}
+.prose p{margin-top:18px; color:var(--muted); font-size:16px; line-height:1.66}
+.prose p.lead{color:var(--ink); font-size:clamp(17px,1.4vw,19.5px); line-height:1.58}
+.prose strong{color:var(--ink); font-weight:600}
+.prose ul{list-style:none; margin-top:22px; display:grid; gap:10px}
+.prose li{position:relative; padding-left:26px; color:var(--muted); font-size:15.5px; line-height:1.5}
+.prose li::before{
+  content:""; position:absolute; left:2px; top:.55em; width:8px; height:8px;
+  border-radius:50%; background:rgb(var(--cyan)); box-shadow:0 0 10px rgba(var(--cyan),.8);
 }
 
 /* =====================  3. FORMATS  ====================================== */
@@ -1320,15 +1340,15 @@ body{
   </div>
   <div class="hero__scrim" aria-hidden="true"></div>
 
-  <span class="script hero__script" aria-hidden="true">flown in town</span>
+  <span class="script hero__script" aria-hidden="true">worth looking up for</span>
 
   <div class="hero__body">
     <div class="hero__copy">
       <span class="eyebrow">Aerial &amp; drone</span>
-      <h1 class="display">Small drone.<span class="line2 grad">Big shots.</span></h1>
+      <h1 class="display">See it all<span class="line2 grad">from the air.</span></h1>
       <p class="hero__sub">
-        Sub-250g aerials, flown in the tight, built-up places a heavier aircraft
-        can't get near. Filming from the air since 2014.
+        Your building, your event, your grounds — shot from above, and cut to
+        look like it cost a great deal more than it did.
       </p>
       <div class="hero__ctas">
         <a class="btn btn--grad" href="#enquire">Send us a postcode</a>
@@ -1342,15 +1362,15 @@ body{
     <div class="stats">
       <div class="stat">
         <div class="stat__n grad">2014</div>
-        <div class="stat__l">Flying commercially since</div>
-      </div>
-      <div class="stat">
-        <div class="stat__n grad">&lt;250g</div>
-        <div class="stat__l">Airframe, the lightest class the rules recognise</div>
+        <div class="stat__l">Flying for clients since</div>
       </div>
       <div class="stat">
         <div class="stat__n grad">4K</div>
-        <div class="stat__l">Video and stills, same flight</div>
+        <div class="stat__l">Video and stills, from the same flight</div>
+      </div>
+      <div class="stat">
+        <div class="stat__n grad">UK</div>
+        <div class="stat__l">Wide, from our Hertfordshire base</div>
       </div>
     </div>
   </div>
@@ -1363,49 +1383,79 @@ body{
 
 <!-- ========================= 2. WORK TILES ========================= -->
 <section class="card work">
-  <div>
-    <span class="eyebrow">Where it works best</span>
-    <h2 class="display">Ideal <span class="grad">for.</span></h2>
-    <div class="work__rule"></div>
-    <p class="work__p">
-      A reveal off the front of a building, a tracking shot down a drive, a
-      site seen whole for the first time. These are the jobs the small drone
-      was made for.
+  <div class="prose">
+    <span class="eyebrow">Aerial &amp; drone</span>
+    <h2 class="display">A view of your place <span class="grad">nobody has had.</span></h2>
+    <p class="lead">
+      Some things simply cannot be photographed from the ground. The whole site
+      in one frame. A building sitting in its landscape. A showground at the
+      moment it fills up. That is what the camera goes up for.
     </p>
-    <a class="btn btn--ice" style="margin-top:26px" href="#enquire">
-      Check your site
+    <p>
+      We have been flying for clients since 2014, and the work is nearly always
+      the same handful of shots done properly: the slow reveal off the front of
+      a building, the tracking move down a drive, the pull-back that shows how
+      much land there actually is. Shot in <strong>4K, with stills from the
+      same flight</strong>, and graded to match the rest of your film rather
+      than looking like something bolted on afterwards.
+    </p>
+    <p>
+      Most of our aerials are <strong>added to a shoot we are already booked
+      for</strong>. We are on site with the cameras anyway, so the air becomes
+      half a day on top rather than a second company, a second call-out and a
+      second invoice. It is a fraction of what a helicopter costs and, for the
+      shots most clients want, it looks better.
+    </p>
+    <p>
+      Before we quote we check the airspace and whatever permissions the
+      location needs, and come back with a straight answer. We are
+      <strong>JOSCAR accredited</strong> — the supply-chain standard for
+      aerospace, defence and security — so if your site runs to a gate, a badge
+      and a briefing, we have been through that before.
+    </p>
+    <ul>
+      <li>4K video and high-resolution stills from a single flight</li>
+      <li>Cut and graded with the rest of the production, in house</li>
+      <li>Airspace and permissions checked before you get a price</li>
+      <li>Filming UK-wide from our base in Stevenage, Hertfordshire</li>
+    </ul>
+    <a class="btn btn--ice" style="margin-top:30px" href="#enquire">
+      Ask for a quote
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h14M13 6l6 6-6 6"/></svg>
     </a>
   </div>
 
-  <div class="tiles">
+  <div>
+    <span class="eyebrow" style="display:block; margin-bottom:16px">Ideal for</span>
+    <div class="tiles">
     <div class="tile tile--idea" style="--g:0,220,255">
       <svg class="scene" viewBox="0 0 150 96" aria-hidden="true"><path class="sd" d="M14 74c14-34 46-52 78-46"/><rect class="fl" x="86" y="40" width="46" height="46" rx="3"/><rect class="ln" x="86" y="40" width="46" height="46" rx="3"/><path class="ln" d="M86 54h46M86 68h46M101 40v46M117 40v46"/><path class="ln" d="M8 86h134"/><g transform="translate(30,30)"><g class="drone"><rect class="fl" x="-7" y="-4" width="14" height="8" rx="2.6"/><rect class="ln" x="-7" y="-4" width="14" height="8" rx="2.6"/><path class="ln" d="M-6.5-3-13-8M6.5-3 13-8"/><path class="rotor" d="M-18.5-8h11"/><path class="rotor" d="M7.5-8h11"/></g></g></svg>
       <span class="tile__tag">Property &amp; development</span>
-      <span class="tile__t">The reveal off<br />the front</span>
-      <span class="tile__d">Approach shots, roof surveys and the whole plot in one frame — without closing the car park.</span>
-      <span class="tile__pill">Same-day lift</span>
-    </div>
-    <div class="tile tile--idea" style="--g:0,160,255">
-      <svg class="scene" viewBox="0 0 150 96" aria-hidden="true"><path class="fl" d="M12 86V58h26v28zM44 86V44h24v42zM74 86V64h22v22zM102 86V50h30v36z"/><path class="ln" d="M12 86V58h26v28M44 86V44h24v42M74 86V64h22v22M102 86V50h30v36"/><path class="ln" d="M6 86h138"/><path class="sd" d="M38 40h36"/><g transform="translate(76,32)"><g class="drone"><rect class="fl" x="-7" y="-4" width="14" height="8" rx="2.6"/><rect class="ln" x="-7" y="-4" width="14" height="8" rx="2.6"/><path class="ln" d="M-6.5-3-13-8M6.5-3 13-8"/><path class="rotor" d="M-18.5-8h11"/><path class="rotor" d="M7.5-8h11"/></g></g></svg>
-      <span class="tile__tag">Town-centre locations</span>
-      <span class="tile__t">Tight spots,<br />built-up</span>
-      <span class="tile__d">Business parks, high streets and courtyards, where a heavier aircraft turns into weeks of paperwork.</span>
-      <span class="tile__pill">Flown in town</span>
+      <span class="tile__t">Buildings and sites</span>
+      <span class="tile__d">The approach, the roofline, the plot and everything around it — the shot that sells the place before anyone visits.</span>
+      <span class="tile__pill">Sales &amp; lettings</span>
     </div>
     <div class="tile tile--idea" style="--g:48,216,240">
       <svg class="scene" viewBox="0 0 150 96" aria-hidden="true"><path class="fl" d="M20 86l22-30 22 30zM78 86l19-24 19 24z"/><path class="ln" d="M20 86l22-30 22 30M78 86l19-24 19 24"/><path class="ln" d="M6 86h138"/><circle class="ln" cx="30" cy="78" r="2.6"/><circle class="ln" cx="52" cy="80" r="2.6"/><circle class="ln" cx="70" cy="76" r="2.6"/><circle class="ln" cx="112" cy="79" r="2.6"/><path class="sd" d="M28 34h86"/><g transform="translate(71,26)"><g class="drone"><rect class="fl" x="-7" y="-4" width="14" height="8" rx="2.6"/><rect class="ln" x="-7" y="-4" width="14" height="8" rx="2.6"/><path class="ln" d="M-6.5-3-13-8M6.5-3 13-8"/><path class="rotor" d="M-18.5-8h11"/><path class="rotor" d="M7.5-8h11"/></g></g></svg>
-      <span class="tile__tag">Events &amp; showgrounds</span>
-      <span class="tile__t">Scale you can't<br />get from the ground</span>
-      <span class="tile__d">Showgrounds, ceremonies and races — the shot that shows how big it actually was.</span>
-      <span class="tile__pill">Live, one take</span>
+      <span class="tile__tag">Events &amp; ceremonies</span>
+      <span class="tile__t">The day, from above</span>
+      <span class="tile__d">Showgrounds, races, ceremonies and open days — the frame that finally shows how big it was.</span>
+      <span class="tile__pill">One take, live</span>
+    </div>
+    <div class="tile tile--idea" style="--g:0,160,255">
+      <svg class="scene" viewBox="0 0 150 96" aria-hidden="true"><path class="fl" d="M46 86V52h34v34z"/><path class="ln" d="M46 86V52h34v34M46 52l17-13 17 13"/><path class="ln" d="M6 86h138"/><path class="sd" d="M12 86c22-8 30-20 34-34"/><circle class="ln" cx="102" cy="70" r="8"/><path class="ln" d="M102 78v8"/><circle class="ln" cx="124" cy="74" r="6"/><path class="ln" d="M124 80v6"/><g transform="translate(36,28)"><g class="drone"><rect class="fl" x="-7" y="-4" width="14" height="8" rx="2.6"/><rect class="ln" x="-7" y="-4" width="14" height="8" rx="2.6"/><path class="ln" d="M-6.5-3-13-8M6.5-3 13-8"/><path class="rotor" d="M-18.5-8h11"/><path class="rotor" d="M7.5-8h11"/></g></g></svg>
+      <span class="tile__tag">Venues &amp; grounds</span>
+      <span class="tile__t">Estates and campuses</span>
+      <span class="tile__d">Schools, colleges, hotels, golf courses and parkland — grounds shown whole, in their setting.</span>
+      <span class="tile__pill">Prospectus &amp; web</span>
     </div>
     <div class="tile tile--idea" style="--g:110,150,255">
-      <svg class="scene" viewBox="0 0 150 96" aria-hidden="true"><path class="ln" d="M6 86h138"/><path class="ln" d="M22 86V50M40 86V50M22 58h18M22 70h18"/><path class="ln" d="M52 60h44" stroke-width="3"/><path class="ln" d="M52 54v14"/><circle class="fl" cx="116" cy="46" r="17"/><circle class="ln" cx="116" cy="46" r="17"/><path class="ln" d="m108 46 6 6 11-13"/><g transform="translate(78,26)"><g class="drone"><rect class="fl" x="-7" y="-4" width="14" height="8" rx="2.6"/><rect class="ln" x="-7" y="-4" width="14" height="8" rx="2.6"/><path class="ln" d="M-6.5-3-13-8M6.5-3 13-8"/><path class="rotor" d="M-18.5-8h11"/><path class="rotor" d="M7.5-8h11"/></g></g></svg>
-      <span class="tile__tag">Secure &amp; accredited sites</span>
-      <span class="tile__t">Past the gate,<br />badge on</span>
-      <span class="tile__d">JOSCAR accredited for aerospace, defence and security — we have been through the briefing before.</span>
-      <span class="tile__pill">Cleared for site</span>
+      <svg class="scene" viewBox="0 0 150 96" aria-hidden="true"><path class="ln" d="M6 86h138"/><path class="fl" d="M30 78l38-16 52 12-40 16z"/><path class="ln" d="M30 78l38-16 52 12-40 16z"/><path class="sd" d="M40 74l50 11M50 70l50 11M60 66l50 11"/><g transform="translate(80,28)"><g class="drone"><rect class="fl" x="-7" y="-4" width="14" height="8" rx="2.6"/><rect class="ln" x="-7" y="-4" width="14" height="8" rx="2.6"/><path class="ln" d="M-6.5-3-13-8M6.5-3 13-8"/><path class="rotor" d="M-18.5-8h11"/><path class="rotor" d="M7.5-8h11"/></g></g></svg>
+      <span class="tile__tag">Surveys &amp; progress</span>
+      <span class="tile__t">Roofs, sites, progress</span>
+      <span class="tile__d">Condition surveys, build progress and hard-to-reach detail, without scaffolding or a cherry picker.</span>
+      <span class="tile__pill">Stills &amp; report</span>
+    </div>
     </div>
   </div>
 </section>
@@ -1413,35 +1463,35 @@ body{
 <!-- =========================== 3. FORMATS ========================== -->
 <section class="card formats">
   <div class="formats__head">
-    <span class="eyebrow">What we bring</span>
-    <h2 class="display">The lightest drone in the bag is usually the one that <span class="grad">gets the shot.</span></h2>
+    <span class="eyebrow">What comes back</span>
+    <h2 class="display">One flight. <span class="grad">Everything you need.</span></h2>
     <p class="formats__p">
-      Business parks, town centres, school grounds, a courtyard with people in it.
-      A heavier aircraft in the same spot becomes a planning exercise measured in
-      weeks. Ours becomes a pre-flight check and a take-off.
+      We do not go up for a single shot. A flight gives you the moving footage,
+      the stills and the detail in one visit — cut, graded and delivered with
+      the rest of the job.
     </p>
   </div>
 
   <div class="frames">
     <div class="frame frame--1">
-      <span class="frame__k">Up<br />quickly</span>
-      <span class="frame__s">A light aircraft and a short pre-flight check, not a permission process measured in weeks.</span>
-      <span class="frame__pill">Same day</span>
+      <span class="frame__k">The opening<br />shot</span>
+      <span class="frame__s">The reveal that starts the film and tells everyone, in three seconds, exactly where they are.</span>
+      <span class="frame__pill">4K video</span>
     </div>
     <div class="frame frame--2">
-      <span class="frame__k">Tight<br />locations</span>
-      <span class="frame__s">Business parks, town centres and courtyards, where a heavier drone becomes a planning exercise.</span>
-      <span class="frame__pill">In town</span>
+      <span class="frame__k">Stills for<br />everything else</span>
+      <span class="frame__s">High-resolution frames from the same flight, ready for brochures, listings, decks and press.</span>
+      <span class="frame__pill">Photography</span>
     </div>
     <div class="frame frame--3">
-      <span class="frame__k">Half a day,<br />not a crew</span>
-      <span class="frame__s">We're already on site with cameras, so aerials are an extension — not a separate call-out and invoice.</span>
-      <span class="frame__pill">Add-on</span>
+      <span class="frame__k">The whole<br />site at once</span>
+      <span class="frame__s">Boundaries, access, parking and how it all sits together — impossible to show from the ground.</span>
+      <span class="frame__pill">Context</span>
     </div>
     <div class="frame frame--4">
-      <span class="frame__k">Cleared<br />for site</span>
-      <span class="frame__s">JOSCAR accredited — the supply-chain standard for aerospace, defence and security.</span>
-      <span class="frame__pill">Gate, badge, briefing</span>
+      <span class="frame__k">Detail you<br />can't reach</span>
+      <span class="frame__s">Roofs, elevations and build progress, close up, without scaffolding or a cherry picker.</span>
+      <span class="frame__pill">Survey</span>
     </div>
   </div>
 </section>
@@ -1469,8 +1519,9 @@ body{
     <span class="eyebrow">Enquire</span>
     <h2 class="display">Send us a <span class="grad">postcode.</span></h2>
     <p class="enquire__p">
-      Tell us where, when and what you need to see. We'll check the airspace and
-      come back with a yes, a no, or the conditions that make it a yes.
+      Tell us the location, the date and what you want to see. We'll check the
+      airspace and the permissions, and come back with a straight answer and a
+      price.
     </p>
   </div>
   <form class="form" onsubmit="return false">
