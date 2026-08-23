@@ -38,16 +38,14 @@ html,body{background:var(--ground)}
 body{
   font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   color:var(--ink); -webkit-font-smoothing:antialiased;
-  padding:clamp(10px,1.4vw,20px);
-  display:flex; flex-direction:column; gap:clamp(10px,1.4vw,20px);
+  display:flex; flex-direction:column;
 }
 
-/* every section is a rounded card sitting on the dark ground */
+/* sections butt straight up against one another - the page is continuous,
+   and the separation comes from tone rather than from an edge */
 .card{
   position:relative; overflow:hidden;
-  border-radius:clamp(18px,2vw,30px);
   background:var(--card);
-  border:1px solid rgba(var(--peri),.12);
 }
 
 /* --- display type -------------------------------------------------------- */
@@ -103,7 +101,7 @@ body{
 
 /* =====================  1. HERO  ========================================== */
 .hero{
-  min-height:min(760px,86vh);
+  min-height:min(880px,94vh);
   display:flex; flex-direction:column;
   background:
     radial-gradient(90% 70% at 82% 30%, rgba(var(--azure),.30), transparent 62%),
@@ -220,6 +218,7 @@ body{
 
 /* =====================  2. WORK TILES  ==================================== */
 .work{
+  background:linear-gradient(180deg, #080e20 0%, var(--card) 46%);
   display:grid; grid-template-columns:minmax(280px,.85fr) minmax(0,1.15fr);
   gap:clamp(20px,3vw,50px);
   padding:clamp(28px,3.6vw,58px) clamp(20px,3vw,44px);
@@ -363,6 +362,7 @@ body{
 .stars{color:rgb(var(--cyan)); letter-spacing:2px; margin-left:8px}
 
 .enquire{
+  background:linear-gradient(180deg, var(--card) 0%, #070c1e 100%);
   display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
   gap:clamp(22px,3vw,50px);
   padding:clamp(30px,3.8vw,60px) clamp(20px,3vw,44px);
@@ -386,6 +386,7 @@ body{
 }
 
 .foot{
+  background:#070c1e;
   display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:space-between;
   padding:20px clamp(20px,3vw,44px); color:var(--muted); font-size:13px;
 }
