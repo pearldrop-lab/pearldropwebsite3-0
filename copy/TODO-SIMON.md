@@ -8,6 +8,27 @@ mechanical checks pass. These are the holes only you can fill.
 
 ---
 
+## 0. Urgent — the live site makes a claim you no longer hold
+
+**`pearldrop.com/about-us/memberships/` still advertises the CAA Unmanned
+Aircraft Operational Authorisation, Specific Category UKPDRA-01.** You confirmed
+in August 2026 that you no longer hold it and fly sub-250g only.
+
+That page is live now, and it is a specific regulatory credential rather than a
+loose marketing claim, so it is worth correcting on the current site rather than
+waiting for the rebuild. The aerial service page on the live site may repeat it —
+worth a look while you are in there.
+
+Everything in this repo has been corrected already: the aerial page rewritten off
+that claim, the automotive page's drone paragraph reworded, and `SOURCE-FACTS.md`
+updated so no future copy pass reintroduces it.
+
+*(The `site-audit/` capture on `claude/site-audit` still records the old wording.
+That is correct — it is a dated snapshot of what the live site said on 23 Aug
+2026, not a source of truth about what is true today.)*
+
+---
+
 ## 1. Missing embed URLs (7)
 
 3D animation has been dropped as a service (Simon, Aug 2026), so the three 3D
@@ -54,14 +75,16 @@ your name on it before it ships.
 | 4.2 | `live-action/landing-page-video-production.md` | "the numbers say 80% more of them convert" | Same: **on the live page**, no source given. Same decision needed. |
 | 4.3 | `live-action/video-production-for-ceremonies-and-conferences.md` | "screens at **Mobile World Congress** in Barcelona" | The live page says "Mobile World Conference". We've written the event's actual name. Confirm that's the one you mean. |
 | 4.4 | `live-action/live-streaming-video-production.md` | Bonded 4G/5G backup, hard-wired connection, slides taken as a clean desk feed | Not described anywhere on the live site. This is the paragraph a technical buyer will test you on — confirm it's all standard kit. |
-| 4.5 | `aerial-drone-video-production.md` | How far we can go describing **UKPDRA-01** | We've toned the first draft down to "filming close to people and property, where the everyday Open-category rules run out". You're the pilot: give us the actual separation distances and congested-area permissions and we'll put a number in. A number beats an adjective. |
+| 4.5 | `aerial-drone-video-production.md` | **How precisely we may describe sub-250g permissions.** The rewrite deliberately says "the lightest class the rules recognise" rather than naming subcategories or stating what may be overflown — the CAA framework has been changing and I would not put wording I am unsure of on a public page. Give me the phrasing you will stand behind and I will make it specific. |
 | 4.6 | `post-production/video-subtitling-and-transcription.md` and `post-production/bristish-sign-language-bsl-production.md` | WCAG captions requirement + the UK public-sector accessibility duty; the British Sign Language Act 2022 | Both accurate as written, both **new to these pages**. Flagging because they are legal statements on pages read by compliance people. |
 
-## 5. Decisions needed on the new vodcast page (1)
+## 5. Decisions needed (2)
 
 | # | Page | What we need |
 | --- | --- | --- |
 | 5.1 | `live-action/video-podcast-production.md` | **The slug.** You said "vodcasts" and the copy uses that word, but search volume is overwhelmingly on *"video podcast"* — hardly anyone types "vodcast". The page is written for `/services/live-action/video-podcast-production/`. Choosing `vodcast-production` instead will cost real traffic. Your call, but it needs making before the page is created in WordPress. |
+
+| 5.2 | `aerial-drone-video-production.md` | **Are the three drone examples still fair to show?** If the St John's May Ball night flight over a crowded historic site was flown under the old authorisation, it advertises a capability the sub-250g setup may not repeat — the sort of thing a client books on and is then let down by. Same question for the Grand Union Boat Race. Say the word and we'll swap in sub-250g work. |
 
 ## 6. Fixed in this pass — no action needed
 
@@ -79,6 +102,12 @@ your name on it before it ships.
   STEP-file renders, world-building). Two cross-references removed: the product
   page's "3D from a STEP file" line and the 2D index's link to 3D. 3D was never
   in the header menu, so no navigation change was needed.
+- **Drone claims corrected throughout.** UKPDRA-01, "Specific Category", "CAA
+  approved" and the old H1 "cleared to fly where others can't" are gone. The
+  aerial page now argues from weight — light aircraft, quick to deploy, works in
+  tight and built-up locations — which is a genuinely good story and happens to
+  be true. JOSCAR is untouched: it is a supply-chain accreditation, nothing to
+  do with flying.
 - **Vodcasts added** as the fifteenth live-action service. The live-action index
   H1 counted the children, so it now reads "Fifteen kinds…", and a routing row
   was added. The menu item was added to both the desktop mega menu and the

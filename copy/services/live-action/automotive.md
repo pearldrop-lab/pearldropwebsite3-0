@@ -41,8 +41,8 @@ plant and public transport all sell better in motion.
 
 Drone work too, where the airspace allows it, which is most places. A
 pull-back off a moving vehicle is the cheapest sense of scale money can buy,
-and our CAA authorisation covers the flying near people and property that
-usually kills the idea.
+and the sub-250g aircraft we fly is light enough to get up quickly on a
+location shoot rather than turning into its own planning job.
 
 ### 3 — Great for
 

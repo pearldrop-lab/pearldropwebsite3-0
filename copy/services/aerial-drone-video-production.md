@@ -2,58 +2,73 @@
 
 **URL** `/services/aerial-drone-video-production/`
 
+> **Rewritten Aug 2026.** Simon no longer holds the PDRA/Specific Category
+> operational authorisation and now flies **sub-250g drones only**. Every claim
+> built on UKPDRA-01 has been removed. See the TODOs at the foot of this file —
+> the regulatory wording needs your eyes before this page goes live, and the
+> **live site currently still advertises the authorisation**.
+
 ### SEO
 
 - **Primary keyword:** drone video production UK
-- **Secondary:** CAA approved drone operator, aerial videography, drone survey, aerial photography
-- **Title tag:** `Drone Video Production UK — CAA Approved | Pearldrop` *(52)*
-- **Meta description:** `CAA-authorised drone video and stills across the UK. UKPDRA-01 operational authorisation, JOSCAR accredited, and flying commercially since 2016.` *(144)*
+- **Secondary:** aerial videography, aerial filming, sub-250g drone, drone photography Hertfordshire
+- **Title tag:** `Drone Video Production & Aerial Filming UK | Pearldrop` *(54)*
+- **Meta description:** `Aerial video and stills across the UK, flown on a sub-250g drone. Quick to set up, easy to place, and at home in spots a heavy rig can't work.` *(141)*
 
 ### 1 — Hero
 
 > **Kicker:** Services · Aerial & drone
 >
-> **H1:** Drone video production cleared to fly where others can't
+> **H1:** Drone video production small enough to fly in town
 >
-> **Sub-deck:** Flying since 2014. CAA commercial accreditation since 2016. Paperwork included.
+> **Sub-deck:** Flying since 2014, these days on a drone lighter than a can of drink.
 >
-> **CTA:** Check we can fly your site
+> **CTA:** Send us a postcode
 
 ### 2 — Body
 
-**H2: 2014. That's the number that matters.**
+**H2: The lightest drone in the bag is usually the one that gets the shot**
 
-It's the year Simon started flying, two years before he took CAA commercial
-accreditation in 2016. Which sounds like our history rather than your problem —
-until the day a drone operator looks at your site, your event or your proximity
-to a controlled airspace boundary and quietly withdraws.
+Ours weighs under 250 grams. People assume that means a compromise, and for a
+windswept coastal survey it would be. For the work most clients actually want —
+a reveal off the front of a building, a tracking shot down a drive, a site seen
+whole for the first time — it is the drone that gets airborne while a heavier
+one is still waiting on paperwork.
 
-We hold a CAA Unmanned Aircraft Operational Authorisation in the Specific
-Category, UKPDRA-01 — the one that covers filming close to people and property,
-where the everyday Open-category rules run out. We're also JOSCAR accredited,
-which is the supply-chain standard for aerospace, defence and security, so if
-your site has a gate, a badge and a briefing, we have already been through that
-process once.
+Weight is the whole point. Sub-250g sits in the lightest class the rules
+recognise, which is what makes it realistic to fly in the places corporate
+filming actually happens: business parks, town centres, school grounds, a
+courtyard with people in it. A heavier aircraft in the same spot turns into a
+planning exercise measured in weeks.
 
-None of that is the fun part. The fun part is the shot: the reveal that pulls
-back off your building to show the whole estate, a construction site tracked
-month by month, an event photographed from an angle nobody in the field had.
-4K, stills as well as video, and a great deal cheaper than a helicopter.
+It flies with the rest of the shoot, too. We are already on site with cameras,
+so the aerials are half a day's extension rather than a separate crew, a
+separate call-out and a separate invoice. 4K video and stills from the same
+flight.
 
-Send us a postcode before you send us a brief. We'll check the airspace, the
-permissions and the ground risk, and tell you straight away whether it flies.
+We are also JOSCAR accredited — the supply-chain standard for aerospace,
+defence and security — so if your site involves a gate, a badge and a briefing,
+we have been through that process before.
 
-TODO(simon): you're the pilot — confirm how precisely we can describe the
-UKPDRA-01 limits (separation distances, congested-area work). A number here
-would be worth more than the adjective.
+TODO(simon): **two things only you can settle here.**
+1. **How precisely can we describe the sub-250g permissions?** The copy above
+   deliberately says "the lightest class the rules recognise" rather than naming
+   subcategories or stating what you may overfly, because the CAA framework has
+   been moving and I am not confident enough in the current wording to put it on
+   a public page. Give me the phrasing you are happy to stand behind and I will
+   make it specific — specificity sells here.
+2. **Is "flying since 2014" still the line you want?** It is true and it is
+   good, but it sat next to the 2016 commercial accreditation in the old copy.
+   On its own it reads as experience rather than credential, which is fine —
+   just confirm.
 
 ### 3 — Great for
 
 **Great for:**
 
-- **Sites other operators decline** — a Specific Category authorisation covers flights the Open-category rules put out of reach
-- **Secure and regulated environments** — JOSCAR accreditation means defence and aerospace clients can clear us through procurement
-- **Showing scale** — estates, developments, farms and festivals make sense from 100 metres up and nowhere else
+- **Getting up quickly** — a light aircraft and a short pre-flight check, rather than a permission process measured in weeks
+- **Tight and built-up locations** — business parks, town centres and courtyards, where a heavier drone becomes a planning exercise
+- **Adding air to a shoot you're already booking** — half a day on top of the ground crew, not a second company and a second invoice
 
 ### 4 — Video examples
 
@@ -61,11 +76,18 @@ would be worth more than the adjective.
 
 | Film | Line | Embed |
 | --- | --- | --- |
-| St John's College Cambridge May Ball 2024 | A crowded historic site at night — the kind of flight permissions exist for. | `https://www.youtube.com/embed/QmSspwhQ43g` |
-| Hertfordshire County Show 2024 | Aerials that show the sheer size of a showground you can't photograph from the ground. | `https://www.youtube.com/embed/A3bwHOjlMhI` |
-| The Grand Union Boat Race 2023 | A moving event on open water, tracked from above. | `TODO(simon): need the embed URL — this film is on the live aerial page but isn't in SOURCE-FACTS.md` |
+| St John's College Cambridge May Ball 2024 | Aerials over a historic Cambridge site at night. | `https://www.youtube.com/embed/QmSspwhQ43g` |
+| Hertfordshire County Show 2024 | The sheer size of a showground, which you cannot photograph from the ground. | `https://www.youtube.com/embed/A3bwHOjlMhI` |
+| The Grand Union Boat Race 2023 | A moving event on open water, tracked from above. | `TODO(simon): need the embed URL — on the live aerial page but not in SOURCE-FACTS.md` |
 
 Also worth a look: our [drone showreel](https://pearldrop.com/about-us/our-showreels/#aerialshowreel).
+
+TODO(simon): **check these three are still fair to show.** If the May Ball night
+flight over a crowded historic site was flown under the old authorisation, it
+advertises a capability the current setup may not repeat — which is the kind of
+thing a client books on and is then disappointed by. Same question for the boat
+race. Happy to swap in sub-250g work instead if you'd rather the examples match
+what we can do today.
 
 ### 5 — Testimonial
 
@@ -85,7 +107,7 @@ match.)*
 
 **H2: Send us a postcode**
 
-Tell us where, when, and what you need to see. We'll check the airspace and come
+Tell us where, when and what you need to see. We'll check the airspace and come
 back with a yes, a no, or the conditions that make it a yes.
 
 **Button:** Check my site

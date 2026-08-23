@@ -118,8 +118,14 @@ Thomas Pink, Amazing Apprenticeships, Department for Education.
 
 - JOSCAR accredited (aerospace, defence, security supply chain)
 - Patrons of the Hertfordshire Chamber of Commerce since 2012
-- CAA Unmanned Aircraft Operational Authorisation, Specific Category UKPDRA-01;
-  Simon Mercer flying since 2014, CAA commercial accreditation 2016
+- **Drones: sub-250g only.** Simon Mercer has been flying since 2014. He no
+  longer holds the Specific Category / UKPDRA-01 operational authorisation
+  (confirmed Aug 2026) and now flies sub-250g aircraft only.
+  **Do not write UKPDRA-01, "Specific Category", "CAA approved operator" or
+  "cleared to fly where others can't" on any page.** The live site still says
+  otherwise — it is out of date, not a source. Describe the benefit (light,
+  quick to deploy, works in tight and built-up locations) rather than naming
+  permissions, and leave exact regulatory wording to Simon.
 - Wenta Net Zero scheme, working toward Gold
 - St Albans District Chamber of Commerce member since 2010
 
