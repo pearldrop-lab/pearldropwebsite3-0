@@ -4,9 +4,11 @@
 
 > **Rewritten Aug 2026.** Simon no longer holds the PDRA/Specific Category
 > operational authorisation and now flies **sub-250g drones only**. Every claim
-> built on UKPDRA-01 has been removed. See the TODOs at the foot of this file —
-> the regulatory wording needs your eyes before this page goes live, and the
-> **live site currently still advertises the authorisation**.
+> built on UKPDRA-01 has been removed and the page now argues from weight.
+> Simon has confirmed all three portfolio films below were flown sub-250g, so
+> the examples prove the argument rather than undercutting it. One open TODO
+> remains in section 2: the exact regulatory wording. Separately, the **live
+> site still advertises the old authorisation** and needs correcting there.
 
 ### SEO
 
@@ -80,14 +82,11 @@ TODO(simon): **two things only you can settle here.**
 | Hertfordshire County Show 2024 | The sheer size of a showground, which you cannot photograph from the ground. | `https://www.youtube.com/embed/A3bwHOjlMhI` |
 | The Grand Union Boat Race 2023 | A moving event on open water, tracked from above. | `TODO(simon): need the embed URL — on the live aerial page but not in SOURCE-FACTS.md` |
 
-Also worth a look: our [drone showreel](https://pearldrop.com/about-us/our-showreels/#aerialshowreel).
+**Every one of these was flown on the sub-250g setup** — including a Cambridge
+college at night and a moving race on open water. The small drone is not a
+budget fallback; it is the one that did all of this.
 
-TODO(simon): **check these three are still fair to show.** If the May Ball night
-flight over a crowded historic site was flown under the old authorisation, it
-advertises a capability the current setup may not repeat — which is the kind of
-thing a client books on and is then disappointed by. Same question for the boat
-race. Happy to swap in sub-250g work instead if you'd rather the examples match
-what we can do today.
+Also worth a look: our [drone showreel](https://pearldrop.com/about-us/our-showreels/#aerialshowreel).
 
 ### 5 — Testimonial
 

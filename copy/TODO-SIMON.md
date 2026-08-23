@@ -78,13 +78,12 @@ your name on it before it ships.
 | 4.5 | `aerial-drone-video-production.md` | **How precisely we may describe sub-250g permissions.** The rewrite deliberately says "the lightest class the rules recognise" rather than naming subcategories or stating what may be overflown — the CAA framework has been changing and I would not put wording I am unsure of on a public page. Give me the phrasing you will stand behind and I will make it specific. |
 | 4.6 | `post-production/video-subtitling-and-transcription.md` and `post-production/bristish-sign-language-bsl-production.md` | WCAG captions requirement + the UK public-sector accessibility duty; the British Sign Language Act 2022 | Both accurate as written, both **new to these pages**. Flagging because they are legal statements on pages read by compliance people. |
 
-## 5. Decisions needed (2)
+## 5. Decisions needed (1)
 
 | # | Page | What we need |
 | --- | --- | --- |
 | 5.1 | `live-action/video-podcast-production.md` | **The slug.** You said "vodcasts" and the copy uses that word, but search volume is overwhelmingly on *"video podcast"* — hardly anyone types "vodcast". The page is written for `/services/live-action/video-podcast-production/`. Choosing `vodcast-production` instead will cost real traffic. Your call, but it needs making before the page is created in WordPress. |
 
-| 5.2 | `aerial-drone-video-production.md` | **Are the three drone examples still fair to show?** If the St John's May Ball night flight over a crowded historic site was flown under the old authorisation, it advertises a capability the sub-250g setup may not repeat — the sort of thing a client books on and is then let down by. Same question for the Grand Union Boat Race. Say the word and we'll swap in sub-250g work. |
 
 ## 6. Fixed in this pass — no action needed
 
@@ -102,6 +101,11 @@ your name on it before it ships.
   STEP-file renders, world-building). Two cross-references removed: the product
   page's "3D from a STEP file" line and the 2D index's link to 3D. 3D was never
   in the header menu, so no navigation change was needed.
+- **Drone examples cleared.** Simon confirmed (Aug 2026) that every drone film
+  on the current site — including the St John's May Ball night flight and the
+  Grand Union Boat Race — was flown under sub-250g rules. So the portfolio needs
+  no swaps, and the aerial page now says so explicitly: the examples are proof
+  that the small drone does serious work, not a compromise to apologise for.
 - **Drone claims corrected throughout.** UKPDRA-01, "Specific Category", "CAA
   approved" and the old H1 "cleared to fly where others can't" are gone. The
   aerial page now argues from weight — light aircraft, quick to deploy, works in
