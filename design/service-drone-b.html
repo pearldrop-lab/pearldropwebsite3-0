@@ -40,17 +40,32 @@ html,body{background:var(--ground)}
 body{
   font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   color:var(--ink); -webkit-font-smoothing:antialiased;
-  padding:var(--gutter);
-  display:flex; flex-direction:column; gap:var(--gutter);
+  display:flex; flex-direction:column;
 }
 
-/* every section, the hero included, is a rounded window on the dark ground */
+/* The page runs edge to edge, like the homepage — no frames anywhere. Sections
+   are told apart three ways instead: each sits on its own ground tone, a lit
+   seam runs across every junction, and the vertical rhythm is generous. */
 .card, .foot{
   position:relative; overflow:hidden;
-  border-radius:clamp(18px,2vw,30px);
   background:var(--card);
-  border:1px solid rgba(var(--peri),.12);
 }
+/* the seam: brightest across the middle, dissolving at both edges, with a
+   soft bloom above it so the join reads as light rather than as a border */
+.card + .card::before, .foot::before{
+  content:""; position:absolute; top:0; left:0; right:0; height:1px; z-index:5;
+  pointer-events:none;
+  background:linear-gradient(90deg,
+    rgba(var(--cyan),0) 0%, rgba(var(--cyan),.38) 26%,
+    rgba(var(--cyan),.38) 74%, rgba(var(--cyan),0) 100%);
+  box-shadow:0 -1px 26px 1px rgba(var(--cyan),.13);
+}
+/* ground tones, so consecutive sections never share a value */
+.work{--tone:#0a1024}
+.formats{--tone:#070c1e}
+.proof{--tone:#0b1436}
+.enquire{--tone:#070c1e}
+.foot{--tone:#04060f}
 
 /* --- display type -------------------------------------------------------- */
 .display{
@@ -105,7 +120,7 @@ body{
 
 /* =====================  1. HERO  ========================================== */
 .hero{
-  min-height:min(820px,88vh);
+  min-height:min(900px,95vh);
   display:flex; flex-direction:column;
   background:
     radial-gradient(90% 70% at 82% 30%, rgba(var(--azure),.30), transparent 62%),
@@ -222,10 +237,10 @@ body{
 
 /* =====================  2. WORK TILES  ==================================== */
 .work{
-  background:linear-gradient(180deg, #080e20 0%, var(--card) 46%);
+  background:var(--tone);
   display:grid; grid-template-columns:minmax(280px,.85fr) minmax(0,1.15fr);
   gap:clamp(20px,3vw,50px);
-  padding:clamp(28px,3.6vw,58px) clamp(20px,3vw,44px);
+  padding:clamp(46px,5.4vw,88px) clamp(20px,3vw,44px);
   align-items:center;
 }
 .work h2{font-size:clamp(34px,4.4vw,64px); margin:14px 0 0}
@@ -314,10 +329,10 @@ body{
 
 /* =====================  3. FORMATS  ====================================== */
 .formats{
-  padding:clamp(28px,3.6vw,58px) clamp(20px,3vw,44px) clamp(34px,4vw,64px);
+  padding:clamp(46px,5.4vw,88px) clamp(20px,3vw,44px) clamp(52px,6vw,96px);
   background:
     radial-gradient(80% 100% at 50% 0%, rgba(var(--azure),.16), transparent 70%),
-    var(--card);
+    var(--tone);
 }
 .formats__head{text-align:center; max-width:720px; margin:0 auto clamp(26px,3vw,44px)}
 .formats h2{font-size:clamp(30px,3.8vw,54px); margin-top:12px}
@@ -358,7 +373,7 @@ body{
   display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
   gap:clamp(20px,3vw,46px); align-items:center;
   padding:clamp(28px,3.6vw,56px) clamp(20px,3vw,44px);
-  background:linear-gradient(120deg, #0a1330, var(--card) 70%);
+  background:linear-gradient(120deg, #0d1740, var(--tone) 72%);
 }
 .quote{font-size:clamp(19px,2vw,27px); line-height:1.4; font-weight:500; text-wrap:balance}
 .quote__by{margin-top:20px; font-size:14px; color:var(--muted)}
@@ -366,10 +381,10 @@ body{
 .stars{color:rgb(var(--cyan)); letter-spacing:2px; margin-left:8px}
 
 .enquire{
-  background:linear-gradient(180deg, var(--card) 0%, #070c1e 100%);
+  background:var(--tone);
   display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
   gap:clamp(22px,3vw,50px);
-  padding:clamp(30px,3.8vw,60px) clamp(20px,3vw,44px);
+  padding:clamp(46px,5.4vw,88px) clamp(20px,3vw,44px);
 }
 .enquire h2{font-size:clamp(32px,4vw,58px); margin-top:12px}
 .enquire__p{margin-top:18px; color:var(--muted); font-size:15.5px; line-height:1.6; max-width:40ch}
@@ -390,7 +405,7 @@ body{
 }
 
 .foot{
-  background:#070c1e; border:1px solid rgba(var(--peri),.12);
+  background:var(--tone);
   display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:space-between;
   padding:20px clamp(20px,3vw,44px); color:var(--muted); font-size:13px;
 }
