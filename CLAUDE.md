@@ -55,6 +55,83 @@ wasted several deploys.
   have come from this, and from placing a media-query override *before* the rule
   it needs to beat.
 
+## The site look (Simon's direction, Aug 2026)
+
+Simon's brief, in his words: he loves **"the blue of the overall look: the
+stunning blue sky and then your darker overlay"**, calls it world-class, and
+wants it carried **throughout the site**. Note what he is praising — not a
+colour, a **relationship**. Getting this wrong by treating it as a swatch is the
+easy mistake; it was made once already.
+
+### The rule
+
+**One hue, many depths. The composition happens in lightness; the hue never
+moves.**
+
+Measured off the *rendered* page (Playwright, 1440×900, twelve regions sampled
+per segment across the composite, not off the source frames):
+
+| Segment | Hue span | Lightness span | In blue family |
+| --- | --- | --- | --- |
+| Live-action | **200–210°** | L18 → L44 | 12 / 12 |
+| Photography | **200–210°** | L18 → L41 | 11 / 12 |
+| 2D animation | 194–222° (+ purples) | L19 → L55 | 10 / 12 |
+
+Across the whole frame — open sky, deep scrim, vignette corners, floor — hue
+moves **10°** while lightness moves **26 points**. That ratio is the entire
+effect. The overlay is a near-black *navy* (`#030818`, H226°), so it removes
+light without going grey or muddy, and everything stays one colour at many
+depths. The 2D-animation segment is the deliberate exception (the surviving
+pinks/purples live there).
+
+### The layer stack that produces it
+
+From `index.html`, bottom to top. Reuse this geometry on inner pages — it works
+with any bright blue field or photograph, no video required:
+
+1. **Ground** — `radial-gradient(120% 90% at 50% 40%, #0a1c50 0%, #050b1f 70%)`
+   A navy pool, brighter behind the subject, falling to near-black at the edges.
+2. **The bright element** — the canvas today; a photo or flat sky field elsewhere.
+3. **Vignette + uplight** (`.pd-stage::after`) — corner darkening at
+   `rgba(5,11,31,.5–.55)`, a top/bottom linear scrim, and critically a
+   **cyan uplight from bottom centre**:
+   `radial-gradient(120% 120% at 50% 120%, rgba(0,220,255,.16), transparent 55%)`.
+   That uplight is a large part of why it feels lit rather than merely dark.
+4. **Directional scrim** (`.pd-scrim`) — the part that makes type legible:
+   `linear-gradient(95deg, rgba(3,8,24,.80) 0%, rgba(3,8,24,.42) 22%, transparent 50%)`
+   plus `linear-gradient(0deg, rgba(3,8,24,.70) 0%, rgba(3,8,24,.18) 24%, transparent 46%)`.
+
+The result is a **diagonal luminance ramp**: type sits bottom-left in the L18–25
+zone, imagery breathes top-right in the L35–44 zone. Headline in white plus neon
+cyan reads hard against the dark end; the picture is never flattened at the
+bright end.
+
+### Supporting values
+
+Sky sampled off the raw frames in `frames-v2d/` (top 22%, blue-dominant pixels,
+every 10th frame) — hue drift only 197–206° across all 311:
+
+| Role | Hex | RGB triple | H / S / L |
+| --- | --- | --- | --- |
+| Sky — live-action + photography | `#0378cf` | `3,120,207` | 205.6° / 97% / 41% |
+| Sky — 2D-animation segment | `#0398d6` | `3,152,214` | 197.6° / 97% / 43% |
+| Sky highlight (near horizon) | `#60afe8` | `96,175,232` | 205.1° / 75% / 64% |
+| Cloud / haze | `#cce3f9` | `204,227,249` | 209.3° / 79% / 89% |
+| Scrim / overlay | `#030818` | `3,8,24` | 226° / 78% / 5% |
+
+Note the raw sky is L41 but composites to L40 at the open top-right and L18
+under the scrim — the scrim is doing 22 points of work.
+
+### Applying it
+
+- Build depth by **moving lightness only**. Hue stays ~205°, saturation high.
+- Every full-width section wants a bright field *and* a scrim, not a flat colour.
+  A flat mid-blue page will look nothing like the hero.
+- Keep `--neon` for what it does now: edges, hovers, rules, glow, and the uplight.
+  Scaling neon up to fill areas reads as cyan UI chrome, not sky.
+- Animation pages may run ~8° cooler (197°); that is already true in the footage.
+- **Do not repaint the hero.** It is the reference, not the target.
+
 ## The hero
 
 Scroll-scrubbed canvas frame sequence (not a `<video>` — seeking was janky).
@@ -116,18 +193,36 @@ stability, `document.getAnimations()` counts when the menu is open vs closed.
 
 ## Open items
 
-- Menu links are all `#` — they need real WordPress slugs.
+- **Three menu items have no page on the live site** and are still `href="#"`:
+  **Healthcare** (sectors), **FAQ** (useful info) and **Work Experience**
+  (employment). Either the pages get created or the items come out of the menu —
+  Simon's call. `legal` is also `#`, but deliberately: it is a column heading.
+- Live Sectors are **Science & Technology, Education, Golf Courses**. The menu
+  invents *Healthcare* and omits *Golf Courses*. Worth reconciling.
+- The menu's Services column has no **3D Animation**, though
+  `/services/3d-animation/` exists live with two children (STEP-file renders,
+  world-building). Deliberate omission or oversight?
 - Portfolio thumbnails in `menu-thumbs/` are **placeholder crops from the hero
-  video**, not real portfolio work. 560x350 WebP.
+  video**, not real portfolio work. 560x350 WebP. The audit collected 643 real
+  portfolio image URLs — see `site-audit/INDEX.md` on `claude/site-audit`.
 - Taglines under each service ("Real people, real places, real good.") are
   written copy, not Simon's — confirm tone.
-- Sectors sub-items were invented; the docx only gave the three headings.
-- Only the homepage hero + header exist. The rest of the site is not started.
+- Only the homepage hero + header exist. The rest of the site is not started,
+  and should be built to the palette recipe in "The site look" above.
 
-## Note for a session with network access
+## The live site
 
-Earlier sessions could **not** reach pearldrop.com — the cloud environment's
-egress policy blocked it, so nothing here was ever checked against the live
-site. If you can now reach it, worth doing early: confirm the real page slugs
-for the menu links, check the existing copy and tone, and pull real portfolio
-stills to replace the placeholder thumbnails.
+Captured in full on the `claude/site-audit` branch: `site-audit/INDEX.md` plus
+one markdown file per page, 116 URLs, all HTTP 200. That is the reference for
+slugs, copy, tone, clients, testimonials and accreditations.
+
+Menu slugs were wired from it on 23 Aug 2026 — all 64 distinct URLs in the menu
+were checked against the live sitemap and every one resolves. Links are
+**absolute** (`https://pearldrop.com/...`) so they work in the local preview, on
+GitHub Pages and inside WordPress alike; root-relative paths would also trip the
+Elementor generator's no-relative-paths assert.
+
+Known defects on the live site, carried into the menu because the slug is real:
+`bristish-sign-language-bsl-production` and `lifestyle-photography-portolio`
+are both misspelled in WordPress. Fix them there first if you want clean URLs —
+don't "correct" them here or the links 404.
