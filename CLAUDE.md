@@ -152,6 +152,15 @@ Scroll-scrubbed canvas frame sequence (not a `<video>` — seeking was janky).
 
 ## Menus
 
+**The menu lives in exactly one place: `index.html`.** Every other page gets a
+copy injected by `python3 design/sync-menu.py`, which lifts the scoped
+stylesheet, the header + four mega panels + mobile nav, and the menu-only JS,
+and drops them between `BEGIN/END SITE MENU (generated)` markers in each file
+under `design/`. It rewrites root-relative asset paths on the way, because the
+design pages sit a level down. Re-run it after **any** menu change, and never
+hand-edit a menu inside a design file — the next sync overwrites it.
+
+
 Full-width bar that drops from y=0 and runs *behind* the fixed header, so an
 open menu becomes the nav's background. Columns arrive one at a time (~110ms
 apart) after the bar has landed — the delay is deliberate, don't remove it.

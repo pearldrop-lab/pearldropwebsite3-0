@@ -122,6 +122,7 @@ body{
 .hero{
   min-height:min(900px,95vh);
   display:flex; flex-direction:column;
+  padding-top:96px;   /* clears the fixed site header */
   background:
     radial-gradient(90% 70% at 82% 30%, rgba(var(--azure),.30), transparent 62%),
     radial-gradient(70% 60% at 8% 90%, rgba(var(--peri),.16), transparent 66%),
@@ -154,35 +155,655 @@ body{
     linear-gradient(0deg, rgba(var(--deep),.7) 0%, rgba(var(--deep),0) 32%);
 }
 
-/* nav lives inside the hero card, as in the reference */
-.nav{
-  position:relative; z-index:3;
-  display:flex; align-items:center; justify-content:space-between; gap:24px;
-  padding:clamp(18px,2vw,26px) clamp(20px,3vw,44px);
-}
-.nav__logo{display:flex; align-items:center; gap:11px; text-decoration:none}
-.nav__logo img{height:34px; width:auto; display:block}
-.nav__links{display:flex; align-items:center; gap:clamp(14px,1.8vw,30px)}
-.nav__links a{
-  color:var(--ink); text-decoration:none; font-size:15px; font-weight:500; opacity:.92;
-  text-shadow:0 1px 12px rgba(3,8,24,.8);
-  padding:6px 0; position:relative; white-space:nowrap;
-  transition:opacity .2s, color .2s;
-}
-.nav__links a::after{
-  content:""; position:absolute; left:0; right:0; bottom:0; height:2px;
-  background:rgb(var(--cyan)); border-radius:2px;
-  transform:scaleX(0); transform-origin:left; transition:transform .26s cubic-bezier(.4,0,.15,1);
-}
-.nav__links a:hover{opacity:1; color:#fff}
-.nav__links a:hover::after, .nav__links a.is-active::after{transform:scaleX(1)}
-.nav__right{display:flex; align-items:center; gap:14px}
-.burger{
-  width:44px; height:44px; border-radius:12px; display:none;
-  align-items:center; justify-content:center;
-  background:rgba(var(--ice),.08); border:1px solid rgba(var(--ice),.22);
-}
-.burger span{display:block; width:18px; height:2px; background:var(--ink); box-shadow:0 -6px 0 var(--ink), 0 6px 0 var(--ink)}
+/* BEGIN SITE MENU (generated) */
+
+  /* ================= PEARLDROP HERO (scoped to #pd-hero) ================= */
+  #pd-hero{
+    --blue:#12b0ff;
+    /* accent = electric cyan (the 'pop'); secondary = vivid azure */
+    --neon:#00dcff; --neon-rgb:0,220,255;
+    --cyan:#4d8cff; --cyan-rgb:77,140,255;
+    --ink:#eaf2ff; --muted:#93a9cf;
+    --glow-neon:0 0 14px rgba(var(--neon-rgb),.75), 0 0 38px rgba(var(--neon-rgb),.45);
+    --glow-cyan:0 0 14px rgba(var(--cyan-rgb),.6), 0 0 40px rgba(var(--cyan-rgb),.35);
+    position:relative;
+    font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    color:var(--ink); -webkit-font-smoothing:antialiased;
+  }
+  #pd-hero *{box-sizing:border-box; margin:0; padding:0}
+
+  /* header */
+  #pd-hero .pd-header{
+    position:fixed; top:0; left:0; right:0; z-index:2147483000;
+    display:flex; align-items:center; justify-content:space-between; gap:24px;
+    padding:22px clamp(20px,4vw,54px);
+    background:transparent; transition:background .35s ease;
+  }
+  #pd-hero .pd-header.scrolled{background:linear-gradient(180deg, rgba(4,10,26,.55), rgba(4,10,26,0))}
+  /* an open menu supplies the header's background itself, so drop the
+     scroll gradient rather than banding the top of the panel */
+  #pd-hero:has(.pd-mega.open) .pd-header.scrolled{background:transparent}
+  #pd-hero .pd-brand{display:flex; align-items:center; gap:13px; text-decoration:none; flex:0 0 auto}
+  #pd-hero .pd-brand__logo{height:40px; width:auto; display:block; filter:drop-shadow(0 2px 12px rgba(0,0,0,.4))}
+  #pd-hero .pd-word{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:26px; letter-spacing:-.5px; color:var(--cyan); text-shadow:var(--glow-cyan)}
+  #pd-hero .pd-nav{display:flex; align-items:center; gap:clamp(14px,2vw,34px)}
+  #pd-hero .pd-nav a{position:relative; text-decoration:none; color:var(--ink); font-weight:500; font-size:17px; letter-spacing:.2px; padding:6px 2px; opacity:.92; transition:opacity .2s,color .2s,text-shadow .2s; white-space:nowrap; text-shadow:0 1px 16px rgba(0,0,0,.55)}
+  #pd-hero .pd-nav a::after{content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px; background:var(--neon); border-radius:2px; transform:scaleX(0); transform-origin:left; transition:transform .28s cubic-bezier(.5,0,.1,1); box-shadow:var(--glow-neon)}
+  #pd-hero .pd-nav a:hover{opacity:1; color:#fff; text-shadow:0 0 10px rgba(var(--neon-rgb),.5)}
+  #pd-hero .pd-nav a:hover::after{transform:scaleX(1)}
+  /* A solid pill rather than a neon outline: it holds its own against both
+     the dark grade and the bright sky behind the header without needing a
+     glow, and the only motion is a response to the pointer. */
+  #pd-hero .pd-nav a.pd-cta{
+    display:inline-flex; align-items:center; gap:10px;
+    margin-left:18px; padding:13px 26px; border-radius:999px;
+    border:0; opacity:1;
+    background:#fff; color:#061426;
+    font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:16px;
+    letter-spacing:.1px; text-shadow:none;
+    box-shadow:0 10px 24px -12px rgba(0,0,0,.85);
+    transition:background .22s ease, color .22s ease,
+      transform .24s cubic-bezier(.3,.9,.3,1), box-shadow .24s ease;
+  }
+  #pd-hero .pd-nav a.pd-cta::after{display:none}
+  /* two arrows in a 16px window: the first leaves right as the second
+     arrives from the left, so the mark keeps travelling forward */
+  #pd-hero .pd-ctaArrow{
+    position:relative; display:block; width:16px; height:16px;
+    overflow:hidden; flex:0 0 auto;
+  }
+  #pd-hero .pd-ctaArrow svg{
+    position:absolute; top:0; left:0; width:16px; height:16px;
+    fill:none; stroke:currentColor; stroke-width:1.9;
+    stroke-linecap:round; stroke-linejoin:round;
+    transition:transform .36s cubic-bezier(.3,.9,.3,1);
+  }
+  #pd-hero .pd-ctaArrow svg + svg{transform:translateX(-100%)}
+  #pd-hero .pd-nav a.pd-cta:hover{
+    background:var(--neon); color:#04101f;
+    transform:translateY(-2px);
+    box-shadow:0 16px 30px -14px rgba(0,0,0,.9);
+  }
+  #pd-hero .pd-nav a.pd-cta:hover .pd-ctaArrow svg{transform:translateX(100%)}
+  #pd-hero .pd-nav a.pd-cta:hover .pd-ctaArrow svg + svg{transform:translateX(0)}
+  #pd-hero .pd-nav a.pd-cta:focus-visible{outline:2px solid #fff; outline-offset:3px}
+  @media (prefers-reduced-motion:reduce){
+    #pd-hero .pd-nav a.pd-cta{transition:background .2s ease, color .2s ease}
+    #pd-hero .pd-nav a.pd-cta:hover{transform:none}
+    #pd-hero .pd-ctaArrow svg{transition:none}
+  }
+
+  /* burger (mobile only) */
+  #pd-hero .pd-burger{
+    display:none; position:relative; z-index:2;
+    width:46px; height:46px; padding:0; border:0; background:transparent;
+    cursor:pointer; align-items:center; justify-content:center; flex:0 0 auto;
+  }
+  #pd-hero .pd-burger span{
+    display:block; position:absolute; left:11px; width:24px; height:2px; border-radius:2px;
+    background:#fff; box-shadow:0 1px 8px rgba(0,0,0,.5);
+    transition:transform .3s cubic-bezier(.5,0,.1,1), opacity .2s ease;
+  }
+  #pd-hero .pd-burger span:nth-child(1){transform:translateY(-7px)}
+  #pd-hero .pd-burger span:nth-child(3){transform:translateY(7px)}
+  #pd-hero .pd-burger.open span:nth-child(1){transform:rotate(45deg)}
+  #pd-hero .pd-burger.open span:nth-child(2){opacity:0}
+  #pd-hero .pd-burger.open span:nth-child(3){transform:rotate(-45deg)}
+
+  /* full-screen mobile menu (sits just under the fixed header) */
+  #pd-hero .pd-mobileNav{
+    position:fixed; inset:0; z-index:2147482000;
+    /* top-aligned and scrollable: with submenus open the content can be
+       taller than the viewport, so centring would push items under the header */
+    display:flex; flex-direction:column; justify-content:flex-start;
+    padding:96px clamp(24px,8vw,60px) 48px;
+    background:linear-gradient(160deg, rgba(4,14,40,.975), rgba(3,8,24,.99));
+    backdrop-filter:blur(18px);
+    opacity:0; visibility:hidden;
+    transition:opacity .35s ease, visibility .35s ease;
+  }
+  #pd-hero .pd-mobileNav.open{opacity:1; visibility:visible}
+  #pd-hero .pd-mobileNav a{
+    color:#fff; text-decoration:none;
+    font-family:'Space Grotesk',sans-serif; font-weight:600;
+    font-size:clamp(26px,7vw,40px); letter-spacing:-.5px;
+    padding:16px 0; border-bottom:1px solid rgba(var(--cyan-rgb),.18);
+    opacity:0; transform:translateY(16px);
+    transition:opacity .4s ease, transform .4s cubic-bezier(.5,0,.1,1), color .2s ease;
+  }
+  #pd-hero .pd-mobileNav a:last-child{border-bottom:0; color:var(--neon); text-shadow:var(--glow-neon)}
+  #pd-hero .pd-mobileNav.open a{opacity:1; transform:none}
+  #pd-hero .pd-mobileNav.open a:nth-child(1){transition-delay:.06s}
+  #pd-hero .pd-mobileNav.open a:nth-child(2){transition-delay:.12s}
+  #pd-hero .pd-mobileNav.open a:nth-child(3){transition-delay:.18s}
+  #pd-hero .pd-mobileNav.open a:nth-child(4){transition-delay:.24s}
+  #pd-hero .pd-mobileNav.open a:nth-child(5){transition-delay:.30s}
+  #pd-hero .pd-mobileNav.open a:nth-child(6){transition-delay:.36s}
+
+  /* ---------- mega menu ---------- */
+  #pd-hero .pd-hasMenu{position:relative; display:flex; align-items:center}
+  #pd-hero .pd-chev{
+    display:inline-block; width:7px; height:7px; margin-left:7px;
+    border-right:2px solid currentColor; border-bottom:2px solid currentColor;
+    transform:translateY(-2px) rotate(45deg); opacity:.65;
+    transition:transform .25s ease, opacity .2s ease;
+  }
+  #pd-hero .pd-hasMenu.open .pd-chev{transform:translateY(1px) rotate(-135deg); opacity:1}
+  #pd-hero .pd-hasMenu.open > a{opacity:1; color:#fff}
+  #pd-hero .pd-hasMenu.open > a::after{transform:scaleX(1)}
+
+  /* == Mega menus: the waterfall index ===================================
+     A screen-wide bar of downward lists - readability first. The play is
+     in the type: big lowercase headings whose underline grows on hover, a
+     giant ghosted watermark word, items cascading in like water, and a
+     droplet that pops in beside whatever you're about to click. */
+  #pd-hero .pd-mega{
+    position:fixed; left:0; right:0; top:0; z-index:2147482900;
+    overflow:hidden;
+    pointer-events:none;
+    opacity:0; visibility:hidden;
+    transition:opacity .22s ease, visibility .22s;
+  }
+  #pd-hero .pd-mega.open{opacity:1; visibility:visible}
+  #pd-hero .pd-megaInner{
+    pointer-events:auto; position:relative; width:100%;
+    transform:translateY(-102%);
+    transition:transform .34s cubic-bezier(.55,0,.6,1);
+  }
+  #pd-hero .pd-mega.open .pd-megaInner{
+    transform:none;
+    transition:transform .38s cubic-bezier(.25,.9,.3,1);
+  }
+  #pd-hero .pd-megaBody{
+    position:relative; overflow:hidden;
+    /* the top 86px sit behind the fixed header, so the bar becomes the
+       background the nav items read against */
+    padding:122px clamp(24px,3.5vw,56px) 42px;
+    background:linear-gradient(180deg, rgba(6,18,48,.98) 0%, rgba(4,11,30,.995) 100%);
+    backdrop-filter:blur(22px);
+    border-bottom:1px solid rgba(var(--neon-rgb),.3);
+    box-shadow:0 30px 70px -28px rgba(0,0,0,.9);
+  }
+  /* aurora drifting through the background */
+  #pd-hero .pd-megaBody::before{
+    content:""; position:absolute; inset:-40% -10%; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(38% 55% at 18% 30%, rgba(var(--neon-rgb),.13), transparent 70%),
+      radial-gradient(34% 50% at 78% 65%, rgba(var(--cyan-rgb),.12), transparent 70%);
+    animation:pd-drift 17s ease-in-out infinite alternate;
+  }
+  @keyframes pd-drift{
+    0%{transform:translate3d(0,0,0) scale(1)}
+    100%{transform:translate3d(3%,4%,0) scale(1.1)}
+  }
+
+  /* the block of columns is centred in the bar; the columns themselves
+     stay left-aligned so every list still reads down a straight edge */
+  #pd-hero .pd-cols{
+    --colgap:clamp(28px,3.4vw,64px);
+    position:relative; z-index:1;
+    display:flex; align-items:stretch; flex-wrap:wrap;
+    justify-content:center;
+    gap:30px var(--colgap);
+  }
+  #pd-hero .pd-col{min-width:0}
+  /* a faint rule down the middle of each gap, fading out top and bottom
+     so it reads as a divider rather than a drawn border */
+  #pd-hero .pd-cols > *{position:relative}
+  #pd-hero .pd-cols > * + *::before{
+    content:""; position:absolute; top:2px; bottom:2px;
+    left:calc(var(--colgap) / -2); width:1px; pointer-events:none;
+    background:linear-gradient(180deg,
+      rgba(255,255,255,0), rgba(255,255,255,.14) 10%,
+      rgba(255,255,255,.14) 88%, rgba(255,255,255,0));
+  }
+  #pd-hero .pd-cols > *.pd-rowStart::before{display:none}
+  /* the four columns are only a few px too wide to hold one row on a
+     1280 screen, so tighten the gutters rather than let them wrap */
+  @media (max-width:1400px){
+    #pd-hero .pd-cols{--colgap:clamp(22px,2.6vw,40px)}
+    #pd-hero .pd-megaBody{padding-left:clamp(18px,2.4vw,40px); padding-right:clamp(18px,2.4vw,40px)}
+  }
+  /* last resort on a short window: scroll inside the block, with room at
+     the top so the clapperboard's climb is never clipped */
+  @media (max-height:800px){
+    #pd-hero .pd-cols{
+      max-height:calc(100vh - 180px); overflow-y:auto; overflow-x:hidden;
+      padding-top:14px; margin-top:-14px;
+    }
+  }
+  /* whole columns arrive one at a time, left to right - fast, but far
+     enough apart that you register each one landing. The first delay
+     clears the bar's own slide (.38s) so nothing is already on screen
+     by the time the bar finishes coming down. */
+  #pd-hero .pd-cols > *{
+    opacity:0; transform:translateY(-12px);
+    transition:opacity .26s ease var(--d,0s), transform .32s cubic-bezier(.25,.9,.3,1) var(--d,0s);
+  }
+  #pd-hero .pd-mega.open .pd-cols > *{opacity:1; transform:none}
+  #pd-hero .pd-cols > *:nth-child(1){--d:.34s}
+  #pd-hero .pd-cols > *:nth-child(2){--d:.45s}
+  #pd-hero .pd-cols > *:nth-child(3){--d:.56s}
+  #pd-hero .pd-cols > *:nth-child(4){--d:.67s}
+  #pd-hero .pd-cols > *:nth-child(5){--d:.78s}
+  #pd-hero .pd-cols > *:nth-child(6){--d:.89s}
+
+  #pd-hero .pd-colTitle{
+    --g:var(--neon-rgb);
+    position:relative; display:flex; align-items:center; gap:11px;
+    padding-bottom:11px; margin-bottom:6px;
+    font-family:'Space Grotesk',sans-serif; font-weight:700;
+    font-size:clamp(20px,1.75vw,26px); line-height:1; letter-spacing:-.5px;
+    white-space:nowrap;
+    color:rgb(var(--g)); text-decoration:none;
+  }
+  #pd-hero .pd-colTitle svg{
+    width:22px; height:22px; flex:0 0 auto; stroke:currentColor; fill:none;
+    stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round;
+  }
+  /* the underline starts as a stub and grows to full width on hover */
+  #pd-hero .pd-colTitle::after{
+    content:""; position:absolute; left:1px; bottom:0; height:4px; width:0;
+    border-radius:99px; background:rgb(var(--g));
+    box-shadow:0 0 12px rgba(var(--g),.7);
+    transition:width .4s cubic-bezier(.3,0,.2,1);
+  }
+  #pd-hero .pd-mega.open .pd-colTitle::after{width:34px; transition-delay:calc(var(--d,0s) + .18s)}
+  #pd-hero .pd-mega.open .pd-colHead:hover .pd-colTitle::after{width:100%; transition-delay:0s}
+  #pd-hero .pd-colTag{
+    font-size:12.5px; line-height:1.35; color:var(--muted); font-style:italic; opacity:.85;
+    margin-bottom:10px;
+  }
+
+  #pd-hero .pd-list{list-style:none; display:grid; gap:2px}
+  /* The label sits flush with the heading's icon: the negative margin and
+     matching padding cancel out, so text starts at the column edge while
+     the hover bar and its droplet hang out to the left of everything. */
+  #pd-hero .pd-list a{
+    --g:var(--neon-rgb); --ov:18px;
+    position:relative; display:block; text-decoration:none;
+    margin-left:calc(var(--ov) * -1);
+    padding:4.5px 8px 4.5px var(--ov); border-radius:8px;
+    font-size:15px; line-height:1.3; color:var(--ink);
+    transition:color .18s ease, background .18s ease;
+  }
+  /* Live-Action carries 15 items since Vodcasts was added, which overflowed the
+     scroll cap at 1366x768 and hid the last item. Buying back 3px a row clears
+     it without touching the single-column layout. Must sit AFTER .pd-list a. */
+  @media (max-height:800px){
+    #pd-hero .pd-list a{padding-top:3px; padding-bottom:3px}
+  }
+  /* a droplet lands beside whatever you're about to click */
+  #pd-hero .pd-list a::before{
+    content:""; position:absolute; left:4px; top:50%; width:7px; height:7px;
+    margin-top:-3.5px; border-radius:50%;
+    background:rgb(var(--g)); box-shadow:0 0 10px rgba(var(--g),.9);
+    opacity:0; transform:scale(.3);
+    transition:opacity .18s ease, transform .25s cubic-bezier(.3,1.6,.4,1);
+  }
+  #pd-hero .pd-list a:hover{color:#fff; background:rgba(var(--g),.1)}
+  #pd-hero .pd-list a:hover::before{opacity:1; transform:none}
+  /* == Services: four doors, each with an icon that keeps moving =========
+     No sub-items - the overview pages carry the catalogue. Every animation
+     is scoped to .pd-mega.open, so the icons run only while the menu is
+     showing and cost nothing the rest of the time. */
+  /* the animated pearl heads its column, with the service list beneath */
+  #pd-hero .pd-colHead{
+    display:flex; flex-direction:column; align-items:flex-start; gap:12px;
+    text-decoration:none;
+  }
+  #pd-hero .pd-svcIcon{
+    position:relative; width:68px; height:68px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(120% 120% at 32% 26%, rgba(var(--g),.26), rgba(var(--g),.04) 66%);
+    border:1px solid rgba(var(--g),.34);
+    transition:transform .35s cubic-bezier(.3,1.35,.4,1), box-shadow .3s ease, border-color .3s ease;
+  }
+  /* the logo's off-centre ring, hung around the pearl */
+  #pd-hero .pd-svcIcon::before{
+    content:""; position:absolute; inset:-8px -4px -4px -8px; border-radius:50%;
+    border:1.5px solid rgba(var(--g),.34); border-top-color:transparent;
+    transition:transform .6s cubic-bezier(.35,0,.2,1);
+  }
+  #pd-hero .pd-colHead:hover .pd-svcIcon{
+    transform:translateY(-4px) scale(1.05);
+    border-color:rgb(var(--g));
+    box-shadow:0 16px 32px -12px rgba(var(--g),.9);
+  }
+  #pd-hero .pd-colHead:hover .pd-svcIcon::before{transform:rotate(210deg)}
+  #pd-hero .pd-svcIcon svg{
+    width:36px; height:36px; overflow:visible;
+    fill:none; stroke:rgb(var(--g));
+    stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+  }
+
+  /* --- live-action: the board climbs, claps at the top, drifts back ---
+     The board swings up about its own bottom-left corner while it rises,
+     the arm opens on the way, the clap lands at the peak, and the arm's
+     descent is what carries the board back down. */
+  #pd-hero .pd-clap{transform-box:view-box; transform-origin:8px 53.5px}
+  #pd-hero .pd-clapArm{transform-box:view-box; transform-origin:10px 27.5px}
+  #pd-hero .pd-clapPivot{fill:rgb(var(--g)); stroke:none}
+  #pd-hero .pd-mega.open .pd-clap{animation:pd-clapFloat 3.2s infinite}
+  #pd-hero .pd-mega.open .pd-clapArm{animation:pd-clapArm 3.2s infinite}
+  @keyframes pd-clapFloat{
+    /* climb: eased out so it slows as it reaches the top */
+    0%      {transform:translateY(0) rotate(0deg);
+             animation-timing-function:cubic-bezier(.3,.65,.35,1)}
+    44%     {transform:translateY(-5px) rotate(-7deg)}
+    /* hangs at the peak just long enough for the clap to land */
+    54%     {transform:translateY(-5px) rotate(-7deg);
+             animation-timing-function:cubic-bezier(.45,.02,.35,1)}
+    90%     {transform:translateY(0) rotate(0deg)}
+    100%    {transform:translateY(0) rotate(0deg)}
+  }
+  @keyframes pd-clapArm{
+    /* opens as the board climbs */
+    0%      {transform:rotate(0deg); animation-timing-function:cubic-bezier(.3,.65,.35,1)}
+    42%     {transform:rotate(-30deg)}
+    48%     {transform:rotate(-30deg); animation-timing-function:cubic-bezier(.8,0,.9,.4)}
+    /* the clap, at the height of the climb */
+    54%     {transform:rotate(0deg); animation-timing-function:cubic-bezier(.3,0,.4,1)}
+    59%     {transform:rotate(-6deg)}
+    66%,100%{transform:rotate(0deg)}
+  }
+
+  /* --- animation: squash and stretch, the first thing you learn --- */
+  #pd-hero .pd-ball{fill:rgb(var(--g)); stroke:none; transform-box:fill-box; transform-origin:50% 100%}
+  #pd-hero .pd-ballShadow{fill:rgb(var(--g)); stroke:none; opacity:.3; transform-box:fill-box; transform-origin:50% 50%}
+  #pd-hero .pd-mega.open .pd-ball{animation:pd-bounce 1.15s infinite}
+  #pd-hero .pd-mega.open .pd-ballShadow{animation:pd-bounceShadow 1.15s infinite}
+  @keyframes pd-bounce{
+    0%  {transform:translateY(-7px) scale(1,1); animation-timing-function:cubic-bezier(.36,0,.9,.55)}
+    42% {transform:translateY(13px) scale(1,1)}
+    50% {transform:translateY(13px) scale(1.3,.7); animation-timing-function:cubic-bezier(.1,.45,.6,1)}
+    58% {transform:translateY(13px) scale(1,1)}
+    100%{transform:translateY(-7px) scale(1,1)}
+  }
+  @keyframes pd-bounceShadow{
+    0%,100%{transform:scaleX(.62); opacity:.18}
+    50%    {transform:scaleX(1.12); opacity:.5}
+  }
+
+  /* --- photography: the iris breathes and the blades turn --- */
+  /* the glint travels round the barrel, so it turns about the lens centre
+     rather than its own bounding box */
+  #pd-hero .pd-cam{transform-box:view-box; transform-origin:32px 40px}
+  #pd-hero .pd-lens{transform-box:view-box; transform-origin:32px 38px}
+  #pd-hero .pd-iris{transform-box:view-box; transform-origin:32px 38px}
+  #pd-hero .pd-irisHole{transform-box:fill-box; transform-origin:50% 50%}
+  #pd-hero .pd-flashLamp{fill:rgb(var(--g)); stroke:none}
+  #pd-hero .pd-flash{opacity:0}
+  #pd-hero .pd-mega.open .pd-cam{animation:pd-camBody 3.2s infinite}
+  #pd-hero .pd-mega.open .pd-lens{animation:pd-camFocus 3.2s ease-in-out infinite}
+  #pd-hero .pd-mega.open .pd-iris{animation:pd-spin 7s linear infinite}
+  #pd-hero .pd-mega.open .pd-irisHole{animation:pd-stop 3.2s ease-in-out infinite}
+  /* fires at the moment the aperture is stopped down - both run on the
+     same 3.2s clock, so the flash lands on the exposure */
+  #pd-hero .pd-mega.open .pd-flash{animation:pd-twinkle 3.2s linear infinite}
+  @keyframes pd-spin{to{transform:rotate(360deg)}}
+  @keyframes pd-stop{0%,100%{transform:scale(1)} 50%{transform:scale(.42)}}
+  @keyframes pd-twinkle{0%,44%,100%{opacity:0} 48%,54%{opacity:1} 64%{opacity:0}}
+  /* raised, held steady, then kicked back by the flash and settled */
+  @keyframes pd-camBody{
+    0%   {transform:translateY(0) rotate(0deg); animation-timing-function:cubic-bezier(.35,.7,.4,1)}
+    30%  {transform:translateY(-2px) rotate(1.6deg)}
+    46%  {transform:translateY(-3px) rotate(0deg); animation-timing-function:cubic-bezier(.6,0,.75,.4)}
+    52%  {transform:translateY(-7px) rotate(-4.5deg); animation-timing-function:cubic-bezier(.2,.6,.35,1)}
+    64%  {transform:translateY(-1px) rotate(.8deg)}
+    80%  {transform:translateY(0) rotate(0deg)}
+    100% {transform:translateY(0) rotate(0deg)}
+  }
+  /* the barrel racks in as it finds focus, and relaxes after the shot */
+  @keyframes pd-camFocus{
+    0%,14% {transform:scale(1)}
+    36%    {transform:scale(1.14)}
+    46%    {transform:scale(1.06)}
+    56%    {transform:scale(1)}
+    100%   {transform:scale(1)}
+  }
+
+  /* --- post-production: levels moving on the timeline --- */
+  #pd-hero .pd-bars rect{fill:rgb(var(--g)); stroke:none; transform-box:fill-box; transform-origin:50% 50%}
+  #pd-hero .pd-mega.open .pd-bars rect{animation:pd-levels 1.05s ease-in-out infinite alternate}
+  #pd-hero .pd-mega.open .pd-bars rect:nth-child(1){animation-delay:-.10s; animation-duration:.95s}
+  #pd-hero .pd-mega.open .pd-bars rect:nth-child(2){animation-delay:-.45s; animation-duration:1.25s}
+  #pd-hero .pd-mega.open .pd-bars rect:nth-child(3){animation-delay:-.75s; animation-duration:.85s}
+  #pd-hero .pd-mega.open .pd-bars rect:nth-child(4){animation-delay:-.30s; animation-duration:1.15s}
+  #pd-hero .pd-mega.open .pd-bars rect:nth-child(5){animation-delay:-.60s; animation-duration:1s}
+  @keyframes pd-levels{from{transform:scaleY(.22)} to{transform:scaleY(1)}}
+
+  @media (prefers-reduced-motion: reduce){
+    #pd-hero .pd-mega.open .pd-clap,
+    #pd-hero .pd-mega.open .pd-clapArm,
+    #pd-hero .pd-mega.open .pd-ball,
+    #pd-hero .pd-mega.open .pd-ballShadow,
+    #pd-hero .pd-mega.open .pd-cam,
+    #pd-hero .pd-mega.open .pd-lens,
+    #pd-hero .pd-mega.open .pd-iris,
+    #pd-hero .pd-mega.open .pd-irisHole,
+    #pd-hero .pd-mega.open .pd-flash,
+    #pd-hero .pd-mega.open .pd-bars rect{animation:none}
+    #pd-hero .pd-mega.open .pd-flash{opacity:1}
+  }
+
+  /* sectors: three big icon blocks rather than a short list */
+  /* a sector block is itself a column, so .pd-cols handles its entrance */
+  #pd-hero .pd-sector{
+    display:flex; flex-direction:column; align-items:flex-start; gap:16px;
+    width:clamp(200px,17vw,250px); text-decoration:none;
+  }
+  /* a pearl the size of the space it has to fill, with the logo's
+     off-centre ring hung around it */
+  #pd-hero .pd-sectorIcon{
+    position:relative; width:112px; height:112px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(120% 120% at 32% 26%, rgba(var(--g),.26), rgba(var(--g),.04) 66%);
+    border:1px solid rgba(var(--g),.34);
+    transition:transform .35s cubic-bezier(.3,1.35,.4,1), box-shadow .3s ease, border-color .3s ease;
+  }
+  #pd-hero .pd-sectorIcon::before{
+    content:""; position:absolute; inset:-10px -5px -5px -10px; border-radius:50%;
+    border:1.5px solid rgba(var(--g),.34); border-top-color:transparent;
+    transition:transform .6s cubic-bezier(.35,0,.2,1);
+  }
+  #pd-hero .pd-sectorIcon svg{
+    width:56px; height:56px; stroke:rgb(var(--g)); fill:none;
+    stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round;
+  }
+  #pd-hero .pd-sector:hover .pd-sectorIcon{
+    transform:translateY(-5px) scale(1.06);
+    border-color:rgb(var(--g));
+    box-shadow:0 20px 40px -14px rgba(var(--g),.85);
+  }
+  #pd-hero .pd-sector:hover .pd-sectorIcon::before{transform:rotate(210deg)}
+  #pd-hero .pd-sectorName{
+    font-family:'Space Grotesk',sans-serif; font-weight:700;
+    font-size:clamp(20px,1.7vw,25px); line-height:1.1; letter-spacing:-.5px; color:#fff;
+    /* reserve two lines so the taglines sit on one baseline across all three */
+    min-height:2.2em;
+    transition:color .2s ease;
+  }
+  #pd-hero .pd-sector:hover .pd-sectorName{color:rgb(var(--g))}
+
+  /* portfolio thumbnails: a tidy grid that lifts and glows on hover */
+  /* one shared tile size, so the video column's two stacked thumbnails
+     line up row-for-row with the photography grid beside it */
+  #pd-hero .pd-thumbs{--tile:clamp(186px,17.4vw,252px); display:grid; gap:16px; padding-top:2px}
+  #pd-hero .pd-thumbs.cols1{grid-template-columns:var(--tile)}
+  #pd-hero .pd-thumbs.cols3{grid-template-columns:repeat(3, var(--tile))}
+  #pd-hero .pd-thumb{
+    --g:var(--neon-rgb);
+    position:relative; display:block; border-radius:15px; overflow:hidden;
+    border:1px solid rgba(var(--g),.32); text-decoration:none;
+    transition:transform .3s cubic-bezier(.25,.9,.3,1),
+      border-color .2s ease, box-shadow .25s ease;
+  }
+  #pd-hero .pd-thumb img{
+    display:block; width:100%; aspect-ratio:16/10; object-fit:cover;
+    transition:transform .5s cubic-bezier(.3,0,.2,1), filter .3s ease;
+  }
+  #pd-hero .pd-thumbLabel{
+    position:absolute; left:0; right:0; bottom:0; z-index:2; padding:30px 14px 12px;
+    font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15.5px;
+    letter-spacing:.3px; color:#fff;
+    background:linear-gradient(0deg, rgba(3,8,24,.92), rgba(3,8,24,.5) 45%, transparent);
+    transition:transform .3s cubic-bezier(.25,.9,.3,1);
+  }
+  /* a play badge on the two showreel tiles - it is video, after all */
+  #pd-hero .pd-play{
+    position:absolute; left:50%; top:50%; z-index:2;
+    width:56px; height:56px; margin:-28px 0 0 -28px;
+    display:flex; align-items:center; justify-content:center; border-radius:50%;
+    background:rgba(4,12,32,.42); border:1.5px solid rgba(255,255,255,.78);
+    backdrop-filter:blur(3px);
+    opacity:.92; transform:scale(.94);
+    transition:opacity .25s ease, transform .34s cubic-bezier(.3,1.45,.4,1),
+      background .25s ease, border-color .25s ease;
+  }
+  #pd-hero .pd-play svg{width:19px; height:19px; margin-left:3px; fill:#fff; stroke:none}
+  #pd-hero .pd-thumb:hover .pd-play{
+    opacity:1; transform:scale(1.12);
+    background:rgba(var(--g),.9); border-color:#fff;
+  }
+  #pd-hero .pd-thumb:hover{
+    transform:translateY(-6px);
+    border-color:rgb(var(--g));
+    box-shadow:0 22px 44px -14px rgba(var(--g),.75);
+  }
+  #pd-hero .pd-thumb:hover img{transform:scale(1.09); filter:saturate(1.12) brightness(1.06)}
+  #pd-hero .pd-thumb:hover .pd-thumbLabel{transform:translateY(-2px)}
+
+  @media (prefers-reduced-motion: reduce){
+    #pd-hero .pd-megaInner{transform:none; transition:none}
+    #pd-hero .pd-megaBody::before{animation:none}
+    #pd-hero .pd-cols > *{
+      opacity:1 !important; transform:none !important; transition-delay:0s !important;
+    }
+    #pd-hero .pd-mega.open .pd-colTitle::after{transition:none}
+  }
+
+  /* hero scroll rig */
+  #pd-hero .pd-heroScroll{position:relative; height:520vh}
+  #pd-hero .pd-sticky{position:sticky; top:0; height:100vh; overflow:hidden}
+  #pd-hero .pd-stage{position:absolute; inset:0; background:radial-gradient(120% 90% at 50% 40%, #0a1c50 0%, #050b1f 70%)}
+  #pd-hero .pd-canvas{position:absolute; inset:0; width:100%; height:100%; display:block}
+  #pd-hero .pd-stage::after{content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(60% 45% at 12% 50%, rgba(5,11,31,.55), transparent 60%),
+      radial-gradient(70% 60% at 92% 62%, rgba(5,11,31,.5), transparent 62%),
+      radial-gradient(120% 120% at 50% 120%, rgba(var(--neon-rgb),.16), transparent 55%),
+      linear-gradient(180deg, rgba(5,11,31,.25), transparent 22%, transparent 72%, rgba(5,11,31,.55));
+  }
+
+  /* overlays */
+  #pd-hero .pd-overlay{position:absolute; inset:0; z-index:5; pointer-events:none}
+  #pd-hero .pd-scrim{position:absolute; inset:0; pointer-events:none;
+    background:
+      linear-gradient(95deg, rgba(3,8,24,.80) 0%, rgba(3,8,24,.42) 22%, rgba(3,8,24,0) 50%),
+      linear-gradient(0deg, rgba(3,8,24,.70) 0%, rgba(3,8,24,.18) 24%, rgba(3,8,24,0) 46%);
+  }
+  #pd-hero .pd-headline{position:absolute; left:clamp(22px,5vw,72px); top:61%; transform:translateY(-50%); max-width:44vw}
+  #pd-hero .pd-kicker{display:inline-flex; align-items:center; gap:9px; margin-bottom:18px; font-size:13px; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); font-weight:600}
+  #pd-hero .pd-kickerDot{width:7px;height:7px;border-radius:50%;background:var(--neon);box-shadow:var(--glow-neon)}
+  #pd-hero .pd-h1{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(38px,6.1vw,94px); line-height:.94; letter-spacing:-2px; text-shadow:0 4px 40px rgba(0,0,0,.4)}
+  #pd-hero .pd-lock{display:block; color:#fff}
+  #pd-hero .pd-swapWrap{display:block; position:relative}
+  #pd-hero .pd-swap{display:inline-block; color:var(--neon); text-shadow:var(--glow-neon); transition:transform .5s cubic-bezier(.5,0,.1,1), opacity .5s ease}
+  #pd-hero .pd-swap.out{transform:translateY(-105%); opacity:0}
+  #pd-hero .pd-swap.in-start{transform:translateY(105%); opacity:0}
+  #pd-hero .pd-sub{margin-top:26px; max-width:430px; color:#fff; font-size:clamp(15px,1.2vw,18px); line-height:1.5; font-weight:400; text-shadow:0 1px 18px rgba(0,0,0,.5)}
+  #pd-hero .pd-quote{position:absolute; right:clamp(22px,4.5vw,68px); bottom:clamp(90px,16vh,150px); width:min(38vw,420px); pointer-events:auto; padding:26px 28px 24px; border-radius:20px; background:linear-gradient(180deg, rgba(10,22,58,.66), rgba(6,12,32,.6)); border:1px solid rgba(var(--neon-rgb),.32); box-shadow:0 24px 60px -30px rgba(0,0,0,.9), inset 0 0 24px rgba(var(--neon-rgb),.08), 0 0 40px -22px rgba(var(--neon-rgb),.8); backdrop-filter:blur(12px); transition:transform .5s cubic-bezier(.5,0,.1,1), opacity .5s ease}
+  #pd-hero .pd-quote.swapping{opacity:0; transform:translateY(14px)}
+  #pd-hero .pd-mark{font-family:'Space Grotesk',sans-serif; font-size:56px; line-height:.5; color:var(--neon); text-shadow:var(--glow-neon); display:block; height:26px}
+  #pd-hero .pd-quote p{font-size:clamp(15px,1.15vw,18px); line-height:1.45; font-weight:500; color:#f2f6ff}
+  #pd-hero .pd-who{margin-top:16px; display:flex; align-items:center; gap:10px; font-size:13px; color:var(--cyan); letter-spacing:.3px; font-weight:600}
+  #pd-hero .pd-whoBar{width:26px;height:2px;background:var(--neon);box-shadow:var(--glow-neon);border-radius:2px}
+
+  #pd-hero .pd-progress{position:absolute; left:0; right:0; bottom:0; height:3px; z-index:8; background:rgba(255,255,255,.06)}
+  #pd-hero .pd-progressBar{height:100%; width:0%; background:linear-gradient(90deg,#1b6bff,var(--neon)); box-shadow:var(--glow-neon)}
+  #pd-hero .pd-dots{position:absolute; left:50%; transform:translateX(-50%); bottom:26px; z-index:8; display:flex; gap:12px; align-items:center}
+  #pd-hero .pd-d{display:flex; align-items:center; gap:8px; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); opacity:.5; transition:opacity .3s,color .3s}
+  #pd-hero .pd-d i{width:8px;height:8px;border-radius:50%;background:currentColor;display:block}
+  #pd-hero .pd-d.on{opacity:1;color:var(--neon);text-shadow:var(--glow-neon)}
+  #pd-hero .pd-scrollhint{position:absolute; left:clamp(22px,5vw,72px); bottom:34px; z-index:8; display:flex; align-items:center; gap:12px; color:var(--muted); font-size:12px; letter-spacing:2px; text-transform:uppercase; transition:opacity .4s ease}
+  #pd-hero .pd-mouse{width:22px;height:34px;border:2px solid var(--muted);border-radius:12px;position:relative}
+  #pd-hero .pd-mouse::before{content:"";position:absolute;left:50%;top:6px;width:3px;height:6px;border-radius:2px;background:var(--neon);transform:translateX(-50%);animation:pd-wheel 1.5s infinite}
+  @keyframes pd-wheel{0%{opacity:0;transform:translate(-50%,0)}30%{opacity:1}100%{opacity:0;transform:translate(-50%,10px)}}
+
+  /* 1024px so tablets and landscape phones also get the mobile treatment */
+  @media (max-width:1024px){
+    #pd-hero .pd-nav{display:none}
+    #pd-hero .pd-burger{display:flex}
+    #pd-hero .pd-headline{max-width:82vw}
+    /* quote card is hidden here - it collided with the headline */
+    #pd-hero .pd-quote{display:none}
+    /* bump body copy up: 1.2vw is unreadably small on a phone */
+    #pd-hero .pd-sub{
+      font-size:clamp(17px,4.4vw,21px); line-height:1.55;
+      max-width:min(560px,88vw); margin-top:22px;
+    }
+    /* scroll hint collided with the section dots; the dots already show
+       progress, so drop the hint and centre the dots cleanly */
+    #pd-hero .pd-scrollhint{display:none}
+    #pd-hero .pd-dots{bottom:22px; gap:10px}
+    #pd-hero .pd-d{font-size:10px; letter-spacing:1.2px; white-space:nowrap}
+    #pd-hero .pd-d i{width:6px; height:6px}
+    /* mega menus are desktop-only; mobile uses the accordion below */
+    #pd-hero .pd-mega{display:none}
+  }
+
+  /* ---------- mobile menu: scrolling + accordion submenus ---------- */
+  #pd-hero .pd-mobileNav{overflow-y:auto; -webkit-overflow-scrolling:touch}
+  #pd-hero .pd-mobileNav > a{flex:0 0 auto}
+  #pd-hero .pd-mobileNav .pd-mRow{
+    flex:0 0 auto;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    border-bottom:1px solid rgba(var(--cyan-rgb),.18);
+    opacity:0; transform:translateY(16px);
+    transition:opacity .4s ease, transform .4s cubic-bezier(.5,0,.1,1);
+  }
+  #pd-hero .pd-mobileNav.open .pd-mRow{opacity:1; transform:none}
+  #pd-hero .pd-mobileNav .pd-mRow > a{border-bottom:0; opacity:1; transform:none; flex:1 1 auto}
+  #pd-hero .pd-mToggle{
+    flex:0 0 auto; width:44px; height:44px; border:0; background:transparent;
+    cursor:pointer; position:relative; padding:0;
+  }
+  #pd-hero .pd-mToggle::before,#pd-hero .pd-mToggle::after{
+    content:""; position:absolute; left:50%; top:50%; background:var(--neon);
+    border-radius:2px; transform:translate(-50%,-50%); transition:transform .3s ease, opacity .2s;
+    box-shadow:0 0 8px rgba(var(--neon-rgb),.6);
+  }
+  #pd-hero .pd-mToggle::before{width:16px; height:2px}
+  #pd-hero .pd-mToggle::after{width:2px; height:16px}
+  #pd-hero .pd-mToggle.open::after{transform:translate(-50%,-50%) rotate(90deg); opacity:0}
+  #pd-hero .pd-mSub{
+    flex:0 0 auto;
+    display:grid; grid-template-rows:0fr; overflow:hidden;
+    transition:grid-template-rows .35s cubic-bezier(.5,0,.1,1);
+  }
+  #pd-hero .pd-mSub.open{grid-template-rows:1fr}
+  #pd-hero .pd-mSubInner{min-height:0; overflow:hidden}
+  #pd-hero .pd-mSub h5{
+    font-family:'Space Grotesk',sans-serif; font-size:11.5px; letter-spacing:1.4px;
+    text-transform:uppercase; color:var(--neon); font-weight:700;
+    padding:14px 0 5px 14px;
+  }
+  #pd-hero .pd-mSub a{
+    display:block; font-family:'Inter',sans-serif; font-size:15.5px; font-weight:400;
+    color:var(--muted); padding:8px 0 8px 14px; border-bottom:0;
+    opacity:1; transform:none; letter-spacing:0;
+  }
+  #pd-hero .pd-mSub a:active{color:#fff}
+  /* section headings that are links in their own right, not list labels */
+  #pd-hero .pd-mSub a.pd-mHead{
+    font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:600;
+    color:#fff; letter-spacing:-.2px; padding:13px 0 13px 14px;
+  }
+  #pd-hero .pd-mSub a.pd-mHead + .pd-mHead{border-top:1px solid rgba(var(--cyan-rgb),.13)}
+  #pd-hero .pd-mSub a.pd-mHead:active{color:var(--neon)}
+
+/* END SITE MENU (generated) */
 
 .hero__body{
   position:relative; z-index:2; flex:1;
@@ -436,6 +1057,257 @@ body{
 </head>
 <body>
 
+<!-- BEGIN SITE MENU (generated) -->
+<div id="pd-hero">
+  <header class="pd-header">
+    <a class="pd-brand" href="https://pearldrop.com/" aria-label="Pearldrop home">
+      <img class="pd-brand__logo" src="../pearldrop-logo.png" alt="pearldrop"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" />
+      <span class="pd-word" style="display:none">pearldrop</span>
+    </a>
+    <nav class="pd-nav">
+      <span class="pd-hasMenu" data-menu="about"><a href="https://pearldrop.com/about-us/">About us<i class="pd-chev"></i></a></span>
+      <span class="pd-hasMenu" data-menu="services"><a href="https://pearldrop.com/services/">Services<i class="pd-chev"></i></a></span>
+      <span class="pd-hasMenu" data-menu="portfolio"><a href="https://pearldrop.com/portfolio/">Portfolio<i class="pd-chev"></i></a></span>
+      <span class="pd-hasMenu" data-menu="sectors"><a href="https://pearldrop.com/services/sectors/">Sectors<i class="pd-chev"></i></a></span>
+      <a href="https://pearldrop.com/case-studies/">Case Studies</a>
+      <a href="https://pearldrop.com/blog/">Blog</a>
+      <a href="https://pearldrop.com/contact/" class="pd-cta">Contact<span class="pd-ctaArrow" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2.5 8h10M8.8 4.3 12.5 8l-3.7 3.7"/></svg><svg viewBox="0 0 16 16"><path d="M2.5 8h10M8.8 4.3 12.5 8l-3.7 3.7"/></svg></span></a>
+    </nav>
+    <button class="pd-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="pd-mobileNav">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <div class="pd-mega" data-mega="services">
+    <div class="pd-megaInner">
+      <div class="pd-megaBody">
+        <div class="pd-cols">
+        <div class="pd-col">
+          <a class="pd-colHead" style="--g:0,220,255" href="https://pearldrop.com/services/live-action/">
+            <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="pdClipClap"><rect x="7" y="16.5" width="50" height="11" rx="2.5"/></clipPath></defs><g class="pd-clap"><rect x="8" y="28.5" width="48" height="25" rx="4"/><path d="M16 38h17M16 45.5h25"/><g class="pd-clapArm"><rect x="8" y="16.5" width="48" height="11" rx="2.5"/><g clip-path="url(#pdClipClap)"><path d="M18 28.5 24 15.5M28 28.5 34 15.5M38 28.5 44 15.5M48 28.5 54 15.5"/></g></g><circle class="pd-clapPivot" cx="10.5" cy="27.5" r="1.6"/></g></svg></span>
+            <span class="pd-colTitle">Live-Action Video</span>
+          </a>
+          <p class="pd-colTag">Real people, real places, real good.</p>
+          <ul class="pd-list">
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/video-production-for-activations-and-launches/">Activations and Launches</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/automotive/">Automotive</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/services/aerial-drone-video-production/">Aerial/Drone</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/case-study-video-production/">Case Studies</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/video-production-for-ceremonies-and-conferences/">Conferences and Ceremonies</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/charity-video-production/">Charity</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/company-and-brand-video-production/">Company Profiles</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/video-production-for-internal-communications/">Internal Communications</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/landing-page-video-production/">Landing Pages</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/high-quality-video-production-for-live-events/">Live Events</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/live-streaming-video-production/">Live-streaming</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/product-video-production/">Product</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/promotional-video-production/">Promotional</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/training-video-production/">Training</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/services/live-action/video-podcast-production/">Vodcasts</a></li>
+          </ul>
+        </div>
+        <div class="pd-col">
+          <a class="pd-colHead" style="--g:0,160,255" href="https://pearldrop.com/services/2d-animation/">
+            <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M13 51h38"/><ellipse class="pd-ballShadow" cx="32" cy="51" rx="9" ry="2.2"/><circle class="pd-ball" cx="32" cy="29" r="9"/></svg></span>
+            <span class="pd-colTitle">Animation</span>
+          </a>
+          <p class="pd-colTag">For when reality needs a rewrite.</p>
+          <ul class="pd-list">
+            <li><a style="--g:0,160,255" href="https://pearldrop.com/services/2d-animation/animated-explainer-video-production/">Explainer</a></li>
+            <li><a style="--g:0,160,255" href="https://pearldrop.com/services/2d-animation/animated-character-video-production/">Character</a></li>
+          </ul>
+        </div>
+        <div class="pd-col">
+          <a class="pd-colHead" style="--g:48,216,240" href="https://pearldrop.com/services/photography/">
+            <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><g class="pd-cam"><path d="M23.5 22.5 27 16.5h10l3.5 6"/><rect x="5" y="22.5" width="54" height="30" rx="6"/><rect x="43.5" y="16.5" width="8" height="5" rx="1.7"/><g class="pd-flash"><rect class="pd-flashLamp" x="44.8" y="17.8" width="5.4" height="2.4" rx="1"/><path d="M47.5 12.6V9.6M43.2 13.9l-2.1-2.2M51.8 13.9l2.1-2.2"/></g><g class="pd-lens"><circle cx="32" cy="38" r="11"/><g class="pd-iris"><path d="M32 30.4a7.6 7.6 0 0 1 5.4 2.2"/></g><circle class="pd-irisHole" cx="32" cy="38" r="5.2"/></g></g></svg></span>
+            <span class="pd-colTitle">Photography</span>
+          </a>
+          <p class="pd-colTag">Stills that stop the scroll.</p>
+          <ul class="pd-list">
+            <li><a style="--g:48,216,240" href="https://pearldrop.com/services/photography/architectural-photography/">Architectural</a></li>
+            <li><a style="--g:48,216,240" href="https://pearldrop.com/services/photography/automotive-photography/">Automotive</a></li>
+            <li><a style="--g:48,216,240" href="https://pearldrop.com/services/photography/headshot-photography/">Headshots</a></li>
+            <li><a style="--g:48,216,240" href="https://pearldrop.com/services/photography/lifestyle-photography/">Lifestyle</a></li>
+            <li><a style="--g:48,216,240" href="https://pearldrop.com/services/photography/live-event-photography/">Live-event</a></li>
+          </ul>
+        </div>
+        <div class="pd-col">
+          <a class="pd-colHead" style="--g:110,150,255" href="https://pearldrop.com/services/post-production/">
+            <span class="pd-svcIcon"><svg viewBox="0 0 64 64" aria-hidden="true"><g class="pd-bars"><rect x="9" y="17" width="6" height="30" rx="3"/><rect x="19" y="17" width="6" height="30" rx="3"/><rect x="29" y="17" width="6" height="30" rx="3"/><rect x="39" y="17" width="6" height="30" rx="3"/><rect x="49" y="17" width="6" height="30" rx="3"/></g></svg></span>
+            <span class="pd-colTitle">Post-Production</span>
+          </a>
+          <p class="pd-colTag">Where it all comes together.</p>
+          <ul class="pd-list">
+            <li><a style="--g:110,150,255" href="https://pearldrop.com/services/post-production/video-editing-services/">Editing</a></li>
+            <li><a style="--g:110,150,255" href="https://pearldrop.com/services/post-production/vfx-production/">VFX</a></li>
+            <li><a style="--g:110,150,255" href="https://pearldrop.com/services/post-production/video-subtitling-and-transcription/">Subtitling and Transcription</a></li>
+            <li><a style="--g:110,150,255" href="https://pearldrop.com/services/post-production/bristish-sign-language-bsl-production/">British Sign Language (BSL)</a></li>
+            <li><a style="--g:110,150,255" href="https://pearldrop.com/services/ai-video-production/">AI Video Production</a></li>
+          </ul>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pd-mega" data-mega="sectors">
+    <div class="pd-megaInner">
+      <div class="pd-megaBody">
+        <div class="pd-cols">
+        <a class="pd-sector" style="--g:0,220,255" href="https://pearldrop.com/services/sectors/education/">
+          <span class="pd-sectorIcon"><svg viewBox="0 0 48 48"><path d="M3.5 18 24 8.5 44.5 18 24 27.5z"/><path d="M12 22.5V32c0 3.4 5.4 6.2 12 6.2s12-2.8 12-6.2v-9.5"/><path d="M40.5 19.8v10.4"/><circle cx="40.5" cy="33" r="2.4"/></svg></span>
+          <span class="pd-sectorName">Education</span>
+          <span class="pd-colTag">Stories that actually get watched.</span>
+        </a>
+        <a class="pd-sector" style="--g:48,216,240" href="#">
+          <span class="pd-sectorIcon"><svg viewBox="0 0 48 48"><path d="M24 40.5S7.5 30.5 7.5 19.8A8.6 8.6 0 0 1 24 16.3a8.6 8.6 0 0 1 16.5 3.5C40.5 30.5 24 40.5 24 40.5z"/><path d="M11 23.5h7.5l3-5.5 4.5 11 3-5.5H37"/></svg></span>
+          <span class="pd-sectorName">Healthcare</span>
+          <span class="pd-colTag">Careful, clear, human.</span>
+        </a>
+        <a class="pd-sector" style="--g:0,160,255" href="https://pearldrop.com/services/sectors/science-technology/">
+          <span class="pd-sectorIcon"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="4.2"/><ellipse cx="24" cy="24" rx="19" ry="8.2"/><ellipse cx="24" cy="24" rx="19" ry="8.2" transform="rotate(60 24 24)"/><ellipse cx="24" cy="24" rx="19" ry="8.2" transform="rotate(120 24 24)"/></svg></span>
+          <span class="pd-sectorName">Science and Technology</span>
+          <span class="pd-colTag">Complex made compelling.</span>
+        </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pd-mega" data-mega="about">
+    <div class="pd-megaInner">
+      <div class="pd-megaBody">
+        <div class="pd-cols">
+        <div class="pd-col">
+          <a class="pd-colTitle" style="--g:0,220,255" href="https://pearldrop.com/about-us/"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.4"/><path d="M2.8 19.5a6.4 6.4 0 0 1 12.4 0"/><circle cx="17" cy="9.5" r="2.6"/><path d="M16 14.4a5.6 5.6 0 0 1 5.2 5.1"/></svg>the company</a>
+          <p class="pd-colTag">Since 2003. Still can't sit still.</p>
+          <ul class="pd-list">
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/about-us/meet-pearldrop/">Meet Pearldrop</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/about-us/our-values/">Our values</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/about-us/our-showreels/">Our showreels</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/about-us/our-clients/">Our clients</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/about-us/testimonials/">Testimonials</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/about-us/memberships/">Memberships and Accreditations</a></li>
+            <li><a style="--g:0,220,255" href="https://pearldrop.com/about-us/behind-the-scenes/">Behind-the-scenes</a></li>
+          </ul>
+        </div>
+        <div class="pd-col">
+          <a class="pd-colTitle" style="--g:48,216,240" href="https://pearldrop.com/about-us/"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.2v.4"/></svg>useful info</a>
+          <p class="pd-colTag">The whys, the hows, the FAQs.</p>
+          <ul class="pd-list">
+            <li><a style="--g:48,216,240" href="https://pearldrop.com/about-us/how-we-work/">How we work</a></li>
+            <li><a style="--g:48,216,240" href="https://pearldrop.com/about-us/why-you-should-hire-pearldrop/">Why should you work with Pearldrop?</a></li>
+            <li><a style="--g:48,216,240" href="https://pearldrop.com/about-us/why-video/">Why video?</a></li>
+            <li><a style="--g:48,216,240" href="https://pearldrop.com/about-us/sustainability/">Sustainability</a></li>
+            <li><a style="--g:48,216,240" href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="pd-col">
+          <a class="pd-colTitle" style="--g:0,160,255" href="https://pearldrop.com/about-us/employment/"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13.5h18"/></svg>employment</a>
+          <p class="pd-colTag">Come make things with us.</p>
+          <ul class="pd-list">
+            <li><a style="--g:0,160,255" href="https://pearldrop.com/about-us/employment/">Recruitment</a></li>
+            <li><a style="--g:0,160,255" href="#">Work Experience</a></li>
+          </ul>
+        </div>
+        <div class="pd-col">
+          <a class="pd-colTitle" style="--g:110,150,255" href="#"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.6-3 7.6-7 9.2-4-1.6-7-4.6-7-9.2V6z"/><path d="m9 12 2 2 4-4.5"/></svg>legal</a>
+          <p class="pd-colTag">The small print, writ large.</p>
+          <ul class="pd-list">
+            <li><a style="--g:110,150,255" href="https://pearldrop.com/about-us/terms-of-service/">Terms of Service</a></li>
+            <li><a style="--g:110,150,255" href="https://pearldrop.com/about-us/privacy-policy/">Privacy Policy</a></li>
+          </ul>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pd-mega" data-mega="portfolio">
+    <div class="pd-megaInner">
+      <div class="pd-megaBody">
+        <div class="pd-cols">
+        <div class="pd-col">
+          <a class="pd-colTitle" style="--g:0,220,255" href="https://pearldrop.com/portfolio/video/"><svg viewBox="0 0 24 24"><path d="M2.5 5h19v14h-19z"/><path d="M7 5v14M17 5v14M2.5 12h19M2.5 8.5h4.5M2.5 15.5h4.5M17 8.5h4.5M17 15.5h4.5"/></svg>video</a>
+          <p class="pd-colTag">The good stuff, moving.</p>
+          <div class="pd-thumbs cols1">
+            <a class="pd-thumb" style="--g:0,220,255" href="https://pearldrop.com/portfolio/video/live-action/"><img src="../menu-thumbs/video-liveaction.webp" alt="" loading="lazy" /><span class="pd-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span><span class="pd-thumbLabel">Live-action</span></a>
+            <a class="pd-thumb" style="--g:0,220,255" href="https://pearldrop.com/portfolio/video/2d-animation/"><img src="../menu-thumbs/video-2danimation.webp" alt="" loading="lazy" /><span class="pd-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span><span class="pd-thumbLabel">2D animation</span></a>
+          </div>
+        </div>
+        <div class="pd-col">
+          <a class="pd-colTitle" style="--g:48,216,240" href="https://pearldrop.com/portfolio/photography/"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h2.2l1.2-2h6.8l1.2 2H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.6"/></svg>photography</a>
+          <p class="pd-colTag">The good stuff, holding still.</p>
+          <div class="pd-thumbs cols3">
+            <a class="pd-thumb" style="--g:48,216,240" href="https://pearldrop.com/portfolio/photography/architectural-photography-portfolio/"><img src="../menu-thumbs/photo-architectural.webp" alt="" loading="lazy" /><span class="pd-thumbLabel">Architectural</span></a>
+            <a class="pd-thumb" style="--g:48,216,240" href="https://pearldrop.com/portfolio/photography/automotive-photography-portfolio/"><img src="../menu-thumbs/photo-automotive.webp" alt="" loading="lazy" /><span class="pd-thumbLabel">Automotive</span></a>
+            <a class="pd-thumb" style="--g:48,216,240" href="https://pearldrop.com/portfolio/photography/awards-ceremonies-and-conferences-photography-portfolio/"><img src="../menu-thumbs/photo-conferences.webp" alt="" loading="lazy" /><span class="pd-thumbLabel">Conferences and Ceremonies</span></a>
+            <a class="pd-thumb" style="--g:48,216,240" href="https://pearldrop.com/portfolio/photography/headshot-photography-portfolio/"><img src="../menu-thumbs/photo-headshots.webp" alt="" loading="lazy" /><span class="pd-thumbLabel">Headshots</span></a>
+            <a class="pd-thumb" style="--g:48,216,240" href="https://pearldrop.com/portfolio/photography/lifestyle-photography-portolio/"><img src="../menu-thumbs/photo-lifestyle.webp" alt="" loading="lazy" /><span class="pd-thumbLabel">Lifestyle</span></a>
+            <a class="pd-thumb" style="--g:48,216,240" href="https://pearldrop.com/portfolio/photography/live-event-photography-portfolio/"><img src="../menu-thumbs/photo-liveevents.webp" alt="" loading="lazy" /><span class="pd-thumbLabel">Live events</span></a>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="pd-mobileNav" id="pd-mobileNav" aria-label="Mobile menu">
+    <div class="pd-mRow"><a href="https://pearldrop.com/about-us/">About us</a><button class="pd-mToggle" type="button" aria-label="Toggle About us submenu"></button></div>
+    <div class="pd-mSub"><div class="pd-mSubInner">
+      <h5>The Company</h5>
+      <a href="https://pearldrop.com/about-us/meet-pearldrop/">Meet Pearldrop</a><a href="https://pearldrop.com/about-us/our-values/">Our values</a><a href="https://pearldrop.com/about-us/our-showreels/">Our showreels</a>
+      <a href="https://pearldrop.com/about-us/our-clients/">Our clients</a><a href="https://pearldrop.com/about-us/testimonials/">Testimonials</a><a href="https://pearldrop.com/about-us/memberships/">Memberships and Accreditations</a>
+      <a href="https://pearldrop.com/about-us/behind-the-scenes/">Behind-the-scenes</a>
+      <h5>Useful Info</h5>
+      <a href="https://pearldrop.com/about-us/how-we-work/">How we work</a><a href="https://pearldrop.com/about-us/why-you-should-hire-pearldrop/">Why should you work with Pearldrop?</a><a href="https://pearldrop.com/about-us/why-video/">Why video?</a>
+      <a href="https://pearldrop.com/about-us/sustainability/">Sustainability</a><a href="#">FAQ</a>
+      <h5>Employment</h5>
+      <a href="https://pearldrop.com/about-us/employment/">Recruitment</a><a href="#">Work Experience</a>
+      <h5>Legal</h5>
+      <a href="https://pearldrop.com/about-us/terms-of-service/">Terms of Service</a><a href="https://pearldrop.com/about-us/privacy-policy/">Privacy Policy</a>
+    </div></div>
+
+    <div class="pd-mRow"><a href="https://pearldrop.com/services/">Services</a><button class="pd-mToggle" type="button" aria-label="Toggle Services submenu"></button></div>
+    <div class="pd-mSub"><div class="pd-mSubInner">
+      <h5>Live-Action Video</h5>
+      <a href="https://pearldrop.com/services/live-action/video-production-for-activations-and-launches/">Activations and Launches</a><a href="https://pearldrop.com/services/live-action/automotive/">Automotive</a><a href="https://pearldrop.com/services/aerial-drone-video-production/">Aerial/Drone</a>
+      <a href="https://pearldrop.com/services/live-action/case-study-video-production/">Case Studies</a><a href="https://pearldrop.com/services/live-action/video-production-for-ceremonies-and-conferences/">Conferences and Ceremonies</a><a href="https://pearldrop.com/services/live-action/charity-video-production/">Charity</a>
+      <a href="https://pearldrop.com/services/live-action/company-and-brand-video-production/">Company Profiles</a><a href="https://pearldrop.com/services/live-action/video-production-for-internal-communications/">Internal Communications</a><a href="https://pearldrop.com/services/live-action/landing-page-video-production/">Landing Pages</a>
+      <a href="https://pearldrop.com/services/live-action/high-quality-video-production-for-live-events/">Live Events</a><a href="https://pearldrop.com/services/live-action/live-streaming-video-production/">Live-streaming</a><a href="https://pearldrop.com/services/live-action/product-video-production/">Product</a>
+      <a href="https://pearldrop.com/services/live-action/promotional-video-production/">Promotional</a><a href="https://pearldrop.com/services/live-action/training-video-production/">Training</a><a href="https://pearldrop.com/services/live-action/video-podcast-production/">Vodcasts</a>
+      <h5>Animation</h5>
+      <a href="https://pearldrop.com/services/2d-animation/animated-explainer-video-production/">Explainer</a><a href="https://pearldrop.com/services/2d-animation/animated-character-video-production/">Character</a>
+      <h5>Photography</h5>
+      <a href="https://pearldrop.com/services/photography/architectural-photography/">Architectural</a><a href="https://pearldrop.com/services/photography/automotive-photography/">Automotive</a><a href="https://pearldrop.com/services/photography/headshot-photography/">Headshots</a>
+      <a href="https://pearldrop.com/services/photography/lifestyle-photography/">Lifestyle</a><a href="https://pearldrop.com/services/photography/live-event-photography/">Live-event</a>
+      <h5>Post-Production</h5>
+      <a href="https://pearldrop.com/services/post-production/video-editing-services/">Editing</a><a href="https://pearldrop.com/services/post-production/vfx-production/">VFX</a><a href="https://pearldrop.com/services/post-production/video-subtitling-and-transcription/">Subtitling and Transcription</a>
+      <a href="https://pearldrop.com/services/post-production/bristish-sign-language-bsl-production/">British Sign Language (BSL)</a><a href="https://pearldrop.com/services/ai-video-production/">AI Video Production</a>
+    </div></div>
+
+    <div class="pd-mRow"><a href="https://pearldrop.com/portfolio/">Portfolio</a><button class="pd-mToggle" type="button" aria-label="Toggle Portfolio submenu"></button></div>
+    <div class="pd-mSub"><div class="pd-mSubInner">
+      <h5>Video</h5>
+      <a href="https://pearldrop.com/portfolio/video/live-action/">Live-action</a><a href="https://pearldrop.com/portfolio/video/2d-animation/">2D animation</a>
+      <h5>Photography</h5>
+      <a href="https://pearldrop.com/portfolio/photography/architectural-photography-portfolio/">Architectural</a><a href="https://pearldrop.com/portfolio/photography/automotive-photography-portfolio/">Automotive</a><a href="https://pearldrop.com/portfolio/photography/awards-ceremonies-and-conferences-photography-portfolio/">Conferences and Ceremonies</a>
+      <a href="https://pearldrop.com/portfolio/photography/headshot-photography-portfolio/">Headshots</a><a href="https://pearldrop.com/portfolio/photography/lifestyle-photography-portolio/">Lifestyle</a><a href="https://pearldrop.com/portfolio/photography/live-event-photography-portfolio/">Live events</a>
+    </div></div>
+
+    <div class="pd-mRow"><a href="https://pearldrop.com/services/sectors/">Sectors</a><button class="pd-mToggle" type="button" aria-label="Toggle Sectors submenu"></button></div>
+    <div class="pd-mSub"><div class="pd-mSubInner">
+      <a href="https://pearldrop.com/services/sectors/education/">Education</a><a href="#">Healthcare</a><a href="https://pearldrop.com/services/sectors/science-technology/">Science and Technology</a>
+    </div></div>
+
+    <a href="https://pearldrop.com/case-studies/">Case Studies</a>
+    <a href="https://pearldrop.com/blog/">Blog</a>
+    <a href="https://pearldrop.com/contact/">Contact</a>
+  </nav>
+</div>
+<!-- END SITE MENU (generated) -->
+
 <!-- ============================ 1. HERO ============================ -->
 <header class="card hero">
   <div class="hero__plate" aria-hidden="true">
@@ -447,22 +1319,6 @@ body{
       frameborder="0" allow="autoplay; encrypted-media" tabindex="-1"></iframe>
   </div>
   <div class="hero__scrim" aria-hidden="true"></div>
-
-  <nav class="nav">
-    <a class="nav__logo" href="https://pearldrop.com/"><img src="../pearldrop-logo.png" alt="Pearldrop" /></a>
-    <div class="nav__links">
-      <a href="https://pearldrop.com/">Home</a>
-      <a class="is-active" href="https://pearldrop.com/services/">Services</a>
-      <a href="https://pearldrop.com/portfolio/">Our work</a>
-      <a href="https://pearldrop.com/case-studies/">Case studies</a>
-      <a href="https://pearldrop.com/about-us/">About us</a>
-      <a href="https://pearldrop.com/contact/">Contact</a>
-    </div>
-    <div class="nav__right">
-      <a class="btn btn--grad" href="#enquire">Get a quote</a>
-      <button class="burger" type="button" aria-label="Open menu"><span></span></button>
-    </div>
-  </nav>
 
   <span class="script hero__script" aria-hidden="true">flown in town</span>
 
@@ -635,6 +1491,114 @@ body{
   <span class="foot__note"><span class="dot"></span> Direction B — built on Simon's "modern ads" reference. Hero image is a placeholder.</span>
   <span>Pearldrop · Stevenage, Hertfordshire · Flying since 2014</span>
 </div>
+
+<script>
+/* BEGIN SITE MENU JS (generated) */
+(function(){
+  function init(){
+    var root = document.getElementById("pd-hero");
+    if(!root) return;
+    var header = root.querySelector(".pd-header");
+    function shade(){
+      header.classList.toggle("scrolled", (window.scrollY || window.pageYOffset) > 40);
+    }
+    window.addEventListener("scroll", shade, {passive:true});
+    shade();
+
+    /* ---------- desktop mega menus ---------- */
+    var megas = Array.prototype.slice.call(root.querySelectorAll('.pd-mega'));
+    var triggers = Array.prototype.slice.call(root.querySelectorAll('.pd-hasMenu'));
+    if(megas.length && triggers.length){
+      var closeTimer = null, openName = null;
+      // Columns are separated by a hairline drawn in the gap to their left.
+      // When the row wraps, the column that starts the new row must not draw
+      // one, or it hangs in space at the row's left edge.
+      function markRowStarts(m){
+        var cols = m.querySelectorAll('.pd-cols > *'), prevTop = null;
+        Array.prototype.forEach.call(cols, function(c, i){
+          var top = c.offsetTop;
+          c.classList.toggle('pd-rowStart', i === 0 || top > prevTop + 1);
+          prevTop = top;
+        });
+      }
+      function showMega(name){
+        clearTimeout(closeTimer);
+        openName = name;
+        megas.forEach(function(m){ m.classList.toggle('open', m.getAttribute('data-mega')===name); });
+        triggers.forEach(function(t){ t.classList.toggle('open', t.getAttribute('data-menu')===name); });
+        megas.forEach(function(m){ if(m.getAttribute('data-mega')===name) markRowStarts(m); });
+      }
+      function hideMega(){
+        openName = null;
+        megas.forEach(function(m){ m.classList.remove('open'); });
+        triggers.forEach(function(t){ t.classList.remove('open'); });
+      }
+      function scheduleHide(){ clearTimeout(closeTimer); closeTimer = setTimeout(hideMega, 180); }
+
+      triggers.forEach(function(t){
+        var name = t.getAttribute('data-menu');
+        t.addEventListener('mouseenter', function(){ showMega(name); });
+        t.addEventListener('mouseleave', scheduleHide);
+        // keyboard / touch: toggle rather than follow the link straight away
+        t.querySelector('a').addEventListener('click', function(e){
+          if(openName !== name){ e.preventDefault(); showMega(name); }
+        });
+      });
+      megas.forEach(function(m){
+        // the outer layer is click-through, so hover lives on the panel itself
+        var surface = m.querySelector('.pd-megaInner') || m;
+        surface.addEventListener('mouseenter', function(){ clearTimeout(closeTimer); });
+        surface.addEventListener('mouseleave', scheduleHide);
+      });
+      window.addEventListener('resize', function(){ megas.forEach(markRowStarts); });
+      document.addEventListener('keydown', function(e){ if(e.key === 'Escape') hideMega(); });
+      window.addEventListener('scroll', function(){ if(openName) hideMega(); }, {passive:true});
+    }
+
+    /* ---------- mobile burger menu ---------- */
+    var burger = root.querySelector('.pd-burger');
+    var mobileNav = root.querySelector('.pd-mobileNav');
+    if(burger && mobileNav){
+      var navOpen = false;
+      function setNav(open){
+        navOpen = open;
+        burger.classList.toggle('open', open);
+        mobileNav.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        // stop the page scrolling behind the open menu
+        document.documentElement.style.overflow = open ? 'hidden' : '';
+        document.body.style.overflow = open ? 'hidden' : '';
+      }
+      burger.addEventListener('click', function(){ setNav(!navOpen); });
+      mobileNav.addEventListener('click', function(e){
+        if(e.target.tagName === 'A') setNav(false);
+      });
+      // accordion submenus
+      Array.prototype.slice.call(mobileNav.querySelectorAll('.pd-mToggle')).forEach(function(btn){
+        btn.addEventListener('click', function(e){
+          e.stopPropagation();
+          var sub = btn.parentElement.nextElementSibling;
+          if(!sub || !sub.classList.contains('pd-mSub')) return;
+          var willOpen = !sub.classList.contains('open');
+          btn.classList.toggle('open', willOpen);
+          sub.classList.toggle('open', willOpen);
+          btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        });
+      });
+      document.addEventListener('keydown', function(e){
+        if(e.key === 'Escape' && navOpen) setNav(false);
+      });
+      window.addEventListener('resize', function(){
+        if(navOpen && window.innerWidth > 1024) setNav(false);
+      });
+    }
+  }
+  if(document.readyState === "loading"){ document.addEventListener("DOMContentLoaded", init); }
+  else { init(); }
+})();
+/* END SITE MENU JS (generated) */
+</script>
 
 </body>
 </html>
