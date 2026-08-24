@@ -6,7 +6,7 @@
 <title>Drone video production — Pearldrop service page, direction B</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
 /* ===========================================================================
    Pearldrop — drone service page, DIRECTION B
@@ -68,13 +68,12 @@ body{
 .foot{--tone:#04060f}
 
 /* --- display type -------------------------------------------------------- */
-/* Same two faces as the homepage: Space Grotesk for display, Inter for body.
-   Space Grotesk is much wider than the condensed Anton this replaced, so the
-   tracking goes negative and the case goes back to sentence case — which is
-   how .pd-h1 sets the hero headline. */
+/* Anton for display — Simon preferred it to the homepage's Space Grotesk on
+   this page. Space Grotesk is still loaded: the synced site menu is set in it,
+   and without it the menu falls back to the browser default. */
 .display{
-  font-family:'Space Grotesk',sans-serif; font-weight:700;
-  letter-spacing:-1.4px; line-height:.94;
+  font-family:'Anton',Impact,sans-serif; font-weight:400;
+  text-transform:uppercase; letter-spacing:.5px; line-height:.92;
 }
 .grad{
   background:linear-gradient(96deg, rgb(var(--cyan)) 0%, rgb(var(--azure)) 55%, rgb(var(--peri)) 100%);
@@ -89,7 +88,7 @@ body{
 .btn{
   display:inline-flex; align-items:center; gap:10px;
   padding:15px 30px; border-radius:999px; text-decoration:none;
-  font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15.5px; letter-spacing:.1px; white-space:nowrap;
+  font-weight:700; font-size:15.5px; letter-spacing:.1px; white-space:nowrap;
   border:0; cursor:pointer;
   transition:transform .22s cubic-bezier(.3,.9,.3,1), box-shadow .22s ease, filter .22s ease;
 }
@@ -815,12 +814,9 @@ body{
 }
 .hero__copy{max-width:660px}
 .hero h1{
-  font-size:clamp(44px,6.2vw,98px);
+  font-size:clamp(46px,6.6vw,104px);
   margin:16px 0 0;
   text-wrap:balance;
-  /* caps only on the page title. Caps need far less negative tracking than
-     lower case does — at -1.4px the letters start to collide. */
-  text-transform:uppercase; letter-spacing:-.5px;
 }
 .hero h1 .line2{display:block}
 .hero__sub{
@@ -836,7 +832,7 @@ body{
   padding-left:clamp(14px,1.6vw,24px);
   border-left:1px solid rgba(var(--ice),.22);
 }
-.stat__n{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(30px,3.2vw,46px); line-height:1; letter-spacing:-1px}
+.stat__n{font-family:'Anton',Impact,sans-serif; font-size:clamp(30px,3.2vw,46px); line-height:1; letter-spacing:.5px}
 .stat__l{margin-top:7px; font-size:12px; line-height:1.35; color:rgba(234,242,255,.82); max-width:14ch}
 
 /* the showreel control, bottom right of the hero */
@@ -895,7 +891,7 @@ body{
   font-size:11px; font-weight:800; letter-spacing:1.8px; text-transform:uppercase;
   opacity:.72; margin-bottom:auto;
 }
-.tile__t{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(21px,2vw,29px); line-height:1; letter-spacing:-.7px}
+.tile__t{font-family:'Anton',Impact,sans-serif; font-size:clamp(21px,2vw,29px); line-height:.98; text-transform:uppercase; letter-spacing:.4px}
 .tile__d{margin-top:9px; font-size:13.5px; line-height:1.45; opacity:.82; font-weight:500}
 .tile__badge{
   position:absolute; top:clamp(14px,1.5vw,20px); right:clamp(14px,1.5vw,20px);
@@ -986,7 +982,7 @@ body{
 .frame--3{background:linear-gradient(165deg, rgb(var(--peri)), #10225c)}
 .frame--4{background:linear-gradient(165deg, rgb(var(--ice)), rgb(var(--sky)))}
 .frame__k{
-  font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:-.6px;
+  font-family:'Anton',Impact,sans-serif; text-transform:uppercase;
   font-size:clamp(20px,1.9vw,27px); line-height:.98; color:#04101f;
 }
 .frame--1 .frame__k, .frame--2 .frame__k, .frame--3 .frame__k{color:#fff}
