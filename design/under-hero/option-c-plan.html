@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Under-hero option C — the plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<!--
+  OPTION C — THE PLAN.  Static, and the most distinctive of the three.
+
+  The one thing a drone gives a client that nothing else does is the plan view.
+  So the section IS a plan view: a stylised site drawn from directly overhead,
+  with the flight line traced across it and the four "Ideal for" cases pinned
+  to the places on the site they actually happen — the building, the entrance,
+  the field, the roof.
+
+  It reads as a survey drawing rather than a web layout, which is where the
+  premium feel comes from, and it works for property, venues and surveys
+  clients without needing a single photograph.
+-->
+<style>
+:root{
+  --ink:#eaf2ff; --muted:#93a9cf; --ground:#05070f;
+  --cyan:0,220,255; --sky:48,216,240; --azure:0,160,255;
+  --peri:110,150,255; --ice:168,216,255;
+  --gutter:clamp(22px,5vw,72px);
+}
+*{box-sizing:border-box; margin:0; padding:0}
+body{background:var(--ground); color:var(--ink);
+  font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased}
+.display{font-family:'Anton',Impact,sans-serif; font-weight:400; text-transform:uppercase; letter-spacing:.5px; line-height:.92}
+.grad{background:linear-gradient(96deg, rgb(var(--cyan)) 0%, rgb(var(--azure)) 60%, rgb(var(--peri)) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent}
+.eyebrow{font-size:12px; font-weight:700; letter-spacing:2.4px; text-transform:uppercase; color:rgb(var(--cyan))}
+
+.survey{
+  padding:clamp(52px,6vw,96px) var(--gutter) clamp(58px,6.6vw,104px);
+  background:
+    radial-gradient(66% 52% at 76% 34%, rgba(var(--azure),.20), transparent 66%),
+    linear-gradient(180deg, #0a1024 0%, #060a18 72%, #04060f 100%);
+  display:grid; grid-template-columns:minmax(320px,.86fr) minmax(0,1fr);
+  gap:clamp(28px,3.4vw,64px); align-items:start;
+}
+.copy h2{font-size:clamp(32px,4vw,58px); margin-top:14px}
+.copy p{margin-top:18px; color:var(--muted); font-size:16.5px; line-height:1.7}
+.copy p.lead{color:var(--ink); font-size:clamp(17px,1.4vw,19.5px); line-height:1.58}
+.copy strong{color:var(--ink); font-weight:600}
+.copy ul{list-style:none; margin-top:24px; display:grid; gap:11px}
+.copy li{position:relative; padding-left:26px; color:var(--muted); font-size:15.5px; line-height:1.5}
+.copy li::before{content:""; position:absolute; left:2px; top:.55em; width:8px; height:8px; border-radius:50%;
+  background:rgb(var(--cyan)); box-shadow:0 0 10px rgba(var(--cyan),.8)}
+.cta{
+  display:inline-flex; align-items:center; gap:10px; margin-top:30px;
+  padding:15px 30px; border-radius:999px; text-decoration:none; border:0;
+  font-weight:700; font-size:15.5px; color:#04101f;
+  background:linear-gradient(96deg, rgb(var(--cyan)), rgb(var(--azure)));
+  box-shadow:0 12px 30px -12px rgba(var(--cyan),.85);
+}
+
+/* ---- the plan ----------------------------------------------------------- */
+.plan{
+  position:relative; border-radius:20px; overflow:hidden;
+  border:1px solid rgba(var(--ice),.16);
+  background:
+    radial-gradient(80% 70% at 60% 34%, rgba(var(--azure),.22), transparent 68%),
+    linear-gradient(160deg, #081231 0%, #050a1c 70%);
+  box-shadow:0 40px 90px -50px rgba(0,0,0,1), inset 0 0 60px rgba(var(--cyan),.05);
+}
+/* the survey grid the drawing sits on */
+.plan::before{
+  content:""; position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(var(--ice),.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--ice),.07) 1px, transparent 1px);
+  background-size:38px 38px;
+  -webkit-mask-image:radial-gradient(78% 78% at 50% 46%, #000 40%, transparent 100%);
+  mask-image:radial-gradient(78% 78% at 50% 46%, #000 40%, transparent 100%);
+}
+.plan__hd{
+  position:relative; display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:16px 20px; border-bottom:1px solid rgba(var(--ice),.13);
+  font-size:11px; font-weight:800; letter-spacing:1.6px; text-transform:uppercase; color:var(--muted);
+}
+.plan__hd b{color:rgb(var(--cyan)); font-weight:800}
+.plan svg{position:relative; display:block; width:100%; height:auto}
+
+/* the drawing */
+.g-line{fill:none; stroke:rgba(var(--ice),.5); stroke-width:1.4; stroke-linejoin:round}
+.g-fill{fill:rgba(var(--azure),.16); stroke:none}
+.g-roof{fill:rgba(var(--cyan),.14); stroke:rgba(var(--cyan),.75); stroke-width:1.6; stroke-linejoin:round}
+.g-soft{fill:none; stroke:rgba(var(--ice),.24); stroke-width:1.2}
+.g-tree{fill:rgba(var(--peri),.2); stroke:rgba(var(--ice),.35); stroke-width:1}
+/* the flight line traced over the site */
+.g-flight{fill:none; stroke:rgb(var(--cyan)); stroke-width:1.8; stroke-dasharray:7 6;
+  filter:drop-shadow(0 0 7px rgba(0,220,255,.75))}
+.g-bound{fill:none; stroke:rgba(var(--cyan),.34); stroke-width:1.3; stroke-dasharray:3 7}
+.g-label{fill:rgba(234,242,255,.9); font:800 11px 'Inter',sans-serif; letter-spacing:1.4px}
+.g-sub{fill:rgba(147,169,207,.9); font:500 11px 'Inter',sans-serif}
+.g-lead{stroke:rgba(var(--cyan),.5); stroke-width:1; fill:none}
+.pin{fill:rgba(4,10,26,.9); stroke:rgb(var(--cyan)); stroke-width:1.6}
+.pin-n{fill:rgb(var(--cyan)); font:800 11px 'Inter',sans-serif; text-anchor:middle}
+/* the drone, mid-line */
+.d-body{fill:rgba(6,14,34,.95); stroke:rgb(var(--cyan)); stroke-width:1.5}
+.d-arm{fill:none; stroke:rgb(var(--cyan)); stroke-width:1.4; stroke-linecap:round}
+.d-rot{fill:none; stroke:rgba(var(--cyan),.5); stroke-width:1.6}
+
+.key{
+  position:relative; display:flex; flex-wrap:wrap; gap:10px 22px;
+  padding:16px 20px 18px; border-top:1px solid rgba(var(--ice),.13);
+}
+.key span{display:inline-flex; align-items:center; gap:9px; font-size:12px; color:var(--muted)}
+.key i{width:9px; height:9px; border-radius:50%; background:rgb(var(--cyan)); box-shadow:0 0 10px rgba(var(--cyan),.8)}
+.key b{color:var(--ink); font-weight:600}
+</style>
+</head>
+<body>
+
+<section class="survey">
+  <div class="copy">
+    <span class="eyebrow">Aerial &amp; drone</span>
+    <h2 class="display">A view of your place <span class="grad">nobody has had.</span></h2>
+    <p class="lead">Some things simply cannot be photographed from the ground.
+       The whole site in one frame. A building sitting in its landscape. A
+       showground at the moment it fills up. That is what the camera goes up for.</p>
+    <p>We have been flying for clients since 2014, and the work is nearly always
+       the same handful of shots done properly: the slow reveal off the front of a
+       building, the tracking move down a drive, the pull-back that shows how much
+       land there actually is. Shot in <strong>4K, with stills from the same
+       flight</strong>, and graded to match the rest of your film.</p>
+    <p>Most of our aerials are <strong>added to a shoot we are already booked
+       for</strong> — half a day on top rather than a second company, a second
+       call-out and a second invoice. Before we quote we check the airspace and
+       whatever permissions the location needs, and come back with a straight
+       answer.</p>
+    <ul>
+      <li>4K video and high-resolution stills from a single flight</li>
+      <li>Cut and graded with the rest of the production, in house</li>
+      <li>Airspace and permissions checked before you get a price</li>
+      <li>Filming UK-wide from our base in Stevenage, Hertfordshire</li>
+    </ul>
+    <a class="cta" href="#">Ask for a quote →</a>
+  </div>
+
+  <figure class="plan">
+    <figcaption class="plan__hd">
+      <span>Site plan · one flight</span>
+      <span><b>Ideal for</b> — four things only shot from up here</span>
+    </figcaption>
+
+    <svg viewBox="0 0 640 520" aria-hidden="true">
+      <!-- field edges and water -->
+      <path class="g-soft" d="M0 372c94-26 168-16 246 12s150 40 232 22 138-40 162-52" />
+      <path class="g-soft" d="M0 416c104-24 176-8 252 22s148 34 226 16 140-34 162-44" />
+      <path class="g-fill" d="M64 458c76-30 150-24 220 2s148 30 226 4l0 56H64z" />
+
+      <!-- the drive -->
+      <path class="g-line" d="M28 492c96-22 132-84 152-146 16-50 44-74 96-84" />
+      <path class="g-soft" d="M42 500c96-22 130-84 150-146 16-50 46-78 98-88" />
+
+      <!-- main building and annex, seen from directly above -->
+      <path class="g-roof" d="M286 168h160v112H286z" />
+      <path class="g-soft" d="M366 168v112M286 224h160" />
+      <path class="g-roof" d="M446 196h68v56h-68z" />
+      <path class="g-soft" d="M446 224h68" />
+
+      <!-- outbuilding -->
+      <path class="g-roof" d="M158 268h88v64h-88z" />
+      <path class="g-soft" d="M202 268v64" />
+
+      <!-- car park -->
+      <path class="g-line" d="M320 344h158v46H320z" />
+      <path class="g-soft" d="M320 360h158M320 376h158M348 344v46M392 344v46M436 344v46" />
+
+      <!-- trees, kept out of the label lanes -->
+      <circle class="g-tree" cx="118" cy="446" r="15" />
+      <circle class="g-tree" cx="166" cy="474" r="11" />
+      <circle class="g-tree" cx="556" cy="452" r="13" />
+
+      <!-- flight boundary and the flight line itself -->
+      <ellipse class="g-bound" cx="330" cy="278" rx="286" ry="214" />
+      <path class="g-flight" d="M44 456C130 406 132 282 212 224s158-44 232-8 152 76 144 156" />
+
+      <!-- the drone on the line, nose along the path -->
+      <g transform="translate(420,168) rotate(26)">
+        <path class="d-rot" d="M-22-11h11M11-11h11" />
+        <path class="d-arm" d="M-6-3-16-10M6-3 16-10" />
+        <rect class="d-body" x="-8" y="-5" width="16" height="10" rx="3.4" />
+        <circle cx="0" cy="0" r="2.4" fill="rgba(0,220,255,.95)" />
+      </g>
+
+      <!-- the four pins, each on the part of the site it happens on -->
+      <g>
+        <path class="g-lead" d="M340 224 208 176 150 166" />
+        <circle class="pin" cx="340" cy="224" r="13" /><text class="pin-n" x="340" y="228">1</text>
+        <text class="g-label" x="20" y="150">THE BUILDING</text>
+        <text class="g-sub" x="20" y="168">roofline, approach, plot</text>
+      </g>
+      <g>
+        <path class="g-lead" d="M202 300 128 330" />
+        <circle class="pin" cx="202" cy="300" r="13" /><text class="pin-n" x="202" y="304">2</text>
+        <text class="g-label" x="20" y="358">THE GROUNDS</text>
+        <text class="g-sub" x="20" y="376">the whole site, one frame</text>
+      </g>
+      <g>
+        <path class="g-lead" d="M399 367 512 336" />
+        <circle class="pin" cx="399" cy="367" r="13" /><text class="g-label" x="620" y="318" text-anchor="end">THE DAY</text>
+        <text class="pin-n" x="399" y="371">3</text>
+        <text class="g-sub" x="620" y="336" text-anchor="end">crowd, scale, one take</text>
+      </g>
+      <g>
+        <path class="g-lead" d="M480 196 556 140" />
+        <circle class="pin" cx="480" cy="196" r="13" /><text class="pin-n" x="480" y="200">4</text>
+        <text class="g-label" x="620" y="112" text-anchor="end">THE DETAIL</text>
+        <text class="g-sub" x="620" y="130" text-anchor="end">roofs, elevations, progress</text>
+      </g>
+
+      <!-- north arrow and scale, because it is a drawing -->
+      <g transform="translate(600,466)">
+        <path class="g-line" d="M0-22 8 4 0-3-8 4z" />
+        <text class="g-label" x="0" y="22" text-anchor="middle">N</text>
+      </g>
+      <g transform="translate(40,60)">
+        <path class="g-soft" d="M0 0h96M0-5v10M48-5v10M96-5v10" />
+        <text class="g-sub" x="0" y="24">100 m</text>
+      </g>
+    </svg>
+
+    <div class="key">
+      <span><i></i><b>Flight line</b> — one take, start to finish</span>
+      <span><i style="background:rgba(110,150,255,.6);box-shadow:none"></i>Everything above comes off the same visit</span>
+    </div>
+  </figure>
+</section>
+
+</body>
+</html>

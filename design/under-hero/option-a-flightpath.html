@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Under-hero option A — the descent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<!--
+  OPTION A — THE DESCENT.  The scroll solution.
+
+  One idea: altitude is the story. The drone starts high, and as you scroll it
+  flies down a vertical path pinned to the left of the section. Every height it
+  passes reveals what you can only see from there — the whole site, then the
+  building, then the day, then the detail. The four "Ideal for" cases become
+  four altitudes of one flight instead of four boxes in a grid.
+
+  This still shows the mechanic frozen mid-scroll: the drone has passed 400ft
+  and 200ft (lit, path bright behind it) and is arriving at 80ft. The last
+  waypoint is still dim and waiting.
+-->
+<style>
+:root{
+  --ink:#eaf2ff; --muted:#93a9cf; --ground:#05070f;
+  --cyan:0,220,255; --sky:48,216,240; --azure:0,160,255;
+  --peri:110,150,255; --ice:168,216,255;
+  --gutter:clamp(22px,5vw,72px);
+}
+*{box-sizing:border-box; margin:0; padding:0}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+}
+.display{font-family:'Anton',Impact,sans-serif; font-weight:400; text-transform:uppercase; letter-spacing:.5px; line-height:.92}
+.grad{background:linear-gradient(96deg, rgb(var(--cyan)) 0%, rgb(var(--azure)) 60%, rgb(var(--peri)) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent}
+.eyebrow{font-size:12px; font-weight:700; letter-spacing:2.4px; text-transform:uppercase; color:rgb(var(--cyan))}
+
+/* the section sits on the same navy pool the hero uses, brighter up top where
+   the flight begins and falling away as the drone comes down */
+.descent{
+  position:relative; overflow:hidden;
+  padding:clamp(52px,6vw,96px) var(--gutter) clamp(60px,7vw,110px);
+  background:
+    radial-gradient(80% 45% at 22% 4%, rgba(var(--azure),.20), transparent 62%),
+    radial-gradient(60% 40% at 88% 96%, rgba(var(--peri),.12), transparent 66%),
+    linear-gradient(180deg, #0a1024 0%, #060a18 74%, #04060f 100%);
+}
+.head{max-width:660px; margin-bottom:clamp(38px,4.4vw,64px)}
+.head h2{font-size:clamp(34px,4.6vw,66px); margin-top:14px}
+.head p{margin-top:20px; color:var(--muted); font-size:17px; line-height:1.62; max-width:52ch}
+
+/* ---- the flight path ---------------------------------------------------- */
+/* the rail is pinned to the altitude ticks: the dot sits on the right edge of
+   the 150px altitude column, so the line runs down x=150 of .stops */
+.path{position:relative}
+.stops{position:relative}
+.rail__line{
+  position:absolute; left:150px; top:6px; bottom:0; width:2px; border-radius:2px; transform:translateX(-1px);
+  background:linear-gradient(180deg,
+    rgba(var(--cyan),.9) 0%, rgba(var(--cyan),.9) 59%,
+    rgba(var(--ice),.16) 59%, rgba(var(--ice),.16) 100%);
+}
+/* the travelled part glows; the part still to come does not */
+.rail__glow{position:absolute; left:142px; top:0; width:18px; height:59%;
+  background:linear-gradient(180deg, rgba(var(--cyan),0), rgba(var(--cyan),.28));
+  filter:blur(9px)}
+
+/* the drone, parked at the waypoint it is arriving at */
+.flier{position:absolute; left:150px; top:59%; transform:translate(-50%,-50%); z-index:3}
+.flier__halo{position:absolute; left:50%; top:50%; width:118px; height:118px; transform:translate(-50%,-50%);
+  background:radial-gradient(circle, rgba(var(--cyan),.28), transparent 66%); filter:blur(5px)}
+.flier svg{position:relative; display:block; width:70px; height:auto; overflow:visible}
+.flier .body{fill:rgba(6,14,34,.96); stroke:rgb(var(--cyan)); stroke-width:1.5}
+.flier .arm{stroke:rgb(var(--cyan)); stroke-width:1.5; fill:none; stroke-linecap:round}
+.flier .rotor{stroke:rgba(var(--cyan),.55); stroke-width:2.4; stroke-linecap:round; fill:none}
+.flier .lens{fill:rgba(var(--cyan),.9)}
+/* the beam of what it is looking at */
+.flier__beam{position:absolute; left:50%; top:52%; width:170px; height:104px;
+  transform:translateX(-46%);
+  background:linear-gradient(178deg, rgba(var(--cyan),.16), transparent 74%);
+  clip-path:polygon(42% 0, 58% 0, 100% 100%, 0 100%); filter:blur(1px)}
+
+/* ---- the waypoints ------------------------------------------------------ */
+.stop{position:relative; padding:0 0 clamp(40px,4.4vw,66px) 0; display:grid;
+  grid-template-columns:150px minmax(0,1fr) clamp(240px,26vw,360px);
+  gap:clamp(20px,2.6vw,44px); align-items:start}
+.stop:last-child{padding-bottom:0}
+.stop__alt{position:relative; text-align:right; padding-right:26px}
+/* the tick that meets the rail */
+.stop__alt::after{
+  content:""; position:absolute; right:-1px; top:15px; width:11px; height:11px; border-radius:50%;
+  background:var(--ground); border:2px solid rgba(var(--ice),.3); transform:translateX(50%);
+}
+.stop--done .stop__alt::after{background:rgb(var(--cyan)); border-color:rgb(var(--cyan)); box-shadow:0 0 16px rgba(var(--cyan),.9)}
+.stop--now .stop__alt::after{background:var(--ground); border-color:rgb(var(--cyan)); box-shadow:0 0 20px rgba(var(--cyan),.75)}
+.stop__ft{font-family:'Anton',Impact,sans-serif; font-size:clamp(26px,2.6vw,38px); line-height:1; letter-spacing:.4px}
+.stop__u{display:block; margin-top:6px; font-size:11px; font-weight:800; letter-spacing:1.8px; text-transform:uppercase; color:var(--muted)}
+.stop h3{font-size:clamp(22px,2.3vw,34px); margin-bottom:0}
+.stop p{margin-top:12px; color:var(--muted); font-size:16px; line-height:1.62}
+
+/* the frame you get from that height — a plate, not a photograph */
+.plate{
+  position:relative; overflow:hidden; aspect-ratio:16/9; border-radius:14px;
+  border:1px solid rgba(var(--ice),.18);
+  box-shadow:0 22px 50px -30px rgba(0,0,0,.95);
+}
+.plate--1{background:linear-gradient(158deg, rgba(var(--cyan),.9), #0b4fa8)}
+.plate--2{background:linear-gradient(158deg, rgba(var(--azure),.92), #08265e)}
+.plate--3{background:linear-gradient(158deg, rgba(var(--peri),.92), #10225c)}
+.plate--4{background:linear-gradient(158deg, rgba(var(--ice),.9), rgba(var(--sky),.85))}
+.plate svg{position:absolute; inset:0; width:100%; height:100%}
+.plate .ln{fill:none; stroke:rgba(255,255,255,.8); stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round}
+.plate .fl{fill:rgba(4,16,31,.22); stroke:none}
+.plate .sd{fill:none; stroke:rgba(255,255,255,.45); stroke-width:1.2; stroke-dasharray:4 4}
+.plate__k{
+  position:absolute; left:12px; bottom:11px; padding:6px 11px; border-radius:999px;
+  background:rgba(4,10,26,.72); color:#fff;
+  font-size:10.5px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase;
+}
+.stop__tag{
+  display:inline-block; margin-top:16px; padding:7px 14px; border-radius:999px;
+  font-size:11px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase;
+  color:rgb(var(--cyan)); border:1px solid rgba(var(--cyan),.4); background:rgba(var(--cyan),.08);
+}
+/* everything the drone has not reached yet is still asleep */
+.stop--wait{opacity:.34}
+.stop--wait .plate{filter:saturate(.35)}
+.stop--wait .stop__ft{color:var(--muted)}
+.stop--wait h3{color:var(--muted)}
+
+.note{
+  margin-top:clamp(44px,5vw,74px); padding-top:26px; display:flex; align-items:center; gap:16px;
+  border-top:1px solid rgba(var(--ice),.13); color:var(--muted); font-size:14.5px;
+}
+.note b{color:var(--ink); font-weight:600}
+</style>
+</head>
+<body>
+
+<section class="descent">
+  <div class="head">
+    <span class="eyebrow">One flight, top to bottom</span>
+    <h2 class="display">Every height <span class="grad">sees something else.</span></h2>
+    <p>We do not go up for a single shot. Coming down through the flight, each
+       height gives you a picture you cannot get from any other — and they all
+       come off the same visit, cut and graded together.</p>
+  </div>
+
+  <div class="path">
+    <div class="stops">
+      <span class="rail__line"></span>
+      <span class="rail__glow"></span>
+      <span class="flier">
+        <span class="flier__halo"></span>
+        <span class="flier__beam"></span>
+        <svg viewBox="-26 -16 52 30" aria-hidden="true">
+          <path class="rotor" d="M-25-9h13M12-9h13" />
+          <path class="arm" d="M-6.5-3-19-9M6.5-3 19-9" />
+          <rect class="body" x="-8" y="-4.5" width="16" height="9" rx="3" />
+          <circle class="lens" cx="0" cy="5" r="2.6" />
+          <path class="arm" d="M-3 4.5h6" />
+        </svg>
+      </span>
+
+      <article class="stop stop--done">
+        <div class="stop__alt"><span class="stop__ft">400</span><span class="stop__u">feet</span></div>
+        <div>
+          <h3 class="display">The whole place at once</h3>
+          <p>Boundaries, access, parking, the way the site actually sits in its
+             landscape. The frame that answers every question a brochure spends
+             two pages on.</p>
+          <span class="stop__tag">Venues &amp; grounds</span>
+        </div>
+        <div class="plate plate--1"><svg viewBox="0 0 320 180" aria-hidden="true"><path class="sd" d="M18 150c46-14 74-44 96-84"/><path class="fl" d="M150 128h58v30h-58z"/><path class="ln" d="M150 128h58v30h-58z"/><path class="fl" d="M214 136h34v22h-34z"/><path class="ln" d="M214 136h34v22h-34z"/><path class="ln" d="M12 158h296"/><path class="sd" d="M40 40c70-22 152-16 232 22"/><circle class="ln" cx="96" cy="140" r="6"/><circle class="ln" cx="118" cy="146" r="5"/><circle class="ln" cx="268" cy="142" r="6"/></svg><span class="plate__k">400 ft · the boundary</span></div>
+      </article>
+
+      <article class="stop stop--done">
+        <div class="stop__alt"><span class="stop__ft">200</span><span class="stop__u">feet</span></div>
+        <div>
+          <h3 class="display">The building, in its setting</h3>
+          <p>The approach, the roofline, the plot and everything around it — the
+             shot that sells the place before anyone visits.</p>
+          <span class="stop__tag">Property &amp; development</span>
+        </div>
+        <div class="plate plate--2"><svg viewBox="0 0 320 180" aria-hidden="true"><path class="fl" d="M96 152V78h128v74z"/><path class="ln" d="M96 152V78h128v74M96 78l64-30 64 30"/><path class="ln" d="M124 152v-34h28v34M180 100h26M180 118h26"/><path class="ln" d="M10 152h300"/><path class="sd" d="M18 152c40-10 58-30 66-56"/></svg><span class="plate__k">200 ft · the approach</span></div>
+      </article>
+
+      <article class="stop stop--now">
+        <div class="stop__alt"><span class="stop__ft">80</span><span class="stop__u">feet</span></div>
+        <div>
+          <h3 class="display">The day, from above</h3>
+          <p>Showgrounds, races, ceremonies and open days — the one frame that
+             finally shows how big it was, live and in a single take.</p>
+          <span class="stop__tag">Events &amp; ceremonies</span>
+        </div>
+        <div class="plate plate--3"><svg viewBox="0 0 320 180" aria-hidden="true"><path class="fl" d="M44 152l40-48 40 48zM172 152l34-40 34 40z"/><path class="ln" d="M44 152l40-48 40 48M172 152l34-40 34 40"/><path class="ln" d="M10 152h300"/><circle class="ln" cx="60" cy="140" r="4"/><circle class="ln" cx="96" cy="144" r="4"/><circle class="ln" cx="132" cy="138" r="4"/><circle class="ln" cx="152" cy="146" r="4"/><circle class="ln" cx="258" cy="140" r="4"/><circle class="ln" cx="286" cy="146" r="4"/><path class="sd" d="M28 60h264"/></svg><span class="plate__k">80 ft · the crowd</span></div>
+      </article>
+
+      <article class="stop stop--wait">
+        <div class="stop__alt"><span class="stop__ft">20</span><span class="stop__u">feet</span></div>
+        <div>
+          <h3 class="display">Detail you can't reach</h3>
+          <p>Roofs, elevations and build progress, close up, without scaffolding
+             or a cherry picker.</p>
+          <span class="stop__tag">Surveys &amp; progress</span>
+        </div>
+        <div class="plate plate--4"><svg viewBox="0 0 320 180" aria-hidden="true"><path class="fl" d="M56 128l84-56 128 34-92 54z"/><path class="ln" d="M56 128l84-56 128 34-92 54z"/><path class="sd" d="M74 122l114 30M92 110l114 30M110 98l114 30"/><path class="ln" d="M10 158h300"/></svg><span class="plate__k">20 ft · the detail</span></div>
+      </article>
+    </div>
+  </div>
+
+  <p class="note"><b>On scroll:</b> the drone flies the rail as the section
+     passes, hovering and drifting a little as it goes. Each height lights as it
+     arrives — number, headline and copy rising in together.</p>
+</section>
+
+</body>
+</html>
