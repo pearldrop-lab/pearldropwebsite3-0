@@ -12,7 +12,7 @@
    Pearldrop — drone service page, DIRECTION B
    Built on the "modern ads" reference Simon supplied: near-black ground,
    rounded cards floating on it, one enormous condensed headline per card,
-   a stat rail, a grid of vivid promo tiles, and a script accent.
+   a stat rail and a grid of vivid promo tiles.
    The reference runs magenta/orange/yellow. Pearldrop's palette is all blues
    (pink was removed from this brand deliberately), so the tile variety comes
    from the blue ladder instead: cyan -> sky -> azure -> periwinkle -> ice.
@@ -79,12 +79,6 @@ body{
 .grad{
   background:linear-gradient(96deg, rgb(var(--cyan)) 0%, rgb(var(--azure)) 55%, rgb(var(--peri)) 100%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
-}
-/* was a handwritten face; with only the two house fonts the accent has to be
-   carried the way the homepage carries it — cyan with the neon glow */
-.script{
-  font-family:'Space Grotesk',sans-serif; font-weight:500; text-transform:none;
-  color:rgb(var(--cyan)); letter-spacing:-.5px; line-height:1.05;
 }
 .eyebrow{
   font-size:12px; font-weight:700; letter-spacing:2.4px; text-transform:uppercase;
@@ -821,21 +815,14 @@ body{
 }
 .hero__copy{max-width:660px}
 .hero h1{
-  font-size:clamp(46px,6.6vw,104px);
+  font-size:clamp(44px,6.2vw,98px);
   margin:16px 0 0;
   text-wrap:balance;
+  /* caps only on the page title. Caps need far less negative tracking than
+     lower case does — at -1.4px the letters start to collide. */
+  text-transform:uppercase; letter-spacing:-.5px;
 }
 .hero h1 .line2{display:block}
-.hero__script{
-  position:absolute; z-index:3;
-  top:clamp(104px,13vw,164px); right:clamp(20px,15vw,260px);
-  /* a handwritten face carried this at 52px; Space Grotesk at that size just
-     reads as a second headline, so it comes down to an annotation */
-  font-size:clamp(16px,1.5vw,22px); letter-spacing:1.6px; text-transform:uppercase;
-  font-weight:600;
-  transform:rotate(-6deg);
-  text-shadow:0 0 22px rgba(var(--cyan),.55);
-}
 .hero__sub{
   margin-top:22px; font-size:clamp(15.5px,1.2vw,18px); line-height:1.55;
   color:var(--muted); max-width:44ch;
@@ -1063,13 +1050,11 @@ body{
     padding-left:0; padding-top:22px; gap:30px; flex-wrap:wrap}
   .stat__l{max-width:none}
   .work{grid-template-columns:1fr}
-  .hero__script{right:clamp(16px,6vw,60px)}
 }
 @media (max-width:820px){
   .nav__links{display:none}
   .burger{display:flex}
   .reel{position:static; margin-top:26px}
-  .hero__script{display:none}
   .tiles{grid-template-columns:1fr}
   .form{grid-template-columns:1fr}
 }
@@ -1342,8 +1327,6 @@ body{
       frameborder="0" allow="autoplay; encrypted-media" tabindex="-1"></iframe>
   </div>
   <div class="hero__scrim" aria-hidden="true"></div>
-
-  <span class="script hero__script" aria-hidden="true">worth looking up for</span>
 
   <div class="hero__body">
     <div class="hero__copy">
