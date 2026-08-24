@@ -6,7 +6,7 @@
 <title>Drone video production — Pearldrop service page, direction B</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
 /* ===========================================================================
    Pearldrop — drone service page, DIRECTION B
@@ -68,17 +68,23 @@ body{
 .foot{--tone:#04060f}
 
 /* --- display type -------------------------------------------------------- */
+/* Same two faces as the homepage: Space Grotesk for display, Inter for body.
+   Space Grotesk is much wider than the condensed Anton this replaced, so the
+   tracking goes negative and the case goes back to sentence case — which is
+   how .pd-h1 sets the hero headline. */
 .display{
-  font-family:'Anton',Impact,sans-serif; font-weight:400;
-  text-transform:uppercase; letter-spacing:.5px; line-height:.92;
+  font-family:'Space Grotesk',sans-serif; font-weight:700;
+  letter-spacing:-1.4px; line-height:.94;
 }
 .grad{
   background:linear-gradient(96deg, rgb(var(--cyan)) 0%, rgb(var(--azure)) 55%, rgb(var(--peri)) 100%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
+/* was a handwritten face; with only the two house fonts the accent has to be
+   carried the way the homepage carries it — cyan with the neon glow */
 .script{
-  font-family:'Caveat',cursive; font-weight:600; text-transform:none;
-  color:rgb(var(--cyan)); letter-spacing:0; line-height:1;
+  font-family:'Space Grotesk',sans-serif; font-weight:500; text-transform:none;
+  color:rgb(var(--cyan)); letter-spacing:-.5px; line-height:1.05;
 }
 .eyebrow{
   font-size:12px; font-weight:700; letter-spacing:2.4px; text-transform:uppercase;
@@ -89,7 +95,7 @@ body{
 .btn{
   display:inline-flex; align-items:center; gap:10px;
   padding:15px 30px; border-radius:999px; text-decoration:none;
-  font-weight:700; font-size:15.5px; letter-spacing:.1px; white-space:nowrap;
+  font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15.5px; letter-spacing:.1px; white-space:nowrap;
   border:0; cursor:pointer;
   transition:transform .22s cubic-bezier(.3,.9,.3,1), box-shadow .22s ease, filter .22s ease;
 }
@@ -822,10 +828,13 @@ body{
 .hero h1 .line2{display:block}
 .hero__script{
   position:absolute; z-index:3;
-  top:clamp(96px,12vw,150px); right:clamp(20px,17vw,300px);
-  font-size:clamp(28px,3.4vw,52px);
-  transform:rotate(-8deg);
-  text-shadow:0 0 26px rgba(var(--cyan),.5);
+  top:clamp(104px,13vw,164px); right:clamp(20px,15vw,260px);
+  /* a handwritten face carried this at 52px; Space Grotesk at that size just
+     reads as a second headline, so it comes down to an annotation */
+  font-size:clamp(16px,1.5vw,22px); letter-spacing:1.6px; text-transform:uppercase;
+  font-weight:600;
+  transform:rotate(-6deg);
+  text-shadow:0 0 22px rgba(var(--cyan),.55);
 }
 .hero__sub{
   margin-top:22px; font-size:clamp(15.5px,1.2vw,18px); line-height:1.55;
@@ -840,7 +849,7 @@ body{
   padding-left:clamp(14px,1.6vw,24px);
   border-left:1px solid rgba(var(--ice),.22);
 }
-.stat__n{font-family:'Anton',Impact,sans-serif; font-size:clamp(30px,3.2vw,46px); line-height:1; letter-spacing:.5px}
+.stat__n{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(30px,3.2vw,46px); line-height:1; letter-spacing:-1px}
 .stat__l{margin-top:7px; font-size:12px; line-height:1.35; color:rgba(234,242,255,.82); max-width:14ch}
 
 /* the showreel control, bottom right of the hero */
@@ -899,7 +908,7 @@ body{
   font-size:11px; font-weight:800; letter-spacing:1.8px; text-transform:uppercase;
   opacity:.72; margin-bottom:auto;
 }
-.tile__t{font-family:'Anton',Impact,sans-serif; font-size:clamp(21px,2vw,29px); line-height:.98; text-transform:uppercase; letter-spacing:.4px}
+.tile__t{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(21px,2vw,29px); line-height:1; letter-spacing:-.7px}
 .tile__d{margin-top:9px; font-size:13.5px; line-height:1.45; opacity:.82; font-weight:500}
 .tile__badge{
   position:absolute; top:clamp(14px,1.5vw,20px); right:clamp(14px,1.5vw,20px);
@@ -990,7 +999,7 @@ body{
 .frame--3{background:linear-gradient(165deg, rgb(var(--peri)), #10225c)}
 .frame--4{background:linear-gradient(165deg, rgb(var(--ice)), rgb(var(--sky)))}
 .frame__k{
-  font-family:'Anton',Impact,sans-serif; text-transform:uppercase;
+  font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:-.6px;
   font-size:clamp(20px,1.9vw,27px); line-height:.98; color:#04101f;
 }
 .frame--1 .frame__k, .frame--2 .frame__k, .frame--3 .frame__k{color:#fff}
