@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Under-hero option B — the strip</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<!--
+  OPTION B — THE STRIP.  Static, and the most filmic of the three.
+
+  Pearldrop is a film company, so the section is cut as film: one flight laid
+  out as a strip of frames running edge to edge, sprocket rail top and bottom,
+  a timecode under it. The four "Ideal for" cases become four frames off one
+  flight rather than four boxes — the point the copy is making, made visually.
+
+  The body copy sits under the strip in two columns, so the section reads
+  headline -> picture -> detail, which is how a case study reads.
+-->
+<style>
+:root{
+  --ink:#eaf2ff; --muted:#93a9cf; --ground:#05070f;
+  --cyan:0,220,255; --sky:48,216,240; --azure:0,160,255;
+  --peri:110,150,255; --ice:168,216,255;
+  --gutter:clamp(22px,5vw,72px);
+}
+*{box-sizing:border-box; margin:0; padding:0}
+body{background:var(--ground); color:var(--ink);
+  font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased}
+.display{font-family:'Anton',Impact,sans-serif; font-weight:400; text-transform:uppercase; letter-spacing:.5px; line-height:.92}
+.grad{background:linear-gradient(96deg, rgb(var(--cyan)) 0%, rgb(var(--azure)) 60%, rgb(var(--peri)) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent}
+.eyebrow{font-size:12px; font-weight:700; letter-spacing:2.4px; text-transform:uppercase; color:rgb(var(--cyan))}
+
+.reel{
+  padding:clamp(52px,6vw,96px) 0 clamp(58px,6.6vw,104px);
+  background:
+    radial-gradient(70% 50% at 50% 0%, rgba(var(--azure),.18), transparent 64%),
+    linear-gradient(180deg, #0a1024 0%, #060a18 70%, #04060f 100%);
+}
+.wrap{padding:0 var(--gutter)}
+
+/* headline left, the promise right — reads across before the strip runs */
+.head{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); gap:clamp(24px,4vw,72px); align-items:end}
+.head h2{font-size:clamp(34px,4.6vw,68px); margin-top:14px}
+.head p{color:var(--muted); font-size:17px; line-height:1.64}
+.head p b{color:var(--ink); font-weight:600}
+
+/* ---- the strip ---------------------------------------------------------- */
+.strip{
+  position:relative; margin-top:clamp(34px,4vw,58px);
+  padding:22px 0; background:#04060f;
+  border-top:1px solid rgba(var(--ice),.12); border-bottom:1px solid rgba(var(--ice),.12);
+}
+/* sprocket rails: the thing that says "film" before you have read a word */
+.strip::before, .strip::after{
+  content:""; position:absolute; left:0; right:0; height:10px;
+  background-image:repeating-linear-gradient(90deg,
+    rgba(var(--ice),.22) 0 16px, transparent 16px 40px);
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.strip::before{top:6px}
+.strip::after{bottom:6px}
+.frames{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:5px; padding:0 var(--gutter)}
+.frame{position:relative; overflow:hidden; aspect-ratio:16/11; isolation:isolate}
+.frame--1{background:linear-gradient(158deg, rgb(var(--cyan)), #0b4fa8)}
+.frame--2{background:linear-gradient(158deg, rgb(var(--azure)), #08265e)}
+.frame--3{background:linear-gradient(158deg, rgb(var(--peri)), #10225c)}
+.frame--4{background:linear-gradient(158deg, rgb(var(--ice)), rgb(var(--sky)))}
+/* the artwork lives above the caption band, not behind it */
+.frame svg{position:absolute; left:0; right:0; top:0; width:100%; height:64%}
+.frame .ln{fill:none; stroke:rgba(255,255,255,.82); stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round}
+.frame .fl{fill:rgba(4,16,31,.2); stroke:none}
+.frame .sd{fill:none; stroke:rgba(255,255,255,.45); stroke-width:1.2; stroke-dasharray:4 4}
+/* the frame number, ghosted into the corner like a slate */
+.frame__n{
+  position:absolute; right:10px; top:2px; font-family:'Anton',Impact,sans-serif;
+  font-size:clamp(48px,5vw,78px); line-height:1; color:rgba(255,255,255,.16);
+}
+.frame__cap{
+  position:absolute; left:0; right:0; bottom:0; padding:22px 18px 16px;
+  background:linear-gradient(0deg, rgba(3,7,18,.94) 0%, rgba(3,7,18,.72) 62%, transparent 100%);
+}
+.frame__cap h3{font-family:'Anton',Impact,sans-serif; font-weight:400; text-transform:uppercase;
+  letter-spacing:.4px; font-size:clamp(17px,1.5vw,22px); line-height:1; color:#fff}
+.frame__cap p{margin-top:8px; font-size:13px; line-height:1.42; color:rgba(234,242,255,.84)}
+.frame__k{
+  display:inline-block; margin-bottom:9px; padding:5px 10px; border-radius:999px;
+  font-size:10px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase;
+  color:rgb(var(--cyan)); border:1px solid rgba(var(--cyan),.45); background:rgba(var(--cyan),.1);
+}
+
+/* the timecode under the strip: one flight, start to finish */
+.tc{
+  margin-top:20px; padding:0 var(--gutter); display:flex; align-items:center; gap:16px;
+  font-size:11.5px; font-weight:800; letter-spacing:1.6px; text-transform:uppercase; color:var(--muted);
+}
+.tc__bar{position:relative; flex:1; height:3px; border-radius:2px; background:rgba(var(--ice),.14)}
+.tc__bar::before{content:""; position:absolute; inset:0 42% 0 0; border-radius:2px;
+  background:linear-gradient(90deg, rgb(var(--azure)), rgb(var(--cyan)));
+  box-shadow:0 0 16px rgba(var(--cyan),.7)}
+.tc__bar::after{content:""; position:absolute; left:58%; top:50%; width:11px; height:11px; border-radius:50%;
+  transform:translate(-50%,-50%); background:#fff; box-shadow:0 0 18px rgba(var(--cyan),.9)}
+
+/* ---- the copy, under the picture ---------------------------------------- */
+.body{margin-top:clamp(40px,4.6vw,72px); display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr)); gap:clamp(28px,4vw,72px); align-items:start}
+.body h3{font-size:clamp(24px,2.4vw,34px)}
+.body p{margin-top:16px; color:var(--muted); font-size:16.5px; line-height:1.7}
+.body strong{color:var(--ink); font-weight:600}
+.body ul{list-style:none; margin-top:22px; display:grid; gap:11px}
+.body li{position:relative; padding-left:26px; color:var(--muted); font-size:15.5px; line-height:1.5}
+.body li::before{content:""; position:absolute; left:2px; top:.55em; width:8px; height:8px; border-radius:50%;
+  background:rgb(var(--cyan)); box-shadow:0 0 10px rgba(var(--cyan),.8)}
+.cta{
+  display:inline-flex; align-items:center; gap:10px; margin-top:28px;
+  padding:15px 30px; border-radius:999px; text-decoration:none; border:0;
+  font-weight:700; font-size:15.5px; color:#04101f;
+  background:linear-gradient(96deg, rgb(var(--cyan)), rgb(var(--azure)));
+  box-shadow:0 12px 30px -12px rgba(var(--cyan),.85);
+}
+</style>
+</head>
+<body>
+
+<section class="reel">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <span class="eyebrow">What comes back</span>
+        <h2 class="display">One flight. <span class="grad">Four frames.</span></h2>
+      </div>
+      <p>We do not go up for a single shot. A flight gives you the moving
+         footage, the stills and the detail in <b>one visit</b> — cut, graded and
+         delivered with the rest of the job.</p>
+    </div>
+  </div>
+
+  <div class="strip">
+    <div class="frames">
+      <article class="frame frame--1">
+        <svg viewBox="0 0 320 200" aria-hidden="true">
+          <path class="sd" d="M14 168c48-16 78-48 100-92" />
+          <path class="fl" d="M150 142h60v32h-60z" /><path class="ln" d="M150 142h60v32h-60z" />
+          <path class="fl" d="M216 150h36v24h-36z" /><path class="ln" d="M216 150h36v24h-36z" />
+          <path class="ln" d="M10 174h300" />
+          <circle class="ln" cx="96" cy="156" r="6" /><circle class="ln" cx="120" cy="162" r="5" />
+          <circle class="ln" cx="272" cy="158" r="6" />
+        </svg>
+        <span class="frame__n">01</span>
+        <div class="frame__cap">
+          <span class="frame__k">Venues &amp; grounds</span>
+          <h3>The whole site</h3>
+          <p>Boundaries, access and parking — everything a brochure spends two pages on.</p>
+        </div>
+      </article>
+
+      <article class="frame frame--2">
+        <svg viewBox="0 0 320 200" aria-hidden="true">
+          <path class="fl" d="M92 172V92h136v80z" /><path class="ln" d="M92 172V92h136v80M92 92l68-32 68 32" />
+          <path class="ln" d="M122 172v-36h30v36M182 116h28M182 136h28" />
+          <path class="ln" d="M10 172h300" /><path class="sd" d="M18 172c42-10 62-32 70-60" />
+        </svg>
+        <span class="frame__n">02</span>
+        <div class="frame__cap">
+          <span class="frame__k">Property &amp; development</span>
+          <h3>The approach</h3>
+          <p>The roofline, the plot and everything around it — the shot that sells the place.</p>
+        </div>
+      </article>
+
+      <article class="frame frame--3">
+        <svg viewBox="0 0 320 200" aria-hidden="true">
+          <path class="fl" d="M42 172l42-52 42 52zM176 172l36-44 36 44z" />
+          <path class="ln" d="M42 172l42-52 42 52M176 172l36-44 36 44" />
+          <path class="ln" d="M10 172h300" />
+          <circle class="ln" cx="60" cy="158" r="4" /><circle class="ln" cx="98" cy="164" r="4" />
+          <circle class="ln" cx="134" cy="156" r="4" /><circle class="ln" cx="156" cy="166" r="4" />
+          <circle class="ln" cx="262" cy="158" r="4" /><circle class="ln" cx="288" cy="165" r="4" />
+          <path class="sd" d="M26 66h268" />
+        </svg>
+        <span class="frame__n">03</span>
+        <div class="frame__cap">
+          <span class="frame__k">Events &amp; ceremonies</span>
+          <h3>The day itself</h3>
+          <p>The frame that finally shows how big it was, live and in one take.</p>
+        </div>
+      </article>
+
+      <article class="frame frame--4">
+        <svg viewBox="0 0 320 200" aria-hidden="true">
+          <path class="fl" d="M54 142l88-58 132 36-96 56z" /><path class="ln" d="M54 142l88-58 132 36-96 56z" />
+          <path class="sd" d="M74 136l118 32M92 124l118 32M110 112l118 32" />
+          <path class="ln" d="M10 176h300" />
+        </svg>
+        <span class="frame__n">04</span>
+        <div class="frame__cap">
+          <span class="frame__k">Surveys &amp; progress</span>
+          <h3>Detail, close up</h3>
+          <p>Roofs, elevations and build progress without scaffolding or a cherry picker.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="tc">
+      <span>00:00</span>
+      <span class="tc__bar"></span>
+      <span>One flight</span>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="body">
+      <div>
+        <h3 class="display">A view of your place <span class="grad">nobody has had.</span></h3>
+        <p>Some things simply cannot be photographed from the ground. The whole
+           site in one frame. A building sitting in its landscape. A showground at
+           the moment it fills up. That is what the camera goes up for.</p>
+        <p>We have been flying for clients since 2014, and the work is nearly
+           always the same handful of shots done properly: the slow reveal off the
+           front of a building, the tracking move down a drive, the pull-back that
+           shows how much land there actually is. Shot in <strong>4K, with stills
+           from the same flight</strong>, and graded to match the rest of your film.</p>
+      </div>
+      <div>
+        <p>Most of our aerials are <strong>added to a shoot we are already booked
+           for</strong>. We are on site with the cameras anyway, so the air becomes
+           half a day on top rather than a second company, a second call-out and a
+           second invoice. It is a fraction of what a helicopter costs and, for the
+           shots most clients want, it looks better.</p>
+        <ul>
+          <li>4K video and high-resolution stills from a single flight</li>
+          <li>Cut and graded with the rest of the production, in house</li>
+          <li>Airspace and permissions checked before you get a price</li>
+          <li>Filming UK-wide from our base in Stevenage, Hertfordshire</li>
+        </ul>
+        <a class="cta" href="#">Ask for a quote →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
