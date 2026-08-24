@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Under-hero option E — azure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<!--
+  OPTION E — AZURE.
+
+  The same hue, the other end of the ladder. Instead of the sky being a bright
+  corner of a dark section, the sky IS the section: #0378cf edge to edge, the
+  hero's own sky value, with the haze blooming through it.
+
+  Two things stop it becoming a flat blue slab, which is the failure mode:
+    - it still ramps. The field is lightest top-right where the sun is and
+      falls to a deeper #05509a bottom-left, so lightness still does the
+      composition and the hue still never moves.
+    - it is bounded. The section meets the dark page through a horizon at the
+      top and a scrim at the foot, the way the sky meets the overlay in the
+      hero, rather than butting straight against black.
+
+  Ink follows the field: display type in white where the blue is deep, body
+  copy on near-white cards where it needs a proper reading contrast.
+-->
+<style>
+:root{
+  --deep:3,8,24;
+  --sky:3,120,207;          /* the hero sky */
+  --sky-hi:96,175,232;
+  --haze:204,227,249;
+  --cyan:0,220,255; --azure:0,160,255; --ice:168,216,255;
+  --gutter:clamp(22px,5vw,72px);
+}
+*{box-sizing:border-box; margin:0; padding:0}
+body{background:#05070f; color:#eaf2ff;
+  font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased}
+.display{font-family:'Anton',Impact,sans-serif; font-weight:400; text-transform:uppercase; letter-spacing:.5px; line-height:.92}
+
+/* ---- the sky ------------------------------------------------------------ */
+.azure{
+  position:relative; isolation:isolate; overflow:hidden;
+  padding:clamp(72px,8vw,124px) var(--gutter) clamp(64px,7vw,104px);
+  /* lightest where the sun is, deepest bottom-left: the ramp survives */
+  background:
+    radial-gradient(64% 60% at 84% 2%, rgba(var(--haze),.62) 0%, rgba(var(--haze),0) 52%),
+    radial-gradient(120% 120% at 80% 0%, rgb(var(--sky-hi)) 0%, rgb(var(--sky)) 34%, #0a63ae 66%, #05509a 100%);
+}
+/* weather, so it is a sky and not a swatch */
+.azure__cloud{
+  position:absolute; inset:0; z-index:-1; opacity:.55; filter:blur(3px);
+  background:
+    radial-gradient(28% 12% at 24% 18%, rgba(var(--haze),.7), transparent 72%),
+    radial-gradient(20% 9% at 52% 8%, rgba(var(--haze),.5), transparent 74%),
+    radial-gradient(24% 10% at 76% 30%, rgba(var(--haze),.42), transparent 74%),
+    radial-gradient(30% 12% at 12% 62%, rgba(var(--haze),.3), transparent 76%);
+}
+/* the horizon at the top and the scrim at the foot — the section is bounded,
+   never butted straight against the dark page */
+.azure::before{
+  content:""; position:absolute; left:0; right:0; top:0; height:150px; z-index:-1;
+  background:linear-gradient(180deg, rgba(5,11,31,.92) 0%, rgba(5,11,31,.42) 46%, rgba(5,11,31,0) 100%);
+}
+.azure::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:190px; z-index:-1;
+  background:
+    radial-gradient(120% 120% at 50% 130%, rgba(var(--cyan),.2), transparent 58%),
+    linear-gradient(0deg, rgba(5,11,31,.9) 0%, rgba(5,11,31,.34) 52%, rgba(5,11,31,0) 100%);
+}
+
+/* ---- headline ----------------------------------------------------------- */
+.head{position:relative; z-index:2; display:grid;
+  grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); gap:clamp(26px,4vw,72px); align-items:end}
+.kicker{display:inline-flex; align-items:center; gap:9px;
+  font-size:12px; font-weight:800; letter-spacing:2.4px; text-transform:uppercase; color:#fff}
+.kicker i{width:7px; height:7px; border-radius:50%; background:rgb(var(--cyan)); box-shadow:0 0 12px rgba(var(--cyan),.9)}
+.head h2{margin-top:16px; font-size:clamp(36px,5vw,74px); color:#fff;
+  text-shadow:0 6px 44px rgba(2,26,58,.45)}
+.head h2 .hi{color:rgb(var(--cyan)); text-shadow:0 0 34px rgba(0,220,255,.5)}
+.head p{color:#f0f6ff; font-size:17.5px; line-height:1.62; text-shadow:0 1px 16px rgba(2,26,58,.5)}
+.head p b{font-weight:700}
+
+/* ---- the four cases, as cards cut out of the sky ------------------------ */
+.cards{position:relative; z-index:2; margin-top:clamp(34px,4.4vw,64px);
+  display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:clamp(12px,1.5vw,20px)}
+.card{
+  position:relative; overflow:hidden; border-radius:18px; padding:22px 22px 24px;
+  background:linear-gradient(180deg, rgba(255,255,255,.97), rgba(238,246,255,.93));
+  box-shadow:0 30px 60px -34px rgba(2,26,58,.85), inset 0 1px 0 rgba(255,255,255,.9);
+  color:rgb(var(--deep));
+}
+.card__ic{display:block; width:52px; height:38px; margin-bottom:16px}
+.card__ic .ln{fill:none; stroke:rgb(var(--sky)); stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round}
+.card__ic .fl{fill:rgba(3,120,207,.12); stroke:none}
+.card__ic .sd{fill:none; stroke:rgba(3,120,207,.45); stroke-width:1.2; stroke-dasharray:3.5 3.5}
+.card__k{font-size:10.5px; font-weight:800; letter-spacing:1.6px; text-transform:uppercase; color:rgba(3,8,24,.52)}
+.card h3{margin-top:7px; font-family:'Anton',Impact,sans-serif; font-weight:400; text-transform:uppercase;
+  letter-spacing:.4px; font-size:clamp(18px,1.7vw,25px); line-height:1}
+.card p{margin-top:10px; font-size:13.5px; line-height:1.5; color:rgba(3,8,24,.74)}
+/* one card takes the accent, so the row is not four of the same thing */
+.card--lead{background:linear-gradient(180deg, rgb(var(--deep)), #0a1430); color:#fff}
+.card--lead .card__k{color:rgba(var(--cyan),.9)}
+.card--lead p{color:rgba(234,242,255,.8)}
+.card--lead .card__ic .ln{stroke:rgb(var(--cyan))}
+.card--lead .card__ic .fl{fill:rgba(0,220,255,.14)}
+.card--lead .card__ic .sd{stroke:rgba(0,220,255,.5)}
+
+/* ---- the foot: copy on the deep end ------------------------------------- */
+.foot{position:relative; z-index:2; margin-top:clamp(40px,4.6vw,72px);
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;
+  gap:clamp(24px,3.4vw,60px); align-items:start}
+.foot p{color:#eef5ff; font-size:16px; line-height:1.68; text-shadow:0 1px 14px rgba(2,26,58,.55)}
+.foot p b{font-weight:700; color:#fff}
+.cta{
+  display:inline-flex; align-items:center; gap:10px; white-space:nowrap;
+  padding:16px 32px; border-radius:999px; text-decoration:none; border:0;
+  font-weight:700; font-size:15.5px; color:#04101f; background:#fff;
+  box-shadow:0 20px 44px -22px rgba(2,26,58,.9);
+}
+
+/* the drone, small and high, a silhouette against its own sky */
+.spot{position:absolute; z-index:1; opacity:.85}
+.spot svg{display:block; overflow:visible}
+.spot .s{fill:rgba(var(--deep),.82)}
+.spot .r{fill:none; stroke:rgba(var(--deep),.5); stroke-width:2.2; stroke-linecap:round}
+.spot .t{fill:none; stroke:rgba(255,255,255,.5); stroke-width:1.6; stroke-dasharray:6 7}
+.spot--1{right:12%; top:96px}
+.spot--2{right:31%; top:172px; transform:scale(.6); opacity:.5}
+</style>
+</head>
+<body>
+
+<section class="azure">
+  <span class="azure__cloud"></span>
+
+  <span class="spot spot--1">
+    <svg width="86" height="40" viewBox="-34 -16 68 32" aria-hidden="true">
+      <path class="t" d="M30-12C6-8-12-2-33 10" />
+      <path class="r" d="M-26-10h13M13-10h13" />
+      <path class="s" d="M-9-5h18a4 4 0 0 1 4 4v3a4 4 0 0 1-4 4H-9a4 4 0 0 1-4-4v-3a4 4 0 0 1 4-4z" />
+      <path class="r" d="M-9-3-20-9M9-3 20-9" />
+    </svg>
+  </span>
+  <span class="spot spot--2">
+    <svg width="86" height="40" viewBox="-34 -16 68 32" aria-hidden="true">
+      <path class="r" d="M-26-10h13M13-10h13" />
+      <path class="s" d="M-9-5h18a4 4 0 0 1 4 4v3a4 4 0 0 1-4 4H-9a4 4 0 0 1-4-4v-3a4 4 0 0 1 4-4z" />
+      <path class="r" d="M-9-3-20-9M9-3 20-9" />
+    </svg>
+  </span>
+
+  <div class="head">
+    <div>
+      <span class="kicker"><i></i>Aerial &amp; drone</span>
+      <h2 class="display">Your place, <span class="hi">against the sky.</span></h2>
+    </div>
+    <p>Some things simply cannot be photographed from the ground. The whole site
+       in one frame. A building in its landscape. A showground at the moment it
+       fills up. <b>That is what the camera goes up for.</b></p>
+  </div>
+
+  <div class="cards">
+    <article class="card card--lead">
+      <svg class="card__ic" viewBox="0 0 120 88" aria-hidden="true">
+        <path class="sd" d="M8 74c22-10 38-30 46-56" />
+        <path class="fl" d="M56 56h40v22H56z" /><path class="ln" d="M56 56h40v22H56z" />
+        <path class="ln" d="M4 78h112" />
+        <circle class="ln" cx="30" cy="66" r="5" /><circle class="ln" cx="104" cy="68" r="5" />
+      </svg>
+      <span class="card__k">Venues &amp; grounds</span>
+      <h3>The whole site</h3>
+      <p>Boundaries, access and parking — everything a brochure spends two pages on.</p>
+    </article>
+
+    <article class="card">
+      <svg class="card__ic" viewBox="0 0 120 88" aria-hidden="true">
+        <path class="fl" d="M34 78V38h56v40z" /><path class="ln" d="M34 78V38h56v40M34 38l28-16 28 16" />
+        <path class="ln" d="M50 78V60h14v18" />
+        <path class="ln" d="M4 78h112" /><path class="sd" d="M10 78c18-6 26-18 30-30" />
+      </svg>
+      <span class="card__k">Property &amp; development</span>
+      <h3>The approach</h3>
+      <p>The roofline, the plot and everything around it — the shot that sells the place.</p>
+    </article>
+
+    <article class="card">
+      <svg class="card__ic" viewBox="0 0 120 88" aria-hidden="true">
+        <path class="fl" d="M14 78l22-26 22 26zM66 78l18-22 18 22z" />
+        <path class="ln" d="M14 78l22-26 22 26M66 78l18-22 18 22" />
+        <path class="ln" d="M4 78h112" />
+        <circle class="ln" cx="30" cy="70" r="3.4" /><circle class="ln" cx="52" cy="73" r="3.4" />
+        <circle class="ln" cx="98" cy="71" r="3.4" />
+        <path class="sd" d="M16 26h88" />
+      </svg>
+      <span class="card__k">Events &amp; ceremonies</span>
+      <h3>The day itself</h3>
+      <p>The frame that finally shows how big it was, live and in one take.</p>
+    </article>
+
+    <article class="card">
+      <svg class="card__ic" viewBox="0 0 120 88" aria-hidden="true">
+        <path class="fl" d="M18 60l34-22 50 14-36 22z" /><path class="ln" d="M18 60l34-22 50 14-36 22z" />
+        <path class="sd" d="M28 56l46 13M38 50l46 13" />
+        <path class="ln" d="M4 80h112" />
+      </svg>
+      <span class="card__k">Surveys &amp; progress</span>
+      <h3>Detail, close up</h3>
+      <p>Roofs, elevations and build progress without scaffolding or a cherry picker.</p>
+    </article>
+  </div>
+
+  <div class="foot">
+    <p>We have been flying for clients since 2014, and the work is nearly always
+       the same handful of shots done properly: the slow reveal off the front of a
+       building, the tracking move down a drive, the pull-back that shows how much
+       land there actually is. Shot in <b>4K, with stills from the same flight</b>.</p>
+    <p>Most of our aerials are <b>added to a shoot we are already booked for</b> —
+       half a day on top rather than a second company, a second call-out and a
+       second invoice. Before we quote we check the airspace and whatever
+       permissions the location needs, and come back with a straight answer.</p>
+    <a class="cta" href="#">Ask for a quote →</a>
+  </div>
+</section>
+
+</body>
+</html>
