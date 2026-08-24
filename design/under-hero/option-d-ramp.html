@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Under-hero option D — the ramp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<!--
+  OPTION D — THE RAMP.
+
+  This is the homepage hero's own recipe, reused with no video in it. The whole
+  section is one diagonal luminance ramp: near-black navy scrim bottom-left,
+  open azure sky top-right, and the hue never moves off ~205 degrees. Type sits
+  in the dark end where it reads hard; the picture breathes in the bright end.
+
+  Layer stack, bottom to top — the same four the hero uses:
+    1. ground        radial navy pool, brighter behind the subject
+    2. bright field  the sky, top-right (a photograph drops straight in here)
+    3. vignette      corner darkening + the cyan uplight from bottom centre
+    4. scrim         the 95deg directional wash that makes type legible
+
+  Because the sky is a real field rather than a flat colour, the four Ideal-for
+  cases can live in it as waypoints along the flight arc, set in deep navy —
+  dark type on the light end, light type on the dark end, one hue throughout.
+-->
+<style>
+:root{
+  --ink:#eaf2ff; --muted:#93a9cf;
+  --deep:3,8,24;            /* the scrim navy, H226 */
+  --sky:3,120,207;          /* the hero sky, H205.6 S97 L41 */
+  --sky-hi:96,175,232;      /* sky highlight near the horizon */
+  --haze:204,227,249;       /* cloud */
+  --cyan:0,220,255; --azure:0,160,255; --peri:110,150,255; --ice:168,216,255;
+  --gutter:clamp(22px,5vw,72px);
+}
+*{box-sizing:border-box; margin:0; padding:0}
+body{background:#05070f; color:var(--ink);
+  font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased}
+.display{font-family:'Anton',Impact,sans-serif; font-weight:400; text-transform:uppercase; letter-spacing:.5px; line-height:.92}
+.eyebrow{font-size:12px; font-weight:700; letter-spacing:2.4px; text-transform:uppercase; color:rgb(var(--cyan))}
+
+/* ---- 1. the ground ------------------------------------------------------- */
+.ramp{
+  position:relative; isolation:isolate; overflow:hidden;
+  min-height:min(860px,92vh);
+  display:flex; align-items:flex-end;
+  padding:clamp(120px,14vw,200px) var(--gutter) clamp(56px,6vw,96px);
+  background:radial-gradient(120% 90% at 50% 40%, #0a1c50 0%, #050b1f 70%);
+}
+/* ---- 2. the bright field: open sky, top right --------------------------- */
+.ramp__sky{
+  position:absolute; inset:0; z-index:-3;
+  background:
+    radial-gradient(58% 78% at 88% 6%, rgba(var(--haze),.5) 0%, rgba(var(--haze),0) 46%),
+    radial-gradient(86% 96% at 82% 12%, rgb(var(--sky-hi)) 0%, rgba(var(--sky),.98) 26%, rgba(var(--sky),.55) 52%, rgba(3,120,207,0) 74%);
+}
+/* a little weather, so the field is never a flat wash */
+.ramp__cloud{
+  position:absolute; inset:0; z-index:-3; opacity:.5;
+  background:
+    radial-gradient(30% 16% at 70% 22%, rgba(var(--haze),.55), transparent 70%),
+    radial-gradient(22% 12% at 92% 34%, rgba(var(--haze),.4), transparent 72%),
+    radial-gradient(26% 10% at 58% 9%, rgba(var(--haze),.32), transparent 74%);
+  filter:blur(2px);
+}
+/* ---- 3. vignette + the cyan uplight ------------------------------------- */
+.ramp::after{
+  content:""; position:absolute; inset:0; z-index:-2; pointer-events:none;
+  background:
+    radial-gradient(120% 120% at 50% 120%, rgba(var(--cyan),.16), transparent 55%),
+    radial-gradient(90% 70% at 12% 96%, rgba(5,11,31,.55), transparent 62%),
+    linear-gradient(0deg, rgba(5,11,31,.5) 0%, transparent 26%),
+    linear-gradient(180deg, rgba(5,11,31,.5) 0%, transparent 22%);
+}
+/* ---- 4. the directional scrim — the part that makes type legible -------- */
+.ramp::before{
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:
+    linear-gradient(95deg, rgba(var(--deep),.80) 0%, rgba(var(--deep),.42) 22%, rgba(3,8,24,0) 50%),
+    linear-gradient(0deg, rgba(var(--deep),.70) 0%, rgba(var(--deep),.18) 24%, rgba(3,8,24,0) 46%);
+}
+
+/* ---- the copy, bottom left, in the L18-25 zone --------------------------- */
+.copy{position:relative; z-index:2; max-width:min(560px,46vw)}
+.copy h2{font-size:clamp(34px,4.6vw,68px); margin-top:14px}
+.copy h2 .hi{color:rgb(var(--cyan)); text-shadow:0 0 30px rgba(var(--cyan),.45)}
+.copy p{margin-top:20px; color:#dbe6fb; font-size:17px; line-height:1.64;
+  text-shadow:0 1px 18px rgba(0,0,0,.5)}
+.copy p strong{color:#fff; font-weight:600}
+.cta{
+  display:inline-flex; align-items:center; gap:10px; margin-top:30px;
+  padding:15px 30px; border-radius:999px; text-decoration:none; border:0;
+  font-weight:700; font-size:15.5px; color:#04101f; background:#fff;
+  box-shadow:0 18px 40px -20px rgba(0,0,0,.9);
+}
+.meta{
+  margin-top:34px; padding-top:22px; border-top:1px solid rgba(255,255,255,.16);
+  display:flex; gap:clamp(18px,2.4vw,40px); flex-wrap:wrap;
+}
+.meta div{min-width:96px}
+.meta b{display:block; font-family:'Anton',Impact,sans-serif; font-weight:400;
+  font-size:clamp(22px,2.2vw,30px); letter-spacing:.4px; color:#fff}
+.meta span{display:block; margin-top:5px; font-size:12px; line-height:1.35; color:rgba(219,230,251,.8)}
+
+/* ---- the flight, drawn into the bright end ------------------------------ */
+/* deep navy on azure: the same relationship as the hero, inverted for the
+   light end of the ramp. No photograph needed, and one drops straight in. */
+.flight{position:absolute; inset:0; z-index:1; pointer-events:none}
+.flight svg{position:absolute; inset:0; width:100%; height:100%}
+.arc{fill:none; stroke:rgba(var(--deep),.5); stroke-width:2; stroke-dasharray:9 8}
+.drone-s{fill:rgba(var(--deep),.9)}
+.drone-r{fill:none; stroke:rgba(var(--deep),.55); stroke-width:2.4; stroke-linecap:round}
+
+/* the four cases, pinned into the sky as waypoints */
+.pin{position:absolute; z-index:2; width:max-content; max-width:250px}
+.pin__dot{
+  position:absolute; left:-1px; top:6px; width:11px; height:11px; border-radius:50%;
+  background:rgb(var(--deep)); box-shadow:0 0 0 4px rgba(255,255,255,.28);
+}
+.pin__b{padding-left:26px}
+.pin__k{font-size:10.5px; font-weight:800; letter-spacing:1.6px; text-transform:uppercase; color:rgba(var(--deep),.66)}
+.pin__t{margin-top:4px; font-family:'Anton',Impact,sans-serif; font-weight:400; text-transform:uppercase;
+  letter-spacing:.4px; font-size:clamp(17px,1.6vw,23px); line-height:1; color:rgb(var(--deep))}
+.pin__d{margin-top:7px; font-size:13px; line-height:1.45; color:rgba(var(--deep),.78)}
+.pin--1{right:clamp(20px,15vw,230px); top:14%}
+.pin--2{right:clamp(20px,4vw,60px); top:36%}
+.pin--3{right:clamp(20px,20vw,320px); top:58%}
+/* the lower two sit where the ramp has gone dark, so they flip to light type —
+   the ramp decides the ink, exactly as it does on the homepage hero */
+.pin--4{right:clamp(20px,7vw,110px); top:76%}
+.pin--3 .pin__dot, .pin--4 .pin__dot{background:rgb(var(--cyan)); box-shadow:0 0 0 4px rgba(var(--cyan),.2), 0 0 18px rgba(var(--cyan),.8)}
+.pin--3 .pin__k, .pin--4 .pin__k{color:rgba(var(--cyan),.9)}
+.pin--3 .pin__t, .pin--4 .pin__t{color:#fff}
+.pin--3 .pin__d, .pin--4 .pin__d{color:rgba(219,230,251,.82)}
+</style>
+</head>
+<body>
+
+<section class="ramp">
+  <span class="ramp__sky"></span>
+  <span class="ramp__cloud"></span>
+
+  <div class="flight">
+    <svg viewBox="0 0 1440 860" preserveAspectRatio="none" aria-hidden="true">
+      <path class="arc" d="M1416 92C1240 150 1180 300 1030 392S760 520 604 636" />
+    </svg>
+    <svg viewBox="0 0 1440 860" aria-hidden="true">
+      <g transform="translate(1030,392) rotate(18)">
+        <path class="drone-r" d="M-30-15h14M16-15h14" />
+        <path class="drone-s" d="M-8-6h16a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4H-8a4 4 0 0 1-4-4v-4a4 4 0 0 1 4-4z" />
+        <path class="drone-r" d="M-8-4-23-13M8-4 23-13" />
+      </g>
+    </svg>
+  </div>
+
+  <article class="pin pin--1">
+    <span class="pin__dot"></span>
+    <div class="pin__b">
+      <span class="pin__k">Venues &amp; grounds</span>
+      <h3 class="pin__t">The whole site</h3>
+      <p class="pin__d">Boundaries, access and parking, in one frame.</p>
+    </div>
+  </article>
+
+  <article class="pin pin--2">
+    <span class="pin__dot"></span>
+    <div class="pin__b">
+      <span class="pin__k">Property &amp; development</span>
+      <h3 class="pin__t">The approach</h3>
+      <p class="pin__d">The roofline, the plot and everything around it.</p>
+    </div>
+  </article>
+
+  <article class="pin pin--3">
+    <span class="pin__dot"></span>
+    <div class="pin__b">
+      <span class="pin__k">Events &amp; ceremonies</span>
+      <h3 class="pin__t">The day itself</h3>
+      <p class="pin__d">The frame that shows how big it really was.</p>
+    </div>
+  </article>
+
+  <article class="pin pin--4">
+    <span class="pin__dot"></span>
+    <div class="pin__b">
+      <span class="pin__k">Surveys &amp; progress</span>
+      <h3 class="pin__t">Detail, close up</h3>
+      <p class="pin__d">Roofs and elevations, no scaffolding.</p>
+    </div>
+  </article>
+
+  <div class="copy">
+    <span class="eyebrow">Aerial &amp; drone</span>
+    <h2 class="display">A view of your place <span class="hi">nobody has had.</span></h2>
+    <p>Some things simply cannot be photographed from the ground. The whole site
+       in one frame. A building in its landscape. A showground at the moment it
+       fills up. Shot in <strong>4K, with stills from the same flight</strong>,
+       and graded to match the rest of your film.</p>
+    <a class="cta" href="#">Ask for a quote →</a>
+    <div class="meta">
+      <div><b>2014</b><span>Flying for clients since</span></div>
+      <div><b>4K</b><span>Video and stills, one flight</span></div>
+      <div><b>UK</b><span>Wide, from Hertfordshire</span></div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
