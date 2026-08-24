@@ -40,23 +40,12 @@
     padding:22px clamp(20px,4vw,54px);
     background:transparent; transition:background .35s ease;
   }
-  /* Scrolled, the header needs to hold the nav legible over whatever passes
-     under it — but any opaque band reads as a bar unrolling from the top, which
-     is worse than the problem. So: no added colour beyond the original wash,
-     and the legibility comes from a blur that is itself faded out at the
-     bottom, so there is no edge anywhere for the eye to catch. */
-  #pd-hero .pd-header::before{
-    content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
-    opacity:0; transition:opacity .35s ease;
-    background:linear-gradient(180deg, rgba(4,10,26,.55), rgba(4,10,26,0));
-    backdrop-filter:blur(10px);
-    -webkit-mask-image:linear-gradient(180deg, #000 38%, rgba(0,0,0,0) 100%);
-    mask-image:linear-gradient(180deg, #000 38%, rgba(0,0,0,0) 100%);
-  }
-  #pd-hero .pd-header.scrolled::before{opacity:1}
+  /* The scrolled header stays a plain soft wash — nothing solid, no blur.
+     Both were tried and both read as a bar unrolling from the top. */
+  #pd-hero .pd-header.scrolled{background:linear-gradient(180deg, rgba(4,10,26,.55), rgba(4,10,26,0))}
   /* an open menu supplies the header's background itself, so drop the
      scroll gradient rather than banding the top of the panel */
-  #pd-hero:has(.pd-mega.open) .pd-header.scrolled::before{opacity:0}
+  #pd-hero:has(.pd-mega.open) .pd-header.scrolled{background:transparent}
   #pd-hero .pd-brand{display:flex; align-items:center; gap:13px; text-decoration:none; flex:0 0 auto}
   #pd-hero .pd-brand__logo{height:40px; width:auto; display:block; filter:drop-shadow(0 2px 12px rgba(0,0,0,.4))}
   #pd-hero .pd-word{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:26px; letter-spacing:-.5px; color:var(--cyan); text-shadow:var(--glow-cyan)}
