@@ -33,7 +33,10 @@
   --ice:168,216,255;
   --deep:3,8,24;
 
-  --gutter:clamp(10px,1.4vw,20px);
+  /* the page gutter, matched to the homepage hero headline
+     (#pd-hero .pd-headline sits at left:clamp(22px,5vw,72px)) so the copy
+     on this page starts on the same left edge as the copy on that one */
+  --gutter:clamp(22px,5vw,72px);
 }
 
 html,body{background:var(--ground)}
@@ -810,7 +813,7 @@ body{
   position:relative; z-index:2; flex:1;
   display:grid; grid-template-columns:minmax(0,1fr) auto;
   gap:clamp(20px,3vw,54px); align-items:center;
-  padding:clamp(18px,2vw,30px) clamp(20px,3vw,44px) clamp(32px,4vw,60px);
+  padding:clamp(18px,2vw,30px) var(--gutter) clamp(32px,4vw,60px);
 }
 .hero__copy{max-width:660px}
 .hero h1{
@@ -837,7 +840,7 @@ body{
 
 /* the showreel control, bottom right of the hero */
 .reel{
-  position:absolute; right:clamp(20px,3vw,44px); bottom:clamp(24px,3vw,40px); z-index:3;
+  position:absolute; right:var(--gutter); bottom:clamp(24px,3vw,40px); z-index:3;
   display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--ink);
   font-size:14px; font-weight:600;
 }
@@ -853,9 +856,12 @@ body{
 /* =====================  2. WORK TILES  ==================================== */
 .work{
   background:var(--tone);
-  display:grid; grid-template-columns:minmax(300px,1fr) minmax(0,1.04fr);
-  gap:clamp(26px,4vw,70px);
-  padding:clamp(46px,5.4vw,88px) clamp(20px,3vw,44px);
+  /* the prose column was capped at 46ch inside a much wider grid column, which
+     left a dead band between the body copy and the Ideal-for boxes. The column
+     now carries the measure itself and the gutter comes in. */
+  display:grid; grid-template-columns:minmax(300px,.94fr) minmax(0,1fr);
+  gap:clamp(24px,2.8vw,50px);
+  padding:clamp(46px,5.4vw,88px) var(--gutter);
   align-items:start;
 }
 .work h2{font-size:clamp(34px,4.4vw,64px); margin:14px 0 0}
@@ -942,9 +948,9 @@ body{
   .scene .rotor, .scene .drone{animation:none}
 }
 
-.prose{max-width:46ch}
+.prose{max-width:none}
 .prose h2{font-size:clamp(30px,3.4vw,50px); margin:14px 0 0}
-.prose p{margin-top:18px; color:var(--muted); font-size:16px; line-height:1.66}
+.prose p{margin-top:18px; color:var(--muted); font-size:16.5px; line-height:1.7}
 .prose p.lead{color:var(--ink); font-size:clamp(17px,1.4vw,19.5px); line-height:1.58}
 .prose strong{color:var(--ink); font-weight:600}
 .prose ul{list-style:none; margin-top:22px; display:grid; gap:10px}
@@ -956,7 +962,7 @@ body{
 
 /* =====================  3. FORMATS  ====================================== */
 .formats{
-  padding:clamp(46px,5.4vw,88px) clamp(20px,3vw,44px) clamp(52px,6vw,96px);
+  padding:clamp(46px,5.4vw,88px) var(--gutter) clamp(52px,6vw,96px);
   background:
     radial-gradient(80% 100% at 50% 0%, rgba(var(--azure),.16), transparent 70%),
     var(--tone);
@@ -999,7 +1005,7 @@ body{
 .proof{
   display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
   gap:clamp(20px,3vw,46px); align-items:center;
-  padding:clamp(28px,3.6vw,56px) clamp(20px,3vw,44px);
+  padding:clamp(28px,3.6vw,56px) var(--gutter);
   background:linear-gradient(120deg, #0d1740, var(--tone) 72%);
 }
 .quote{font-size:clamp(19px,2vw,27px); line-height:1.4; font-weight:500; text-wrap:balance}
@@ -1011,7 +1017,7 @@ body{
   background:var(--tone);
   display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
   gap:clamp(22px,3vw,50px);
-  padding:clamp(46px,5.4vw,88px) clamp(20px,3vw,44px);
+  padding:clamp(46px,5.4vw,88px) var(--gutter);
 }
 .enquire h2{font-size:clamp(32px,4vw,58px); margin-top:12px}
 .enquire__p{margin-top:18px; color:var(--muted); font-size:15.5px; line-height:1.6; max-width:40ch}
@@ -1034,7 +1040,7 @@ body{
 .foot{
   background:var(--tone);
   display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:space-between;
-  padding:20px clamp(20px,3vw,44px); color:var(--muted); font-size:13px;
+  padding:20px var(--gutter); color:var(--muted); font-size:13px;
 }
 .foot__note{display:flex; align-items:center; gap:9px}
 .dot{width:7px; height:7px; border-radius:50%; background:rgb(var(--cyan)); box-shadow:0 0 10px rgba(var(--cyan),.9)}
