@@ -34,18 +34,23 @@
     padding:22px clamp(20px,4vw,54px);
     background:transparent; transition:background .35s ease;
   }
-  /* Once scrolled, the header needs to be a real backdrop, not a wash: on an
-     inner page with body copy, text slides underneath and 55% is not enough to
-     keep either legible. Solid through the band, soft only at its lower edge. */
-  #pd-hero .pd-header.scrolled{
-    background:linear-gradient(180deg,
-      rgba(4,10,26,.97) 0%, rgba(4,10,26,.94) 58%,
-      rgba(4,10,26,.6) 84%, rgba(4,10,26,0) 100%);
-    backdrop-filter:blur(12px) saturate(1.08);
+  /* Scrolled, the header needs to hold the nav legible over whatever passes
+     under it — but any opaque band reads as a bar unrolling from the top, which
+     is worse than the problem. So: no added colour beyond the original wash,
+     and the legibility comes from a blur that is itself faded out at the
+     bottom, so there is no edge anywhere for the eye to catch. */
+  #pd-hero .pd-header::before{
+    content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    opacity:0; transition:opacity .35s ease;
+    background:linear-gradient(180deg, rgba(4,10,26,.55), rgba(4,10,26,0));
+    backdrop-filter:blur(10px);
+    -webkit-mask-image:linear-gradient(180deg, #000 38%, rgba(0,0,0,0) 100%);
+    mask-image:linear-gradient(180deg, #000 38%, rgba(0,0,0,0) 100%);
   }
+  #pd-hero .pd-header.scrolled::before{opacity:1}
   /* an open menu supplies the header's background itself, so drop the
      scroll gradient rather than banding the top of the panel */
-  #pd-hero:has(.pd-mega.open) .pd-header.scrolled{background:transparent; backdrop-filter:none}
+  #pd-hero:has(.pd-mega.open) .pd-header.scrolled::before{opacity:0}
   #pd-hero .pd-brand{display:flex; align-items:center; gap:13px; text-decoration:none; flex:0 0 auto}
   #pd-hero .pd-brand__logo{height:40px; width:auto; display:block; filter:drop-shadow(0 2px 12px rgba(0,0,0,.4))}
   #pd-hero .pd-word{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:26px; letter-spacing:-.5px; color:var(--cyan); text-shadow:var(--glow-cyan)}
