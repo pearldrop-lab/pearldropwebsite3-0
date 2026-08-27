@@ -1,0 +1,702 @@
+{
+  "source": "site audit, 2026-08-23, 116 live URLs",
+  "rule": "every slug below must resolve on the new site at the same address, or carry a 301 to a named replacement",
+  "urls": [
+    {
+      "slug": "/",
+      "title": "Outstanding corporate and charity video production and animation",
+      "group": "Home",
+      "status": "built"
+    },
+    {
+      "slug": "/about-us/",
+      "title": "About us",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/about-us/behind-the-scenes/",
+      "title": "Behind-the-scenes",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/about-us/employment/",
+      "title": "Employment",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/about-us/employment/junior-editor-and-animator/",
+      "title": "Junior Editor and Animator",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/about-us/employment/production-executive/",
+      "title": "Production Executive",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/about-us/how-we-work/",
+      "title": "How we work",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/about-us/meet-pearldrop/",
+      "title": "Meet Pearldrop - a quality Hertfordshire video production company",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/about-us/memberships/",
+      "title": "Memberships and Accreditations",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/about-us/our-clients/",
+      "title": "Our clients",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/about-us/our-showreels/",
+      "title": "Our showreels",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/about-us/our-values/",
+      "title": "Our values",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/about-us/privacy-policy/",
+      "title": "Privacy Policy",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/about-us/social-media/",
+      "title": "Social Media",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/about-us/sustainability/",
+      "title": "Sustainability",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/about-us/terms-of-service/",
+      "title": "Terms of Service",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/about-us/testimonials/",
+      "title": "Testimonials",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/about-us/why-video/",
+      "title": "Why video?",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/about-us/why-you-should-hire-pearldrop/",
+      "title": "Why you should hire Pearldrop",
+      "group": "About us",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/",
+      "title": "Services",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/2d-animation/",
+      "title": "2D Animation",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/2d-animation/animated-character-video-production/",
+      "title": "Character animations for your business, brand or charity",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/2d-animation/animated-explainer-video-production/",
+      "title": "Animated explainer videos for your business, brand or charity",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/3d-animation/",
+      "title": "3D Animation",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/3d-animation/step-file-renders/",
+      "title": "STEP-file renders",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/3d-animation/world-building/",
+      "title": "World-building",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/aerial-drone-video-production/",
+      "title": "Safe, reliable, high-quality aerial/drone video production",
+      "group": "Services",
+      "status": "built"
+    },
+    {
+      "slug": "/services/ai-video-production/",
+      "title": "AI video production for businesses and charities",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/live-action/",
+      "title": "Live-action",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/live-action/automotive-video-production/",
+      "title": "Top-quality automotive video production",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/live-action/automotive/",
+      "title": "Automotive",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/live-action/case-study-video-production/",
+      "title": "Case study video production for businesses and charities",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/live-action/charity-video-production/",
+      "title": "Emotive, powerful and impactful charity video production",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/live-action/company-and-brand-video-production/",
+      "title": "Outstanding video production for company and brand video production",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/live-action/high-quality-video-production-for-live-events/",
+      "title": "High-quality video production for live events",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/live-action/landing-page-video-production/",
+      "title": "Video production for landing pages",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/live-action/live-streaming-video-production/",
+      "title": "Live-streaming video production for businesses and charities",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/live-action/livestreaming/",
+      "title": "Livestreaming",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/live-action/product-video-production/",
+      "title": "Top-quality product videos",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/live-action/promotional-video-production/",
+      "title": "Promotional video production for your business, brand or charity",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/live-action/training-video-production/",
+      "title": "Training video production",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/live-action/video-production-for-activations-and-launches/",
+      "title": "High-quality video production for activations and launches",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/live-action/video-production-for-ceremonies-and-conferences/",
+      "title": "Outstanding video production for ceremonies and conferences",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/live-action/video-production-for-internal-communications/",
+      "title": "Top-quality video production for Internal Communications",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/photography/",
+      "title": "Photography",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/photography/architectural-photography/",
+      "title": "High-quality architectural photography",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/photography/automotive-photography/",
+      "title": "High-quality automotive photography",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/photography/headshot-photography/",
+      "title": "Outstanding headshot photography",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/photography/lifestyle-photography/",
+      "title": "Top-quality lifestyle photography",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/photography/live-event-photography/",
+      "title": "Outstanding live event photography",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/photography/photography-for-conferences-and-ceremonies/",
+      "title": "Outstanding photography for conferences and ceremonies",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/post-production/",
+      "title": "Post-production",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/post-production/bristish-sign-language-bsl-production/",
+      "title": "High-quality British Sign Language (BSL) video production",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/post-production/vfx-production/",
+      "title": "Professional visual effects (VFX) production",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/post-production/video-editing-services/",
+      "title": "High-quality professional video editing services",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/post-production/video-subtitling-and-transcription/",
+      "title": "Video subtitling and transcription",
+      "group": "Services",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/sectors/",
+      "title": "Sectors",
+      "group": "Sectors (under /services/)",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/sectors/education/",
+      "title": "Education",
+      "group": "Sectors (under /services/)",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/sectors/golf-courses/",
+      "title": "Golf Courses",
+      "group": "Sectors (under /services/)",
+      "status": "todo"
+    },
+    {
+      "slug": "/services/sectors/science-technology/",
+      "title": "Science and Technology",
+      "group": "Sectors (under /services/)",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/",
+      "title": "Portfolio",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/photography-2/",
+      "title": "Photography",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/photography/",
+      "title": "Pearldrop's high-quality photography portfolio",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/photography/ai/",
+      "title": "AI",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/photography/architectural-photography-portfolio/",
+      "title": "Pearldrop's high-quality architectural photography portfolio",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/photography/automotive-photography-portfolio/",
+      "title": "Pearldrop's high-quality automotive photography portfolio",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/photography/awards-ceremonies-and-conferences-photography-portfolio/",
+      "title": "High-quality awards ceremonies and conferences photography",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/photography/clients/",
+      "title": "Clients",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/photography/hcci-golf-day-2023/",
+      "title": "HCCI Golf Day 2023",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/photography/hcci-summer-party-2023/",
+      "title": "HCCI Summer Party 2023",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/photography/hcci-summer-party-2024/",
+      "title": "HCCI Summer Party 2024",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/photography/hcci-women-in-leadership-conference-2024/",
+      "title": "HCCI Women in Leadership Conference 2024",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/photography/headshot-photography-portfolio/",
+      "title": "Pearldrop's high-quality headshot photography portfolio",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/photography/inspiring-herts-awards-2024-launch/",
+      "title": "Inspiring Herts Awards 2024 launch",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/photography/lifestyle-photography-portolio/",
+      "title": "Pearldrop's high-quality lifestyle photography portfolio",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/photography/live-event-photography-portfolio/",
+      "title": "Pearldrop's high-quality live-event photography portfolio",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/plx-awards-2025-tender-submission/",
+      "title": "PLx Awards 2025 Tender Submission",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/video/",
+      "title": "Video",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/video/2d-animation/",
+      "title": "2D animation",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/portfolio/video/live-action/",
+      "title": "Live-action",
+      "group": "Portfolio",
+      "status": "todo"
+    },
+    {
+      "slug": "/case-studies/",
+      "title": "Case studies",
+      "group": "Case studies",
+      "status": "todo"
+    },
+    {
+      "slug": "/case-studies/healthy-body-healthy-mind-hertfordshire/",
+      "title": "Healthy Body Healthy Mind Hertfordshire",
+      "group": "Case studies",
+      "status": "todo"
+    },
+    {
+      "slug": "/case-studies/inspiring-hertfordshire-awards/",
+      "title": "Inspiring Hertfordshire Awards",
+      "group": "Case studies",
+      "status": "todo"
+    },
+    {
+      "slug": "/case-studies/nv200-campervan/",
+      "title": "NV200 Campervan",
+      "group": "Case studies",
+      "status": "todo"
+    },
+    {
+      "slug": "/blog/",
+      "title": "Blog",
+      "group": "Top-level / utility",
+      "status": "todo"
+    },
+    {
+      "slug": "/contact/",
+      "title": "Contact",
+      "group": "Top-level / utility",
+      "status": "todo"
+    },
+    {
+      "slug": "/home-2/",
+      "title": "Home",
+      "group": "Top-level / utility",
+      "status": "todo"
+    },
+    {
+      "slug": "/main-site-header/",
+      "title": "Main Site Header",
+      "group": "Top-level / utility",
+      "status": "todo"
+    },
+    {
+      "slug": "/sitemap/",
+      "title": "Sitemap",
+      "group": "Top-level / utility",
+      "status": "todo"
+    },
+    {
+      "slug": "/category/film-term-friday/",
+      "title": "Film Term Friday Archives",
+      "group": "Category archives",
+      "status": "todo"
+    },
+    {
+      "slug": "/category/production-tips/",
+      "title": "Production tips Archives",
+      "group": "Category archives",
+      "status": "todo"
+    },
+    {
+      "slug": "/category/uncategorized/",
+      "title": "Uncategorized Archives",
+      "group": "Category archives",
+      "status": "todo"
+    },
+    {
+      "slug": "/author/simon_pm_2023/",
+      "title": "Simon, Author at Pearldrop - Video Production Hertfordshire",
+      "group": "Author archives",
+      "status": "todo"
+    },
+    {
+      "slug": "/%f0%9f%9a%a8-so-heres-a-cautionary-tale-navigating-the-so-saga-in-video-interviews-%f0%9f%9a%a8/",
+      "title": "\ud83d\udea8 So Here's a Cautionary Tale: Navigating the 'So' Saga in Video Interviews \ud83d\udea8",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/10507-2/",
+      "title": "What It Really Means to Be in the Top 0.1% of ChatGPT Users",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/alan-smithee/",
+      "title": "Alan Smithee",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/baby/",
+      "title": "Baby",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/behind-the-scenes-unveiling-the-magic-with-meet-the-team-videos/",
+      "title": "Humanising your brand with 'Meet the Team' Videos",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/cheeseplate/",
+      "title": "Cheeseplate",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/cookie/",
+      "title": "Cookie",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/dolly/",
+      "title": "Dolly",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/easter-egg/",
+      "title": "Easter Egg",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/film-term-friday-the-c47/",
+      "title": "Film-term Friday: the C47",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/golden-hour/",
+      "title": "Golden Hour",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/great-gatsby-on-a-shoestring-how-ai-turned-us-into-1920s-movie-moguls-for-under-60/",
+      "title": "Great Gatsby on a Shoestring: How AI Turned Us into 1920s Movie Moguls for Under $60!",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/hollywood-baby/",
+      "title": "Hollywood, baby!",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/how-to-be-interviewed/",
+      "title": "How to be interviewed",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/logline/",
+      "title": "Logline",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/the-animated-advantage-why-2d-animation-is-corporate-marketings-secret-sauce/",
+      "title": "The Animated Advantage: Why 2D Animation is Corporate Marketing's Secret Sauce",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/the-power-of-a-professional-image-why-you-need-outstanding-corporate-headshots/",
+      "title": "The Power of a Professional Image: Why You Need Outstanding Corporate Headshots",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/weve-been-nominated-for-an-award/",
+      "title": "We've been nominated for an award!",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/what-makes-2d-animation-a-great-choice-for-your-business/",
+      "title": "What makes 2D animation a great choice for your business?",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/what-the-who/",
+      "title": "WHAT THE WHO??",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/winning/",
+      "title": "winning",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/woof/",
+      "title": "Woof!",
+      "group": "Blog posts",
+      "status": "todo"
+    },
+    {
+      "slug": "/your-teams-headshots-are-boring-watch-how-we-turned-ours-into-eye-popping-animated-masterpieces/",
+      "title": "Your Team\u2019s Headshots Are Boring - Watch How We Turned Ours into Eye-Popping Animated Masterpieces!",
+      "group": "Blog posts",
+      "status": "todo"
+    }
+  ]
+}

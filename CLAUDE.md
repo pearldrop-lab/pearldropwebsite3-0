@@ -7,36 +7,73 @@ Work branch: `claude/pearldrop-hero-video-d6wl0v`
 
 ## How this ships
 
-The site is WordPress + Elementor Pro. Simon drops an **HTML widget** onto a page
-and pastes in a single self-contained block. So:
+The target is **WordPress with Blocks** — no Elementor, no page builder — on a
+fresh LiteSpeed install. Everything is generated from the design files in this
+repo by one command:
 
-- `index.html` — the source of truth. Full-page preview: scoped CSS, markup, JS.
-- `pearldrop-hero.elementor.html` — **generated from `index.html`**, never edited
-  by hand. It is the same markup with relative asset paths rewritten to absolute
-  GitHub Pages URLs. Regenerate it after *every* change to `index.html`:
-
-```python
-import re
-BASE = 'https://pearldrop-lab.github.io/pearldropwebsite3-0/'
-src = open('index.html').read()
-header = open('pearldrop-hero.elementor.html').read().split('-->',1)[0] + '-->\n'
-styles = re.findall(r'<style>(.*?)</style>', src, re.S)   # [0] is preview-only reset
-body = src.split('<body>',1)[1].rsplit('</body>',1)[0]
-body = body.replace('src="pearldrop-logo.png"', 'src="%spearldrop-logo.png"' % BASE)
-body = body.replace('src="menu-thumbs/', 'src="%smenu-thumbs/' % BASE)
-body = body.replace("base:'frames-v2d/'", "base:'%sframes-v2d/'" % BASE)
-left = re.findall(r'(?:src|href)="(?!https://|#|data:)[^"]+"', body)
-assert not left, left          # nothing relative may survive
-open('pearldrop-hero.elementor.html','w').write(
-    header + '<style>' + styles[1] + '</style>\n' + body.strip() + '\n')
+```bash
+python3 build/build.py     # site/ + wp/ ;  ./publish.sh runs it for you
 ```
 
-- `./publish.sh` — publishes to the `gh-pages` branch (index.html, logo,
-  `frames-v2d/`, `menu-thumbs/`). Live preview:
-  **https://pearldrop-lab.github.io/pearldropwebsite3-0/**
+- `index.html` — still the source of truth for the homepage **and the site menu**.
+- `design/*.html` — the source of truth for inner pages.
+- `build/build.py` — takes them apart and reassembles them twice:
+  - **`site/`** — a static preview whose URLs are the **real WordPress slugs**
+    (`/`, `/services/aerial-drone-video-production/`). What we look at on GitHub
+    Pages is what pearldrop.com will be, addresses included. This is what
+    `./publish.sh` publishes, so the GitHub draft-site loop is unchanged.
+  - **`wp/pearldrop/`** — a WordPress **block theme**, plus `wp/pages/*.html`,
+    one block-markup file per page, ready to post to the REST API.
+- `build/fetch-fonts.py` — self-hosts Anton, Space Grotesk and Inter into
+  `assets/fonts/`. Run once; re-run only to add a weight.
+- `build/urls.py` — regenerates `seo/URLS.md`, the ledger of all 116 live
+  addresses with what is built.
+- `build/wp-upload.py` — pushes `wp/pages/` into WordPress over the REST API,
+  using an Application Password from the environment. Dry run by default.
+- `wp/README.md` — how to install the theme and push the pages.
 
-Normal cycle: edit `index.html` → verify in headless Chromium → regenerate the
-Elementor file → commit → push → `./publish.sh`.
+### The two rules that make it work
+
+**The menu is one file.** `wp/pearldrop/parts/header.html` is a block theme
+template part: every template pulls it in, so one edit changes every page. A
+Custom HTML block pasted per page would be ninety copies — that is the trap, and
+it is what the Elementor setup was doing.
+
+**The CSS is enqueued, not pasted.** `functions.php` enqueues `site.css`,
+`site.js` and the fonts once, site-wide, so they cache across the whole site.
+Page bodies carry markup only.
+
+The whole stylesheet is scoped to `#pd-hero`, so each template wraps
+header + content + footer in a Group block with the anchor `pd-hero`. That means
+the CSS shipped to WordPress is **byte-identical** to the preview's — no second
+copy to keep in sync. Page-specific CSS is scoped one level deeper, to
+`#pd-hero .pd-page--<slug>`, and that is load-bearing rather than tidy: the design
+pages declare their own custom properties, and `--cyan` is a hex colour in the
+site stylesheet but an `r,g,b` triple on the drone page. Scoped to the page
+wrapper, both are right and neither reaches the other. Getting this wrong renders
+the page with no backgrounds at all — it happened once, in the first build.
+
+Verify a generated page by screenshot-diffing it against its design file with
+animations frozen; the homepage currently comes out pixel-identical.
+
+### Addresses are the deal
+
+Every one of the 116 live URLs has to answer at **the same address** on the new
+site, or 301 to a named replacement — that is where twenty years of ranking
+lives. `seo/URLS.md` is the checklist; `build/build.py`'s `PAGES` list is where a
+page claims its slug.
+
+### Legacy
+
+`pearldrop-hero.elementor.html` is the old Elementor paste-in block. It is
+superseded by the block theme and only worth regenerating if Simon needs to drop
+the hero into the *current* live site before the rebuild lands. `design/sync-menu.py`
+still injects the menu into the design files so they preview standalone.
+
+Live preview: **https://pearldrop-lab.github.io/pearldropwebsite3-0/**
+
+Normal cycle: edit `index.html` or a design page → verify in headless Chromium →
+`./publish.sh` (which rebuilds) → commit → push.
 
 **Do not push again while a Pages deploy is running** — GitHub's built-in
 workflow cancels an in-flight deploy when a new one arrives, which silently

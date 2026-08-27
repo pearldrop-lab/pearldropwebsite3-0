@@ -1,0 +1,17 @@
+/*
+Theme Name: Pearldrop
+Theme URI: https://pearldrop.com/
+Author: Pearldrop
+Description: The Pearldrop site. A block theme: the header and menu live in
+  one template part, and the stylesheet and scripts are enqueued once for the
+  whole site rather than pasted into each page.
+Requires at least: 6.4
+Tested up to: 6.7
+Requires PHP: 7.4
+Version: 1.0.0
+License: GPL-2.0-or-later
+Text Domain: pearldrop
+*/
+
+/* Styles live in assets/site.css, enqueued from functions.php. This file
+   exists because WordPress requires it to identify the theme. */
