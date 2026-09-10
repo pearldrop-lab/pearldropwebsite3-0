@@ -52,6 +52,26 @@ Every pick stays editable afterwards. Reorder, drop, and extend the in or out
 point by a neighbouring unit from the same speaker. The running time in the
 masthead recalculates as you go and turns amber when the cut runs long.
 
+## Sequence transcripts
+
+A transcript exported from a finished sequence carries sequence timecodes, not
+source-clip ones. Set **These timecodes are -> A sequence** in the Timeline panel
+and nothing else is needed: every timecode Chop Chop writes is a timecode on that
+timeline, so the camera filenames behind the edit never have to be named.
+
+Each transcript card carries a **relinks to** field — the name of the file the EDL
+should conform against. Export the sequence from Premiere as one self-contained
+master, put its name in that field, and the EDL relinks to it frame-accurately.
+
+Two record layouts:
+
+- **Assemble the cut** — events run back to back from the record start, in story
+  order. Import this to get the cut-down as a new sequence.
+- **Leave bites in place** — record timecode equals source timecode, so every
+  select lands exactly where it already sits, with gaps between. Events are
+  written in timeline order rather than story order, because EDL record
+  timecodes have to ascend.
+
 ## Exports
 
 | File | What it is |

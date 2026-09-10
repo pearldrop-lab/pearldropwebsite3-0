@@ -311,6 +311,16 @@ details.adv .body{margin-top:10px; display:flex; flex-direction:column; gap:9px}
 
     <section class="card sec">
       <div class="sec-h"><h2>Timeline</h2></div>
+
+      <div class="field" style="margin-bottom:12px">
+        <span class="lbl" id="lbl-tcmode">These timecodes are</span>
+        <div class="seg" role="group" aria-labelledby="lbl-tcmode">
+          <button type="button" id="tc-seq" aria-pressed="true">A sequence</button>
+          <button type="button" id="tc-clip" aria-pressed="false">Source clips</button>
+        </div>
+        <p class="hint" id="tcmode-hint" style="margin:7px 0 0"></p>
+      </div>
+
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
         <div class="field">
           <label class="lbl" for="fps">Frame rate</label>
@@ -326,12 +336,20 @@ details.adv .body{margin-top:10px; display:flex; flex-direction:column; gap:9px}
             <option value="60">60</option>
           </select>
         </div>
-        <div class="field">
+        <div class="field" id="rectc-field">
           <label class="lbl" for="rectc">Record starts</label>
           <input type="text" id="rectc" value="00:00:00:00" style="font-family:'IBM Plex Mono',monospace">
         </div>
       </div>
-      <p class="hint" style="margin:9px 0 0">Used for the EDL and the marker list. Set each transcript's own start timecode on its card above if the clips don't start at zero.</p>
+
+      <div class="field" style="margin-top:12px">
+        <span class="lbl" id="lbl-recmode">The EDL should</span>
+        <div class="seg" role="group" aria-labelledby="lbl-recmode">
+          <button type="button" id="rec-asm" aria-pressed="true">Assemble the cut</button>
+          <button type="button" id="rec-hold" aria-pressed="false">Leave bites in place</button>
+        </div>
+        <p class="hint" id="recmode-hint" style="margin:7px 0 0"></p>
+      </div>
     </section>
 
     <button class="btn primary" id="go" type="button" style="width:100%">Make the cut</button>
@@ -361,10 +379,11 @@ details.adv .body{margin-top:10px; display:flex; flex-direction:column; gap:9px}
       <div class="sec-h"><h2>Take it into Premiere</h2></div>
       <div class="exports">
         <button class="btn ex" type="button" id="x-edl"><strong>Sequence &mdash; EDL</strong><span>CMX 3600, cuts in order. Arrives in a zip &mdash; unzip, import, relink.</span></button>
-        <button class="btn ex" type="button" id="x-mark"><strong>Markers &mdash; CSV</strong><span>One marker per soundbite, ready to import onto the clips.</span></button>
+        <button class="btn ex" type="button" id="x-mark"><strong>Markers &mdash; CSV</strong><span>One marker per soundbite, at the timecodes in the table.</span></button>
         <button class="btn ex" type="button" id="x-tbl"><strong>The table &mdash; CSV</strong><span>Speaker, timecode, words and reasoning. For the spreadsheet.</span></button>
         <button class="btn ex" type="button" id="x-all"><strong>Everything &mdash; ZIP</strong><span>EDL, markers, table and the treatment in one folder.</span></button>
       </div>
+      <p class="hint" id="ex-hint" style="margin:12px 0 0; max-width:70ch"></p>
       <details class="adv">
         <summary>Do it by hand</summary>
         <div class="body">
@@ -634,6 +653,7 @@ const S = {
   cut: [],              // {uid, role, reason, dropped, inExt, outExt}
   title: "", treatment: "", notes: "", tag: "",
   topicMode: "general", topic: "", targetSec: 120, dir: "",
+  tcMode: "sequence", recMode: "assemble",
   variant: 0, busy: false
 };
 const SRC_IDS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -727,7 +747,10 @@ function renderSources(){
       '<button class="btn ghost tiny" type="button" data-drop-src="' + s.id + '" aria-label="Remove ' + esc(s.name) + '">&times;</button></div>' +
       '<div class="src-meta">' + s.units.length + " bites &middot; " + secsToClock(secs) + " &middot; " +
         esc(speakers.slice(0, 3).join(", ")) + (speakers.length > 3 ? " +" + (speakers.length - 3) : "") + "</div>" +
-      '<div class="src-tc"><span>starts at</span><input type="text" value="' + framesToTC(s.offsetF, fi) +
+      '<div class="src-tc"><span>' + (S.tcMode === "sequence" ? "relinks&nbsp;to" : "clip") + '</span>' +
+        '<input type="text" value="' + esc(clipOf(s)) + '" data-clip-src="' + s.id +
+        '" style="flex:1 1 auto; width:auto" aria-label="Name of the file the EDL relinks to, for ' + esc(s.name) + '"></div>' +
+      '<div class="src-tc"><span>starts&nbsp;at</span><input type="text" value="' + framesToTC(s.offsetF, fi) +
         '" data-off-src="' + s.id + '" aria-label="Start timecode for ' + esc(s.name) + '"></div>' +
     "</div>";
   }).join("");
@@ -811,7 +834,34 @@ function renderTreatment(){
   $("treat-notes").hidden = !S.notes;
   $("treat-notes").innerHTML = S.notes ? "<b>Worth knowing:</b> " + esc(S.notes) : "";
 }
-function renderAll(){ renderSources(); renderCut(); renderTreatment(); }
+function renderExHint(){
+  const el = $("ex-hint");
+  if (!el) return;
+  const names = [...new Set(S.sources.map(clipOf))];
+  el.innerHTML = S.tcMode === "sequence"
+    ? "Every timecode in the table is a timecode on your own timeline. Export the sequence from Premiere as one self-contained file called <b>" +
+      esc(names[0] || "MASTER") + "</b>, import the EDL, and point it at that file &mdash; it conforms frame-accurately. " +
+      "You never have to name the camera files the sequence was cut from."
+    : "The EDL asks Premiere to relink to " +
+      (names.length === 1 ? "a clip called <b>" + esc(names[0]) + "</b>" : "the clip names set on the transcript cards") +
+      ". Change them there if they don't match your project.";
+}
+function renderMode(){
+  const seq = S.tcMode === "sequence", hold = S.recMode === "hold";
+  $("tc-seq").setAttribute("aria-pressed", String(seq));
+  $("tc-clip").setAttribute("aria-pressed", String(!seq));
+  $("tcmode-hint").textContent = seq
+    ? "The transcript is of a finished timeline, so its timecodes are sequence timecodes. Name the export it should relink to on each transcript card above."
+    : "Each transcript belongs to one source clip, and the EDL relinks to a clip of that name.";
+  $("rec-asm").setAttribute("aria-pressed", String(!hold));
+  $("rec-hold").setAttribute("aria-pressed", String(hold));
+  $("rectc-field").hidden = hold;
+  $("recmode-hint").textContent = hold
+    ? "Each bite keeps its own timecode, so the selects land exactly where they sit now, with gaps between them. Events run in timeline order, not story order."
+    : "Cuts run back to back from the record start, in the story order below.";
+  renderExHint();
+}
+function renderAll(){ renderSources(); renderCut(); renderTreatment(); renderMode(); }
 
 /* ---------- status ---------- */
 function setStatus(html){ $("status").innerHTML = html || ""; }
@@ -845,27 +895,25 @@ const csvRows = (rows) => rows.map(r => r.map(csvQ).join(",")).join("\r\n") + "\
 const slug = (s) => (String(s || "chop-chop").toLowerCase().replace(/[^a-z0-9]+/g, "-")
   .replace(/^-|-$/g, "") || "chop-chop").slice(0, 48);
 const reelOf = (s) => {
-  const c = s.name.replace(/\.[^.]+$/, "").toUpperCase().replace(/[^A-Z0-9]/g, "");
-  return (c ? c.slice(0, 8) : "SRC" + s.id).padEnd(8, " ").slice(0, 8).trim() || "AX";
+  const c = clipOf(s).toUpperCase().replace(/[^A-Z0-9]/g, "");
+  return (c ? c.slice(0, 8) : "SRC" + s.id) || "AX";
 };
-const clipOf = (s) => s.name.replace(/\.[^.]+$/, "");
+const clipOf = (s) => (s.clipName || s.name.replace(/\.[^.]+$/, "")).trim() || ("SOURCE" + s.id);
 
 function cutRows(){
   const fi = FI();
+  const picks = active().map(p => ({ p, r: resolve(p) })).filter(x => x.r);
+  const hold = S.recMode === "hold";
+  if (hold) picks.sort((a, b) => (a.r.startF - b.r.startF) || (a.r.src < b.r.src ? -1 : 1));
+
   let rec = parseTime($("rectc").value, fi);
   if (rec == null) rec = 0;
   const out = [];
-  let evt = 0;
-  active().forEach(p => {
-    const r = resolve(p);
-    if (!r) return;
+  picks.forEach(({ p, r }, i) => {
     const len = r.endF - r.startF;
-    out.push({
-      evt: ++evt, r, p, len,
-      recIn: rec, recOut: rec + len,
-      dur: len / fi.rate
-    });
-    rec += len;
+    const recIn = hold ? Math.max(r.startF, rec) : rec;
+    out.push({ evt: i + 1, r, p, len, recIn, recOut: recIn + len, dur: len / fi.rate });
+    rec = recIn + len;
   });
   return out;
 }
@@ -900,7 +948,7 @@ function markerCSVs(){
       framesToTC(x.len, { ...fi, df: false }), "Comment"
     ]);
     files.push({
-      name: "markers-" + slug(s ? clipOf(s) : sid) + ".csv",
+      name: (S.tcMode === "sequence" ? "sequence-markers-" : "markers-") + slug(s ? clipOf(s) : sid) + ".csv",
       text: csvRows([["Marker Name", "Description", "In", "Out", "Duration", "Marker Type"], ...rows])
     });
   }
@@ -917,7 +965,7 @@ function buildEDL(){
     L.push(pad(x.evt, 3) + "  " + reel.padEnd(8, " ") + " " + "AA/V".padEnd(6, " ") + "C        " +
       framesToTC(x.r.startF, fi) + " " + framesToTC(x.r.endF, fi) + " " +
       framesToTC(x.recIn, fi) + " " + framesToTC(x.recOut, fi));
-    if (s) L.push("* FROM CLIP NAME: " + clipOf(s));
+    if (s) L.push("* FROM CLIP NAME: " + clipOf(s).replace(/[^\x20-\x7E]/g, " ").replace(/\s+/g, " ").trim());
     const note = (x.r.speaker + ": " + x.r.text).replace(/[^\x20-\x7E]/g, " ").slice(0, 92);
     L.push("* COMMENT: " + note);
     L.push("");
@@ -1262,7 +1310,7 @@ function addSource(name, text, opts){
   const units = readSource(text, fi);
   const offsetTC = (opts && opts.offsetTC) || "00:00:00:00";
   S.sources.push({
-    id: nextSrcId(), name: name.slice(0, 80), raw: text, units,
+    id: nextSrcId(), name: name.slice(0, 80), clipName: name.replace(/\.[^.]+$/, "").slice(0, 60), raw: text, units,
     offsetTC, offsetF: parseTime(offsetTC, fi) || 0, demo: !!(opts && opts.demo)
   });
 }
@@ -1328,6 +1376,12 @@ function wire(){
     renderAll();
   });
   $("srcs").addEventListener("change", e => {
+    const c = e.target.closest("[data-clip-src]");
+    if (c){
+      const src = srcById(c.dataset.clipSrc);
+      if (src){ src.clipName = c.value.trim(); renderSources(); renderExHint(); }
+      return;
+    }
     const i = e.target.closest("[data-off-src]");
     if (!i) return;
     const s = srcById(i.dataset.offSrc);
@@ -1365,6 +1419,10 @@ function wire(){
   $("dir").addEventListener("input", e => { S.dir = e.target.value; });
 
   /* timeline */
+  $("tc-seq").onclick = () => { S.tcMode = "sequence"; renderSources(); renderMode(); };
+  $("tc-clip").onclick = () => { S.tcMode = "clips"; renderSources(); renderMode(); };
+  $("rec-asm").onclick = () => { S.recMode = "assemble"; renderMode(); renderCut(); };
+  $("rec-hold").onclick = () => { S.recMode = "hold"; renderMode(); renderCut(); };
   $("fps").addEventListener("change", reparse);
   $("rectc").addEventListener("change", () => {
     if (parseTime($("rectc").value, FI()) == null){ toast("That isn't a timecode. Try 00:00:00:00."); $("rectc").value = "00:00:00:00"; }
