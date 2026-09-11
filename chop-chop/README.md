@@ -125,6 +125,34 @@ on the mapped track is a gap. Both get a `* NOTE:` line in the EDL.
 Reel names come from the CSV filename, which is usually the clip name, and the
 `* FROM CLIP NAME:` comment carries the full name for relinking.
 
+## Reaching Claude
+
+The page finds one of two routes at load and the Claude panel says which.
+
+**The artifact runtime.** Published as a Claude Artifact, `claude.use("sample")`
+resolves and Claude runs inside the page, billed to whoever opens it. No key
+exists anywhere.
+
+**Your own API key.** Served from anywhere else — a local server, a file on
+disk — the panel takes an Anthropic key and calls
+`POST https://api.anthropic.com/v1/messages` directly from the browser. Verified
+against the live API: the CORS preflight admits `content-type`, `x-api-key`,
+`anthropic-version` and `anthropic-dangerous-direct-browser-access` from any
+origin, and the last of those is what the API requires to accept a browser call.
+Requests carry `model`, `max_tokens: 16000`, `output_config.effort` and one user
+message; nothing else. Model is selectable — Opus 5 by default, Sonnet 5 or
+Haiku 4.5 for less. Sifting passes on a transcript too big for one prompt use
+Haiku regardless; only the final cut uses the chosen model.
+
+The key is held in `localStorage` on that browser, per person, and is sent
+nowhere but api.anthropic.com. Anyone with access to that browser profile can
+read it back, so use a key that can be rotated. Serve the page over HTTPS.
+
+Server-side refusal fallbacks are deliberately not wired in. They need a beta
+header, and an unrecognised beta fails the whole request — a worse failure mode
+than the refusal it guards against, on interview transcripts. A `refusal` stop
+reason is handled and reported instead.
+
 ## If Claude is not available on the page
 
 "Do it by hand", below the table, copies the exact brief to the clipboard. Paste

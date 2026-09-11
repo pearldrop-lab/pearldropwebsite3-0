@@ -369,6 +369,11 @@ details.adv .body{margin-top:10px; display:flex; flex-direction:column; gap:9px}
 
     <button class="btn primary" id="go" type="button" style="width:100%">Make the cut</button>
     <p class="hint" id="go-hint" style="margin:-4px 0 0; text-align:center"></p>
+
+    <section class="card sec" id="engine-card">
+      <div class="sec-h"><h2>Claude</h2><span class="hint" id="engine-state"></span></div>
+      <div id="engine-body"></div>
+    </section>
   </form>
 
   <!-- ================= MAIN ================= -->
@@ -784,7 +789,8 @@ function renderSources(){
   const n = S.sources.length, u = allUnits().length;
   $("src-count").textContent = n ? n + (n === 1 ? " file · " : " files · ") + u + " bites" : "";
   $("go").disabled = S.busy || !n;
-  $("go-hint").textContent = !n ? "Add a transcript to begin." : "";
+  $("go-hint").textContent = !n ? "Add a transcript to begin."
+    : (ENGINE.kind === "api" && !apiKey()) ? "Add an API key below." : "";
 }
 
 /* ---------- the cut table ---------- */
@@ -884,6 +890,52 @@ function renderExHint(){
       (names.length === 1 ? "a clip called <b>" + esc(names[0]) + "</b>" : "the clip names set on the transcript cards") +
       ". Change them there if they don't match your project.";
 }
+function renderEngine(){
+  const state = $("engine-state"), body = $("engine-body");
+  if (!state || !body) return;
+
+  if (ENGINE.kind === "checking"){
+    state.textContent = "checking…";
+    body.innerHTML = '<p class="hint" style="margin:0">Looking for a way to reach Claude.</p>';
+    return;
+  }
+  if (ENGINE.kind === "sample"){
+    state.innerHTML = '<span style="color:var(--ok)">connected</span>';
+    body.innerHTML = '<p class="hint" style="margin:0">Claude runs inside this page, billed to whoever opens it. ' +
+      "Nothing to set up and no key kept anywhere.</p>";
+    return;
+  }
+
+  const key = apiKey();
+  state.innerHTML = key
+    ? '<span style="color:var(--ok)">key saved</span>'
+    : '<span style="color:var(--mark)">key needed</span>';
+  body.innerHTML =
+    '<div class="field"><label class="lbl" for="api-key">Anthropic API key</label>' +
+      '<input type="password" id="api-key" autocomplete="off" spellcheck="false" placeholder="sk-ant-…" value="' + esc(key) + '"></div>' +
+    '<div class="field" style="margin-top:10px"><label class="lbl" for="api-model">Model</label><select id="api-model">' +
+      MODELS.map(m => '<option value="' + m[0] + '"' + (m[0] === apiModel() ? " selected" : "") + ">" + esc(m[1]) + "</option>").join("") +
+    "</select></div>" +
+    '<div style="display:flex; gap:8px; margin-top:10px">' +
+      '<button class="btn tiny" type="button" id="api-save">Save to this browser</button>' +
+      (key ? '<button class="btn tiny" type="button" id="api-forget">Forget it</button>' : "") +
+    "</div>" +
+    '<p class="hint" style="margin:10px 0 0">Kept in this browser only and sent nowhere but api.anthropic.com. ' +
+      "Anyone using this browser can read it back, so use a key you are willing to rotate.</p>";
+
+  const k = $("api-key"), m = $("api-model"), save = $("api-save"), forget = $("api-forget");
+  if (m) m.onchange = () => { store(MODEL_STORE, m.value); };
+  if (save) save.onclick = () => {
+    const v = (k.value || "").trim();
+    if (!v) return toast("Paste a key first.");
+    store(KEY_STORE, v); store(MODEL_STORE, m.value);
+    renderEngine(); renderSources(); setStatus("");
+    toast("Key saved to this browser.");
+  };
+  if (forget) forget.onclick = () => { store(KEY_STORE, null); renderEngine(); renderSources(); toast("Key forgotten."); };
+  if (k) k.addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); save && save.click(); } });
+}
+
 function renderTimeline(){
   const box = $("tl-box");
   if (!box) return;
@@ -1239,20 +1291,84 @@ function splitToBudget(lines, budget){
 }
 function normId(v){ return String(v == null ? "" : v).replace(/[[\]\s]/g, "").toUpperCase(); }
 
-async function askJSON(sample, prompt, tier){
+/* Two ways to reach Claude: the artifact runtime, which needs nothing, or a key
+   of your own when this page is served from somewhere else. */
+const KEY_STORE = "chopchop.apiKey", MODEL_STORE = "chopchop.model";
+const MODELS = [
+  ["claude-opus-5", "Opus 5 — the best judgement"],
+  ["claude-sonnet-5", "Sonnet 5 — quicker and cheaper"],
+  ["claude-haiku-4-5", "Haiku 4.5 — cheapest"]
+];
+const WORKER_MODEL = "claude-haiku-4-5";      /* sifting long transcripts, not the final cut */
+const NO_EFFORT = { "claude-haiku-4-5": true };
+
+function store(k, v){
   try {
-    return await sample.json(prompt, { modelTier: tier || "default", cache: false });
-  } catch (e){
-    const raw = e && e.text;
-    if (raw){
-      const m = raw.match(/\{[\s\S]*\}/);
-      if (m){ try { return JSON.parse(m[0]); } catch (_){} }
-    }
-    throw e;
-  }
+    if (v === undefined) return localStorage.getItem(k);
+    if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v);
+  } catch (e){ return null; }
+}
+const apiKey = () => (store(KEY_STORE) || "").trim();
+const apiModel = () => store(MODEL_STORE) || MODELS[0][0];
+
+let ENGINE = { kind: "checking" };
+const engineReady = () => ENGINE.kind === "sample" || (ENGINE.kind === "api" && !!apiKey());
+async function detectEngine(){
+  const sample = await cap("sample");
+  ENGINE = sample ? { kind: "sample", sample } : { kind: "api" };
+  renderEngine(); renderSources();
 }
 
-async function chooseBites(sample, lines, budget){
+async function callAPI(prompt, quick){
+  const model = quick ? WORKER_MODEL : apiModel();
+  const body = { model, max_tokens: 16000, messages: [{ role: "user", content: prompt }] };
+  if (!NO_EFFORT[model]) body.output_config = { effort: quick ? "low" : "high" };
+  let res;
+  try {
+    res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": apiKey(),
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify(body)
+    });
+  } catch (e){
+    const err = new Error("Couldn't reach the Claude API from this page."); err.code = "offline"; throw err;
+  }
+  const data = await res.json().catch(() => null);
+  if (!res.ok){
+    const e = (data && data.error) || {};
+    const err = new Error(e.message || "The API returned " + res.status + ".");
+    err.code = e.type === "authentication_error" ? "bad_key"
+             : e.type === "permission_error" ? "bad_key"
+             : e.type === "rate_limit_error" ? "rate_limited"
+             : e.type === "overloaded_error" ? "overloaded" : "api_error";
+    throw err;
+  }
+  if (data && data.stop_reason === "refusal"){
+    const err = new Error("Claude declined to answer this one."); err.code = "refused"; throw err;
+  }
+  return (data && Array.isArray(data.content) ? data.content : [])
+    .filter(b => b && b.type === "text").map(b => b.text).join("");
+}
+
+async function ask(prompt, quick){
+  if (ENGINE.kind === "sample")
+    return (await ENGINE.sample(prompt, { modelTier: quick ? "quick" : "complex", cache: false })).text;
+  return callAPI(prompt, quick);
+}
+async function askJSON(prompt, quick){
+  const raw = await ask(prompt, quick);
+  try { return JSON.parse(raw); } catch (e){}
+  const m = String(raw).match(/\{[\s\S]*\}/);
+  if (m){ try { return JSON.parse(m[0]); } catch (e){} }
+  const err = new Error("Claude's answer wasn't JSON."); err.code = "not_json"; throw err;
+}
+
+async function chooseBites(lines, budget){
   let pool = lines, round = 0;
   const overhead = 2600;
   while (byteLen(pool.join("\n")) + overhead > budget && round < 4){
@@ -1263,7 +1379,7 @@ async function chooseBites(sample, lines, budget){
     const kept = new Set();
     for (let i = 0; i < chunks.length; i++){
       working("Reading part " + (i + 1) + " of " + chunks.length + " — " + (round ? "narrowing down" : "sifting for the best material") + "…");
-      const res = await askJSON(sample, shortlistText(chunks[i], per), "quick");
+      const res = await askJSON(shortlistText(chunks[i], per), true);
       (res && res.picks || []).forEach(p => kept.add(normId(p && p.id)));
     }
     const next = pool.filter(l => kept.has(idOfLine(l)));
@@ -1271,7 +1387,7 @@ async function chooseBites(sample, lines, budget){
     pool = next; round++;
   }
   working("Shaping the story…");
-  return { res: await askJSON(sample, briefText(pool), "complex"), pool };
+  return { res: await askJSON(briefText(pool), false), pool };
 }
 
 function applyResult(res){
@@ -1298,25 +1414,33 @@ async function makeCut(){
   S.busy = true; $("go").disabled = true; $("go").textContent = "Cutting…";
   working("Reading " + allUnits().length + " soundbites…");
   try {
-    const sample = await cap("sample");
-    if (!sample){
-      fail("Claude isn't available on this page.",
-           "Open “Do it by hand” below the table: copy the brief, paste it into a Claude chat, then paste the JSON back.");
+    if (ENGINE.kind === "checking") await detectEngine();
+    if (!engineReady()){
+      fail("Chop Chop can't reach Claude yet.",
+           "Paste an Anthropic API key into the Claude panel on the left, or use “Do it by hand” below the table.");
       $("ex-card").hidden = false;
       const d = document.querySelector("details.adv"); if (d) d.open = true;
+      $("api-key") && $("api-key").focus();
       return;
     }
-    let budget = 61000;
-    try { const lim = await sample.limits(); if (lim && lim.maxPromptBytes) budget = Math.floor(lim.maxPromptBytes * 0.95); } catch (e){}
+    let budget = 400000;                       /* the API takes the whole transcript in one go */
+    if (ENGINE.kind === "sample"){
+      budget = 61000;
+      try { const lim = await ENGINE.sample.limits(); if (lim && lim.maxPromptBytes) budget = Math.floor(lim.maxPromptBytes * 0.95); } catch (e){}
+    }
     const fi = FI();
-    const lines = allUnits().map(u => unitLine(u, fi));
-    const { res } = await chooseBites(sample, lines, budget);
+    const { res } = await chooseBites(allUnits().map(u => unitLine(u, fi)), budget);
     applyResult(res);
   } catch (e){
     const code = e && e.code;
     if (code === "cancelled") setStatus("");
-    else if (code === "not_granted") fail("Claude wasn't allowed to run here.", "Reload the page and accept the prompt, or use “Do it by hand” below the table.");
-    else if (code === "rate_limited") fail("Too many requests just now.", "Give it a minute and press Make the cut again.");
+    else if (code === "bad_key") fail("That API key was refused.", "Check it in the Claude panel on the left. Keys start sk-ant- and need Messages API access.");
+    else if (code === "offline") fail("Couldn't reach the Claude API from this page.", "Check the server has outbound access to api.anthropic.com.");
+    else if (code === "not_granted") fail("Claude wasn't allowed to run here.", "Reload the page and accept the prompt, or paste an API key instead.");
+    else if (code === "rate_limited") fail("Your account hit its rate limit.", "Give it a minute and press Make the cut again.");
+    else if (code === "overloaded") fail("Claude is busy just now.", "Try again in a moment.");
+    else if (code === "refused") fail("Claude declined to answer this one.", "If the material is sensitive, narrow the topic and try again.");
+    else if (code === "not_json") fail("Claude's answer came back in the wrong shape.", "Press Make the cut again — it usually lands second time.");
     else if (e && e.message === "empty") fail("Claude didn't choose any soundbites that exist in these transcripts.", "Try again, or narrow the topic.");
     else fail("That didn't work.", (e && (e.message || e.code)) ? String(e.message || e.code) : "Try again.");
   } finally {
@@ -1328,24 +1452,24 @@ async function suggestTopics(){
   if (!S.sources.length) return toast("Load a transcript first.");
   const btn = $("b-suggest"); btn.disabled = true; btn.textContent = "Reading…";
   try {
-    const sample = await cap("sample");
-    if (!sample) return toast("Claude isn't available on this page.");
+    if (ENGINE.kind === "checking") await detectEngine();
+    if (!engineReady()) return toast("Add an API key in the Claude panel first.");
     const fi = FI();
     let lines = allUnits().map(u => unitLine(u, fi));
-    lines = splitToBudget(lines, 52000)[0];
-    const res = await askJSON(sample, [
+    lines = splitToBudget(lines, ENGINE.kind === "sample" ? 52000 : 400000)[0];
+    const res = await askJSON([
       "Here is an interview transcript, in numbered soundbites.",
       "Name six topics a short film could be built from, each one genuinely present in this material.",
       "Each topic is at most six words, and specific — not 'the company' but 'why the old system kept failing'.",
       "", lines.join("\n"), "",
       'Return ONLY JSON: {"topics":["",""]}'
-    ].join("\n"), "quick");
+    ].join("\n"), false);
     const topics = (res && Array.isArray(res.topics) ? res.topics : []).slice(0, 6).map(t => String(t).slice(0, 60));
     $("topic-chips").innerHTML = topics.map(t =>
       '<button class="chip" type="button" data-topic="' + esc(t) + '">' + esc(t) + "</button>").join("");
     if (!topics.length) toast("Couldn't find any clear topics in that material.");
   } catch (e){
-    toast("Couldn't read the transcripts just now.");
+    toast(e && e.code === "bad_key" ? "That API key was refused." : "Couldn't read the transcripts just now.");
   } finally { btn.disabled = false; btn.textContent = "Suggest topics from the transcripts"; }
 }
 </script>
@@ -1832,6 +1956,8 @@ renderLenChips();
 wire();
 loadDemo();
 renderAll();
+renderEngine();
+detectEngine();
 </script>
 
 </body>
