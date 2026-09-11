@@ -581,11 +581,18 @@ function mapColumns(rows){
     }
   }
   if (map.start < 0 || map.text < 0) return null;
-  return { map, body };
+  return { map, body, hasSpeaker: map.speaker >= 0 };
 }
 
 /* ---------- turning rows into soundbite units ---------- */
 const WORDS = (t) => (String(t).trim().match(/\S+/g) || []).length;
+/* A caption that wrapped comes back glued: "detailed knowledgeable,credible" and
+   "a global RussellGroup university". Only ever inserts a space. */
+function unglue(t){
+  return String(t)
+    .replace(/([,;])(?=[A-Za-z])/g, "$1 ")   /* "knowledgeable,credible" — never "30,000" */
+    .replace(/\s+/g, " ").trim();           /* caption line breaks live inside the field */
+}
 const ENDS_SENTENCE = /[.!?…]["')\]]?\s*$/;
 const MERGE_GAP = 1.6;      // seconds of silence that still counts as the same thought
 const MAX_WORDS = 42;       // above this a unit gets split at a sentence break
@@ -600,7 +607,7 @@ function readSource(text, fi){
 
   const raw = [];
   for (const r of body){
-    const txt = String(r[map.text] == null ? "" : r[map.text]).replace(/\s+/g, " ").trim();
+    const txt = unglue(String(r[map.text] == null ? "" : r[map.text]));
     if (!txt) continue;
     const startF = parseTime(r[map.start], fi);
     if (startF == null) continue;
@@ -653,7 +660,7 @@ function readSource(text, fi){
       at = end;
     });
   }
-  return units;
+  return { units, hasSpeaker: mapped.hasSpeaker };
 }
 </script>
 
@@ -705,7 +712,7 @@ function resolve(pick){
   const span = arr.slice(a, b + 1);
   return {
     uid: pick.uid, src: s.id, sourceName: s.name, demo: s.demo,
-    speaker: base.speaker, a, b, count: arr.length,
+    speaker: s.hasSpeaker ? base.speaker : (s.speaker || "Speaker"), a, b, count: arr.length,
     canIn: a > 0 && arr[a - 1].speaker === arr[a].speaker,
     canOut: b + 1 < arr.length && arr[b + 1].speaker === arr[b].speaker,
     canTrimIn: (pick.inExt || 0) > 0, canTrimOut: (pick.outExt || 0) > 0,
@@ -754,7 +761,7 @@ function renderSources(){
   box.innerHTML = S.sources.map(s => {
     const fi = FI();
     const secs = s.units.reduce((a, u) => a + (u.endF - u.startF), 0) / fi.rate;
-    const speakers = [...new Set(s.units.map(u => u.speaker))];
+    const speakers = s.hasSpeaker ? [...new Set(s.units.map(u => u.speaker))] : [s.speaker || "Speaker"];
     return '<div class="src">' +
       '<div class="src-top"><span class="src-id">' + s.id + '</span>' +
       '<span class="src-name" title="' + esc(s.name) + '">' + esc(s.name) + "</span>" +
@@ -766,6 +773,9 @@ function renderSources(){
         '<div class="src-tc"><span>' + (S.tcMode === "sequence" ? "relinks&nbsp;to" : "clip") + '</span>' +
         '<input type="text" value="' + esc(clipOf(s)) + '" data-clip-src="' + s.id +
         '" style="flex:1 1 auto; width:auto" aria-label="Name of the file the EDL relinks to, for ' + esc(s.name) + '"></div>') +
+      (s.hasSpeaker ? "" :
+        '<div class="src-tc"><span>speaker</span><input type="text" value="' + esc(s.speaker || "Speaker") +
+        '" data-who-src="' + s.id + '" style="flex:1 1 auto; width:auto" aria-label="Who is speaking in ' + esc(s.name) + '"></div>') +
       '<div class="src-tc"><span>starts&nbsp;at</span><input type="text" value="' + framesToTC(s.offsetF, fi) +
         '" data-off-src="' + s.id + '" aria-label="Start timecode for ' + esc(s.name) + '"></div>' +
     "</div>";
@@ -860,10 +870,9 @@ function renderExHint(){
   if (!el) return;
   const names = [...new Set(S.sources.map(clipOf))];
   if (S.timeline){
-    const t = S.timeline.tracks[S.timeline.trackKey];
-    el.innerHTML = "Each soundbite is traced through <b>" + esc(S.timeline.trackKey) + "</b> of <b>" +
+    el.innerHTML = "Each soundbite is traced through <b>" + esc(trackKeys(S.timeline, S.timeline.trackKey).join(", ")) + "</b> of <b>" +
       esc(S.timeline.name) + "</b> back to the camera file underneath it, so the EDL carries real reel names and real source timecode. " +
-      "Relink to the originals in " + esc(String(t.clips.length)) + " clips &mdash; no flattened master needed. " +
+      "Relink to the originals in " + esc(String(S.timeline.mergedClips.length)) + " clips &mdash; no flattened master needed. " +
       "A bite that crosses a cut comes back as the same two events.";
     return;
   }
@@ -886,19 +895,19 @@ function renderTimeline(){
     return;
   }
   const fi = FI();
-  const keys = Object.keys(tl.tracks);
-  const opts = keys.map(k => {
-    const t = tl.tracks[k];
-    return '<option value="' + k + '"' + (k === tl.trackKey ? " selected" : "") + ">" +
-      k + " · " + t.items.length + " clips · " + t.clips.length + " sources</option>";
-  }).join("");
-  const t = tl.tracks[tl.trackKey];
+  const groups = ["audio", "video"].filter(g => trackKeys(tl, g).length).map(g => {
+    const keys = trackKeys(tl, g);
+    return { key: g, label: "All " + g + " (" + keys[0] + "–" + keys[keys.length - 1] + ")" };
+  });
+  const opts = groups.concat(Object.keys(tl.tracks).map(k => ({ key: k, label: k + " only" })))
+    .map(o => '<option value="' + o.key + '"' + (o.key === tl.trackKey ? " selected" : "") + ">" +
+      esc(o.label) + "</option>").join("");
   box.innerHTML = '<div class="src" style="margin-bottom:12px; border-left-color:var(--mark)">' +
     '<div class="src-top"><span class="src-id" style="color:var(--mark)">XML</span>' +
     '<span class="src-name" title="' + esc(tl.name) + '">' + esc(tl.name) + "</span>" +
     '<button class="btn ghost tiny" type="button" id="tl-drop" aria-label="Remove the sequence XML">&times;</button></div>' +
     '<div class="src-meta">' + tl.timebase + (tl.ntsc ? " NTSC" : "") + " fps · starts " +
-      framesToTC(tl.startFrame, fi) + " · " + t.clips.length + " camera clips on " + tl.trackKey + "</div>" +
+      framesToTC(tl.startFrame, fi) + " · " + tl.mergedClips.length + " camera clips</div>" +
     '<div class="src-tc"><span>map&nbsp;from</span><select id="tl-track" style="flex:1 1 auto; width:auto" aria-label="Which track to trace soundbites through">' + opts + "</select></div>" +
   "</div>" +
   (tl.retimed ? '<p class="hint" style="margin:0 0 12px; color:var(--mark)">Some clips on this timeline are retimed. Those events are flagged in the EDL — check them by hand.</p>' : "");
@@ -906,7 +915,7 @@ function renderTimeline(){
   const d = $("tl-drop");
   if (d) d.onclick = () => { S.timeline = null; renderAll(); };
   const sel = $("tl-track");
-  if (sel) sel.onchange = () => { S.timeline.trackKey = sel.value; renderAll(); };
+  if (sel) sel.onchange = () => { setTrack(S.timeline, sel.value); renderAll(); };
 }
 
 function renderMode(){
@@ -1156,8 +1165,10 @@ const ENC = new TextEncoder();
 const byteLen = (s) => ENC.encode(s).length;
 
 function unitLine(u, fi){
+  const s = srcById(u.src);
+  const who = (s && !s.hasSpeaker) ? (s.speaker || "Speaker") : u.speaker;
   return "[" + u.uid + "] " + ((u.endF - u.startF) / fi.rate).toFixed(1) + "s " +
-         String(u.speaker).toUpperCase() + ": " + u.text;
+         String(who).toUpperCase() + ": " + u.text;
 }
 function topicLine(){
   return (S.topicMode === "named" && S.topic.trim())
@@ -1167,7 +1178,8 @@ function topicLine(){
 
 function briefText(lines){
   const t = S.targetSec, lo = Math.round(t * 0.92), hi = Math.round(t * 1.08);
-  const speakers = [...new Set(allUnits().map(u => u.speaker))];
+  const speakers = [...new Set(S.sources.map(s => s.hasSpeaker ? null : (s.speaker || "Speaker"))
+    .filter(Boolean).concat(allUnits().filter(u => srcById(u.src) && srcById(u.src).hasSpeaker).map(u => u.speaker)))];
   return [
 "You are a documentary story editor building a paper edit from interview transcripts.",
 "",
@@ -1440,15 +1452,13 @@ function readTimelineXML(text, fileName){
   const reels = assignReels([...new Set(Object.values(tracks).flatMap(t => t.items.map(i => i.rawName)))]);
   for (const t of Object.values(tracks)) for (const i of t.items) i.reel = reels[i.clip] || "AX";
 
-  const audioFirst = Object.values(tracks).filter(t => t.kind === "audio").sort((a, b) => b.covered - a.covered);
-  const anyFirst = Object.values(tracks).sort((a, b) => b.covered - a.covered);
-  return {
+  const hasAudio = Object.values(tracks).some(t => t.kind === "audio");
+  return setTrack({
     name: txt(seq, "name") || fileName.replace(/\.[^.]+$/, ""),
     fileName, timebase, ntsc, df, startFrame, tracks, rateWarn,
-    trackKey: (audioFirst[0] || anyFirst[0]).key,
     fpsValue: pickFpsValue(timebase, ntsc, df),
     retimed: Object.values(tracks).some(t => t.items.some(i => i.retimed))
-  };
+  }, hasAudio ? "audio" : "video");
 }
 function pickFpsValue(timebase, ntsc, df){
   if (!ntsc) return String(timebase);
@@ -1458,11 +1468,48 @@ function pickFpsValue(timebase, ntsc, df){
   return String(timebase);
 }
 
+/* Audio for one interview is rarely all on A1 — a few clips get moved to A3/A4.
+   Flatten a whole group into one map, the lowest track winning any overlap. */
+function trackKeys(tl, key){
+  if (key === "audio" || key === "video")
+    return Object.keys(tl.tracks).filter(k => tl.tracks[k].kind === key)
+      .sort((a, b) => parseInt(a.slice(1), 10) - parseInt(b.slice(1), 10));
+  return tl.tracks[key] ? [key] : [];
+}
+function mergeTracks(tl, key){
+  const claimed = [];
+  for (const k of trackKeys(tl, key)){
+    for (const it of tl.tracks[k].items){
+      let pieces = [[it.start, it.end]];
+      for (const c of claimed){
+        if (!pieces.length) break;
+        const next = [];
+        for (const [a, b] of pieces){
+          if (c.end <= a || c.start >= b){ next.push([a, b]); continue; }
+          if (a < c.start) next.push([a, c.start]);
+          if (c.end < b) next.push([c.end, b]);
+        }
+        pieces = next;
+      }
+      for (const [a, b] of pieces)
+        if (b > a) claimed.push({ ...it, track: k, start: a, end: b, in: it.in + (a - it.start) });
+    }
+    claimed.sort((x, y) => x.start - y.start);
+  }
+  return claimed;
+}
+function setTrack(tl, key){
+  tl.trackKey = key;
+  tl.merged = mergeTracks(tl, key);
+  tl.mergedClips = [...new Set(tl.merged.map(i => i.clip))];
+  return tl;
+}
+
 /* Split a stretch of sequence time into the source clips underneath it. */
 function mapRange(a, b){
   const tl = S.timeline;
   if (!tl) return null;
-  const items = tl.tracks[tl.trackKey].items;
+  const items = tl.merged;
   const off = tl.startFrame;
   const A = a - off, B = b - off;
   const segs = [];
@@ -1559,12 +1606,14 @@ function nextSrcId(){
 }
 function addSource(name, text, opts){
   const fi = FI();
-  const units = readSource(text, fi);
+  const read = readSource(text, fi);
+  const units = read.units;
   const offsetTC = (opts && opts.offsetTC) ||
     (S.timeline && !(opts && opts.demo) ? framesToTC(S.timeline.startFrame, fi) : "00:00:00:00");
   S.sources.push({
     id: nextSrcId(), name: name.slice(0, 80), clipName: name.replace(/\.[^.]+$/, "").slice(0, 60), raw: text, units,
-    offsetTC, offsetF: parseTime(offsetTC, fi) || 0, demo: !!(opts && opts.demo)
+    offsetTC, offsetF: parseTime(offsetTC, fi) || 0, demo: !!(opts && opts.demo),
+    hasSpeaker: read.hasSpeaker, speaker: read.hasSpeaker ? null : "Speaker"
   });
 }
 function clearDemo(){
@@ -1602,7 +1651,7 @@ async function addFiles(list){
 function reparse(){
   const fi = FI();
   for (const s of S.sources){
-    try { s.units = readSource(s.raw, fi); } catch (e){}
+    try { s.units = readSource(s.raw, fi).units; } catch (e){}
     s.offsetF = parseTime(s.offsetTC, fi) || 0;
   }
   renderAll();
@@ -1642,6 +1691,12 @@ function wire(){
     renderAll();
   });
   $("srcs").addEventListener("change", e => {
+    const w = e.target.closest("[data-who-src]");
+    if (w){
+      const src = srcById(w.dataset.whoSrc);
+      if (src){ src.speaker = w.value.trim() || "Speaker"; renderAll(); }
+      return;
+    }
     const c = e.target.closest("[data-clip-src]");
     if (c){
       const src = srcById(c.dataset.clipSrc);

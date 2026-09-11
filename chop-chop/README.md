@@ -21,7 +21,14 @@ in that skeleton first.
 
 ## What it reads
 
-Any delimited transcript. It sniffs the delimiter, matches the header row
+Any delimited transcript. A transcript with no speaker column — Premiere's
+caption export gives `Start Time, End Time, Text, Layer ID` — is accepted, and
+the transcript card grows a field to name who is speaking. Caption line breaks
+live inside the quoted text field and are folded back to single spaces; the only
+other repair is a space after a comma or semicolon that runs straight into a
+letter, which never touches a figure like 30,000.
+
+It sniffs the delimiter, matches the header row
 loosely, and falls back to reading the data itself when there is no header:
 
 - Speaker column — `Speaker Name`, `Name`, `Talent`, or a short repeating column.
@@ -92,8 +99,11 @@ What that buys:
   transcript filename.
 - **Frame rate and sequence start** are taken from the XML.
 
-Pick which track to trace through in the Timeline panel. It defaults to the
-audio track with the most coverage, which is normally A1. Premiere's extracted
+Mapping runs across a whole track group, not one track. It defaults to **all
+audio**, flattening A1 downwards into one non-overlapping map with the lowest
+track winning any overlap — an interview's audio is rarely all on A1, and clips
+moved to A3/A4 would otherwise map to nothing. A single track can be selected
+instead. Premiere's extracted
 audio is folded back to its camera clip, so `A016_..._C002 Audio Extracted.wav`
 and `A016_..._C002.braw` are treated as one source. Reels are the last eight
 alphanumeric characters of the clip name, because camera files share a long
