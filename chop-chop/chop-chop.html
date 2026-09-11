@@ -1,0 +1,1530 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{color-scheme:light dark}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<title>Chop Chop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#EFF3F9; --panel:#FFFFFF; --panel-2:#F6F9FD; --line:#CFDBE8; --line-soft:#E3EBF4;
+  --ink:#0D1926; --ink-2:#2C4257; --muted:#5C7186;
+  --accent:#0B5FC4; --accent-soft:rgba(11,95,196,.09); --accent-line:rgba(11,95,196,.30);
+  --mark:#C9540A; --mark-soft:rgba(201,84,10,.11);
+  --ok:#15754F; --bad:#B32D22;
+  --shadow:0 1px 2px rgba(13,25,38,.06), 0 8px 24px rgba(13,25,38,.06);
+  --hatch:rgba(201,84,10,.22);
+  --mast:rgba(239,243,249,.90); --bad-soft:rgba(179,45,34,.10);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0A0F16; --panel:#121A25; --panel-2:#0E151F; --line:#26364A; --line-soft:#1B2734;
+    --ink:#E7EFF8; --ink-2:#B9CBDD; --muted:#8399AF;
+    --accent:#54A8FF; --accent-soft:rgba(84,168,255,.13); --accent-line:rgba(84,168,255,.34);
+    --mark:#FF9A52; --mark-soft:rgba(255,154,82,.14);
+    --ok:#3FCB94; --bad:#FF7566;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+    --hatch:rgba(255,154,82,.26);
+    --mast:rgba(10,15,22,.90); --bad-soft:rgba(255,117,102,.12);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0A0F16; --panel:#121A25; --panel-2:#0E151F; --line:#26364A; --line-soft:#1B2734;
+  --ink:#E7EFF8; --ink-2:#B9CBDD; --muted:#8399AF;
+  --accent:#54A8FF; --accent-soft:rgba(84,168,255,.13); --accent-line:rgba(84,168,255,.34);
+  --mark:#FF9A52; --mark-soft:rgba(255,154,82,.14);
+  --ok:#3FCB94; --bad:#FF7566;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+  --hatch:rgba(255,154,82,.26);
+  --mast:rgba(10,15,22,.90); --bad-soft:rgba(255,117,102,.12);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px; line-height:1.55; margin:0;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:Archivo,system-ui,sans-serif; margin:0; text-wrap:balance; letter-spacing:-.01em}
+.mono,td.tc,.tc,.badge,.lbl,.evt{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+button,input,select,textarea{font:inherit; color:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px}
+a{color:var(--accent)}
+
+/* ---------- shell ---------- */
+.wrap{max-width:1360px; margin:0 auto; padding-inline:20px; padding-block:0 64px}
+
+/* ---------- masthead ---------- */
+.mast{
+  position:sticky; top:0; z-index:40;
+  background:var(--mast);
+  backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+}
+.mast-in{max-width:1360px; margin:0 auto; padding:12px 20px; display:flex; gap:24px; align-items:center; flex-wrap:wrap}
+.brand{display:flex; align-items:baseline; gap:10px; flex:0 0 auto}
+.brand .wm{
+  font-family:"Archivo Black",Archivo,system-ui,sans-serif; font-size:23px; line-height:1;
+  letter-spacing:.02em; text-transform:uppercase; position:relative; padding-right:2px;
+}
+.brand .wm::after{
+  content:""; position:absolute; left:-3px; right:-3px; top:52%; height:2px;
+  background:var(--mark); transform:rotate(-3.5deg); transform-origin:left center;
+}
+.brand .ver{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--muted); letter-spacing:.06em}
+
+/* runtime meter */
+.meter{flex:1 1 340px; min-width:260px; display:flex; flex-direction:column; gap:5px}
+.meter-head{display:flex; justify-content:space-between; align-items:baseline; gap:12px; font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--muted)}
+.meter-head b{font-size:16px; color:var(--ink); letter-spacing:0; font-variant-numeric:tabular-nums}
+.meter-head b.over{color:var(--mark)}
+.meter-head b.on{color:var(--ok)}
+.track{position:relative; height:9px; border-radius:2px; background:var(--line-soft); border:1px solid var(--line); overflow:hidden}
+.fill{position:absolute; inset:0 auto 0 0; width:0; background:var(--accent); transition:width .35s cubic-bezier(.2,.7,.3,1)}
+.fill.on{background:var(--ok)}
+.ovr{position:absolute; inset:0 auto 0 0; width:0; left:0;
+  background-image:repeating-linear-gradient(-45deg, var(--hatch) 0 4px, transparent 4px 8px);
+  background-color:var(--mark-soft); transition:width .35s cubic-bezier(.2,.7,.3,1)}
+.notch{position:absolute; top:-2px; bottom:-2px; width:2px; background:var(--ink); opacity:.55}
+.mast-tools{display:flex; gap:8px; align-items:center; flex:0 0 auto; margin-left:auto}
+@media (max-width:660px){
+  .mast-in{gap:8px 12px; padding:10px 20px}
+  .brand{order:0} .mast-tools{order:1} .meter{order:2; flex:1 1 100%; min-width:0}
+}
+
+/* ---------- generic bits ---------- */
+.card{background:var(--panel); border:1px solid var(--line); border-radius:6px; box-shadow:var(--shadow)}
+.lbl{display:block; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:6px}
+.field{display:flex; flex-direction:column}
+input[type=text],input[type=number],select,textarea{
+  background:var(--panel-2); border:1px solid var(--line); border-radius:4px; padding:7px 9px;
+  width:100%; min-width:0;
+}
+textarea{resize:vertical; min-height:64px; line-height:1.45}
+input[type=file]{display:none}
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:7px;
+  background:var(--panel-2); border:1px solid var(--line); border-radius:4px;
+  padding:7px 12px; cursor:pointer; font-size:13.5px; font-weight:500; white-space:nowrap;
+  transition:border-color .15s, background .15s, color .15s;
+}
+.btn:hover:not(:disabled){border-color:var(--accent); color:var(--accent)}
+.btn:disabled{opacity:.45; cursor:not-allowed}
+.btn.primary{
+  background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600;
+  font-family:Archivo,sans-serif; letter-spacing:.01em; padding:10px 16px; font-size:15px;
+}
+.btn.primary:hover:not(:disabled){filter:brightness(1.1); color:#fff}
+:root[data-theme="dark"] .btn.primary,
+:root:not([data-theme="light"]) .btn.primary{color:#06121F}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .btn.primary{color:#fff}}
+.btn.ghost{background:transparent; border-color:transparent; color:var(--muted); padding:5px 8px}
+.btn.ghost:hover:not(:disabled){color:var(--accent); background:var(--accent-soft)}
+.btn.tiny{padding:2px 7px; font-size:12px; border-radius:3px}
+.seg{display:flex; border:1px solid var(--line); border-radius:4px; overflow:hidden}
+.seg button{flex:1; background:var(--panel-2); border:0; border-right:1px solid var(--line); padding:7px 6px; cursor:pointer; font-size:13px}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent); color:#fff; font-weight:600}
+:root[data-theme="dark"] .seg button[aria-pressed="true"]{color:#06121F}
+.chips{display:flex; flex-wrap:wrap; gap:6px}
+.chip{border:1px solid var(--line); background:var(--panel-2); border-radius:99px; padding:3px 11px; font-size:12.5px; cursor:pointer; font-family:"IBM Plex Mono",monospace}
+.chip[aria-pressed="true"]{border-color:var(--accent); background:var(--accent-soft); color:var(--accent); font-weight:500}
+.hint{font-size:12.5px; color:var(--muted); line-height:1.45}
+.note{font-size:13px; color:var(--ink-2)}
+
+/* ---------- layout ---------- */
+.grid{display:grid; grid-template-columns:326px minmax(0,1fr); gap:22px; align-items:start; margin-top:22px}
+.grid > *{min-width:0}
+@media (max-width:1000px){.grid{grid-template-columns:minmax(0,1fr)}}
+.rail{position:sticky; top:82px; display:flex; flex-direction:column; gap:14px}
+@media (max-width:1000px){.rail{position:static}}
+.main{display:flex; flex-direction:column; gap:22px; min-width:0}
+.sec{padding:16px 18px}
+.sec + .sec{margin-top:0}
+.sec-h{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; flex-wrap:wrap}
+.sec-h h2{font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:600}
+.rule{height:1px; background:var(--line-soft); margin:14px 0}
+
+/* ---------- sources ---------- */
+.drop{
+  display:block;
+  border:1.5px dashed var(--line); border-radius:5px; padding:18px 14px; text-align:center;
+  cursor:pointer; background:var(--panel-2); transition:border-color .15s, background .15s;
+}
+.drop:hover,.drop.hot{border-color:var(--accent); background:var(--accent-soft)}
+.drop strong{display:block; font-family:Archivo,sans-serif; font-size:14.5px}
+.srcs{display:flex; flex-direction:column; gap:8px; margin-top:10px}
+.src{border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:4px; padding:8px 10px; background:var(--panel-2)}
+.src-top{display:flex; align-items:baseline; gap:8px}
+.src-id{font-family:"IBM Plex Mono",monospace; font-weight:600; color:var(--accent); font-size:13px}
+.src-name{flex:1; font-size:13px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.src-meta{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--muted); margin-top:2px}
+.src-tc{display:flex; gap:6px; align-items:center; margin-top:7px}
+.src-tc input{padding:3px 6px; font-family:"IBM Plex Mono",monospace; font-size:12px; width:104px; flex:0 0 auto}
+.src-tc span{font-size:11px; color:var(--muted); letter-spacing:.05em; text-transform:uppercase}
+.demo-tag{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--mark); border:1px solid var(--mark); border-radius:99px; padding:0 6px}
+
+/* ---------- treatment ---------- */
+.treat h3{font-family:Archivo,sans-serif; font-size:25px; line-height:1.2; margin-bottom:8px}
+.treat p{margin:0 0 10px; max-width:66ch; color:var(--ink-2)}
+.treat .notes{border-left:2px solid var(--mark); padding-left:12px; font-size:13.5px; color:var(--ink-2); background:var(--mark-soft); padding:8px 12px; border-radius:0 4px 4px 0}
+
+/* ---------- table ---------- */
+.tbl-scroll{overflow-x:auto; margin:0 -18px; padding:0 18px}
+table{border-collapse:collapse; width:100%; min-width:900px; table-layout:fixed}
+col.c-evt{width:74px} col.c-who{width:132px} col.c-tc{width:104px}
+col.c-why{width:184px} col.c-act{width:96px}
+thead th{
+  text-align:left; font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--muted); font-weight:500; padding:0 10px 7px;
+  border-bottom:1px solid var(--line); white-space:nowrap;
+}
+tbody td{padding:10px; border-bottom:1px solid var(--line-soft); vertical-align:top}
+tbody tr:hover{background:var(--accent-soft)}
+tbody tr.dropped{opacity:.42}
+tbody tr.dropped .words{text-decoration:line-through; text-decoration-color:var(--mark); text-decoration-thickness:1.5px}
+td.evt{font-size:12.5px; color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap; padding-top:11px}
+td.evt b{display:block; color:var(--accent); font-size:13px}
+td.who{font-size:13.5px; font-weight:500; overflow-wrap:anywhere}
+td.who .sid{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--muted); display:block; font-weight:400}
+td.tc{font-size:12px; white-space:nowrap; font-variant-numeric:tabular-nums; color:var(--ink-2)}
+td.tc .dur{display:block; color:var(--mark); font-weight:500}
+td.tc .approx{display:block; color:var(--muted); font-size:10.5px; letter-spacing:.04em}
+td.words{min-width:0}
+.words q{quotes:"\201C" "\201D"; font-size:14.5px}
+td.why{font-size:12.5px; color:var(--muted); line-height:1.4}
+td.why .role{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.08em;
+  text-transform:uppercase; border:1px solid var(--accent-line); color:var(--accent); border-radius:2px; padding:0 5px; margin-bottom:4px}
+td.act{white-space:nowrap; text-align:right}
+.act-row{display:inline-flex; gap:2px}
+.trim{display:flex; gap:8px; margin-top:7px; align-items:center; flex-wrap:wrap}
+.trim-grp{display:inline-flex; align-items:center; gap:3px; border:1px solid var(--line); border-radius:3px; padding:1px 4px}
+.trim-grp span{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.07em; text-transform:uppercase; color:var(--muted)}
+.trim-grp button{background:none; border:0; cursor:pointer; color:var(--muted); font-size:14px; line-height:1; padding:1px 4px; border-radius:2px}
+.trim-grp button:hover:not(:disabled){color:var(--accent); background:var(--accent-soft)}
+.trim-grp button:disabled{opacity:.3; cursor:not-allowed}
+
+/* ---------- empty / status ---------- */
+.empty{padding:44px 20px; text-align:center; color:var(--muted)}
+.empty h3{font-family:Archivo,sans-serif; font-size:18px; color:var(--ink); margin-bottom:6px}
+.working{display:flex; align-items:center; gap:11px; padding:14px 18px; border:1px solid var(--accent-line); background:var(--accent-soft); border-radius:5px; font-size:14px}
+.spin{width:15px; height:15px; border:2px solid var(--accent-line); border-top-color:var(--accent); border-radius:50%; animation:sp .8s linear infinite; flex:0 0 auto}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:2.4s} .fill,.ovr{transition:none}}
+.err{border:1px solid var(--bad); background:var(--bad-soft); border-radius:5px; padding:12px 14px; font-size:13.5px}
+.err b{color:var(--bad)}
+
+/* ---------- exports ---------- */
+.exports{display:flex; gap:9px; flex-wrap:wrap}
+.ex{flex:1 1 190px; text-align:left; padding:11px 13px; display:block}
+.ex strong{display:block; font-family:Archivo,sans-serif; font-size:14px; margin-bottom:2px}
+.ex span{font-size:12px; color:var(--muted); line-height:1.35; display:block; white-space:normal}
+
+details.adv{margin-top:12px}
+details.adv summary{cursor:pointer; font-size:12.5px; color:var(--muted); list-style:none}
+details.adv summary::-webkit-details-marker{display:none}
+details.adv summary::before{content:"▸ "; font-size:10px}
+details.adv[open] summary::before{content:"▾ "}
+details.adv .body{margin-top:10px; display:flex; flex-direction:column; gap:9px}
+
+.toast{position:fixed; left:50%; bottom:26px; transform:translateX(-50%); z-index:60;
+  background:var(--ink); color:var(--ground); padding:9px 16px; border-radius:4px; font-size:13.5px;
+  box-shadow:var(--shadow); max-width:min(92vw,460px)}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+</style>
+
+<header class="mast">
+  <div class="mast-in">
+    <div class="brand">
+      <span class="wm">Chop&nbsp;Chop</span>
+      <span class="ver">paper&nbsp;edit</span>
+    </div>
+
+    <div class="meter" aria-live="polite">
+      <div class="meter-head">
+        <span>Running time <b id="m-run">0:00</b></span>
+        <span id="m-verdict">against a <b style="font-size:13px">2:00</b> target</span>
+      </div>
+      <div class="track" id="m-track">
+        <div class="fill" id="m-fill"></div>
+        <div class="ovr" id="m-over"></div>
+        <div class="notch" id="m-notch" style="left:100%"></div>
+      </div>
+    </div>
+
+    <div class="mast-tools">
+      <button class="btn ghost" id="b-reset" type="button">Start again</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="grid">
+
+  <!-- ================= RAIL ================= -->
+  <form class="rail" id="rail" onsubmit="return false">
+
+    <section class="card sec">
+      <div class="sec-h"><h2>Transcripts</h2><span class="hint" id="src-count"></span></div>
+
+      <label class="drop" id="drop" for="file" tabindex="0">
+        <strong>Drop your Premiere CSVs here</strong>
+        <span class="hint">or click to choose. Add as many interviews as you like.</span>
+      </label>
+      <input type="file" id="file" accept=".csv,.tsv,.txt,text/csv" multiple>
+
+      <div class="srcs" id="srcs"></div>
+    </section>
+
+    <section class="card sec">
+      <div class="sec-h"><h2>The brief</h2></div>
+
+      <div class="field">
+        <span class="lbl" id="lbl-topic">Topic</span>
+        <div class="seg" role="group" aria-labelledby="lbl-topic">
+          <button type="button" id="t-general" aria-pressed="true">General story</button>
+          <button type="button" id="t-named" aria-pressed="false">A topic I name</button>
+        </div>
+        <div id="topic-box" hidden style="margin-top:9px">
+          <input type="text" id="topic" placeholder="e.g. why they chose us over a London agency">
+          <div class="chips" id="topic-chips" style="margin-top:8px"></div>
+          <button class="btn tiny" type="button" id="b-suggest" style="margin-top:8px">Suggest topics from the transcripts</button>
+        </div>
+      </div>
+
+      <div class="rule"></div>
+
+      <div class="field">
+        <span class="lbl" id="lbl-len">Finished length</span>
+        <div class="chips" id="len-chips" role="group" aria-labelledby="lbl-len"></div>
+        <div style="display:flex; gap:8px; align-items:center; margin-top:9px">
+          <input type="text" id="len" value="2:00" inputmode="numeric" style="width:88px; font-family:'IBM Plex Mono',monospace; text-align:center" aria-label="Target length, minutes and seconds">
+          <span class="hint">mm:ss &mdash; Chop Chop aims within &plusmn;10%.</span>
+        </div>
+      </div>
+
+      <div class="rule"></div>
+
+      <div class="field">
+        <label class="lbl" for="dir">Direction <span style="text-transform:none; letter-spacing:0">(optional)</span></label>
+        <textarea id="dir" placeholder="Tone, audience, anything to avoid. e.g. warm and plain-spoken, for a science client, no jargon."></textarea>
+      </div>
+    </section>
+
+    <section class="card sec">
+      <div class="sec-h"><h2>Timeline</h2></div>
+
+      <div class="field" style="margin-bottom:12px">
+        <span class="lbl" id="lbl-tcmode">These timecodes are</span>
+        <div class="seg" role="group" aria-labelledby="lbl-tcmode">
+          <button type="button" id="tc-seq" aria-pressed="true">A sequence</button>
+          <button type="button" id="tc-clip" aria-pressed="false">Source clips</button>
+        </div>
+        <p class="hint" id="tcmode-hint" style="margin:7px 0 0"></p>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
+        <div class="field">
+          <label class="lbl" for="fps">Frame rate</label>
+          <select id="fps">
+            <option value="23.976">23.976</option>
+            <option value="24">24</option>
+            <option value="25" selected>25</option>
+            <option value="29.97df">29.97 DF</option>
+            <option value="29.97">29.97 NDF</option>
+            <option value="30">30</option>
+            <option value="50">50</option>
+            <option value="59.94df">59.94 DF</option>
+            <option value="60">60</option>
+          </select>
+        </div>
+        <div class="field" id="rectc-field">
+          <label class="lbl" for="rectc">Record starts</label>
+          <input type="text" id="rectc" value="00:00:00:00" style="font-family:'IBM Plex Mono',monospace">
+        </div>
+      </div>
+
+      <div class="field" style="margin-top:12px">
+        <span class="lbl" id="lbl-recmode">The EDL should</span>
+        <div class="seg" role="group" aria-labelledby="lbl-recmode">
+          <button type="button" id="rec-asm" aria-pressed="true">Assemble the cut</button>
+          <button type="button" id="rec-hold" aria-pressed="false">Leave bites in place</button>
+        </div>
+        <p class="hint" id="recmode-hint" style="margin:7px 0 0"></p>
+      </div>
+    </section>
+
+    <button class="btn primary" id="go" type="button" style="width:100%">Make the cut</button>
+    <p class="hint" id="go-hint" style="margin:-4px 0 0; text-align:center"></p>
+  </form>
+
+  <!-- ================= MAIN ================= -->
+  <main class="main">
+    <div id="status"></div>
+
+    <section class="card sec treat" id="treat-card" hidden>
+      <div class="sec-h"><h2>The story</h2><span class="hint" id="treat-tag"></span></div>
+      <h3 id="treat-title"></h3>
+      <div id="treat-body"></div>
+      <div class="notes" id="treat-notes" hidden></div>
+    </section>
+
+    <section class="card sec" id="cut-card">
+      <div class="sec-h">
+        <h2>The cut</h2>
+        <span class="hint" id="cut-sub"></span>
+      </div>
+      <div id="cut-body"></div>
+    </section>
+
+    <section class="card sec" id="ex-card" hidden>
+      <div class="sec-h"><h2>Take it into Premiere</h2></div>
+      <div class="exports">
+        <button class="btn ex" type="button" id="x-edl"><strong>Sequence &mdash; EDL</strong><span>CMX 3600, cuts in order. Arrives in a zip &mdash; unzip, import, relink.</span></button>
+        <button class="btn ex" type="button" id="x-mark"><strong>Markers &mdash; CSV</strong><span>One marker per soundbite, at the timecodes in the table.</span></button>
+        <button class="btn ex" type="button" id="x-tbl"><strong>The table &mdash; CSV</strong><span>Speaker, timecode, words and reasoning. For the spreadsheet.</span></button>
+        <button class="btn ex" type="button" id="x-all"><strong>Everything &mdash; ZIP</strong><span>EDL, markers, table and the treatment in one folder.</span></button>
+      </div>
+      <p class="hint" id="ex-hint" style="margin:12px 0 0; max-width:70ch"></p>
+      <details class="adv">
+        <summary>Do it by hand</summary>
+        <div class="body">
+          <p class="hint">If Claude isn't available on this page, copy the brief below into any Claude chat, then paste the JSON it gives you back here.</p>
+          <div style="display:flex; gap:8px; flex-wrap:wrap">
+            <button class="btn tiny" type="button" id="b-copy-prompt">Copy the brief</button>
+            <button class="btn tiny" type="button" id="b-paste">Use pasted JSON</button>
+          </div>
+          <textarea id="paste" placeholder='{"title": "...", "treatment": "...", "picks": [{"id": "A012", "role": "open", "reason": "..."}]}'></textarea>
+        </div>
+      </details>
+    </section>
+  </main>
+
+</div>
+</div>
+<div id="toast-host" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* ============================================================
+   Chop Chop — transcript CSV -> paper edit
+   Part 1: timecode, CSV parsing, soundbite units
+   ============================================================ */
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c =>
+  ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+
+/* ---------- frame rate ---------- */
+function fpsInfo(v){
+  const df = String(v).endsWith("df");
+  const rate = parseFloat(v);
+  return { df, rate, nominal: Math.round(rate) };
+}
+function pad(n, w){ return String(Math.abs(n)).padStart(w || 2, "0"); }
+
+function framesToTC(frames, fi){
+  let f = Math.max(0, Math.round(frames));
+  const N = fi.nominal;
+  let sep = ":";
+  if (fi.df){
+    const drop = (N / 30) * 2;
+    const perMin = N * 60 - drop;
+    const per10 = N * 60 * 10 - drop * 9;
+    const D = Math.floor(f / per10);
+    const M = f % per10;
+    f = f + drop * 9 * D + (M > drop ? drop * Math.floor((M - drop) / perMin) : 0);
+    sep = ";";
+  }
+  const ff = f % N;
+  const ss = Math.floor(f / N) % 60;
+  const mm = Math.floor(f / (N * 60)) % 60;
+  const hh = Math.floor(f / (N * 3600)) % 24;
+  return pad(hh) + ":" + pad(mm) + ":" + pad(ss) + sep + pad(ff);
+}
+function tcToFrames(hh, mm, ss, ff, fi){
+  const N = fi.nominal;
+  let total = ((hh * 60 + mm) * 60 + ss) * N + ff;
+  if (fi.df){
+    const drop = (N / 30) * 2;
+    total -= drop * (60 * hh + mm - Math.floor((60 * hh + mm) / 10));
+  }
+  return total;
+}
+/* Accepts 01:02:03:04, 01:02:03;04, 01:02:03.456, 02:03.4, 12.75, "12,75" */
+function parseTime(raw, fi){
+  if (raw == null) return null;
+  let s = String(raw).trim().replace(/\s+/g, "");
+  if (!s) return null;
+  let m = s.match(/^(\d{1,3}):(\d{1,2}):(\d{1,2})[:;](\d{1,3})$/);
+  if (m) return tcToFrames(+m[1], +m[2], +m[3], +m[4], { ...fi, df: fi.df || s.includes(";") });
+  m = s.match(/^(\d{1,3}):(\d{1,2}):(\d{1,2})[.,](\d{1,3})$/);
+  if (m) return Math.round((((+m[1] * 60) + +m[2]) * 60 + +m[3] + +("0." + m[4])) * fi.rate);
+  m = s.match(/^(\d{1,3}):(\d{1,2}):(\d{1,2})$/);
+  if (m) return Math.round((((+m[1] * 60) + +m[2]) * 60 + +m[3]) * fi.rate);
+  m = s.match(/^(\d{1,3}):(\d{1,2})[.,](\d{1,3})$/);
+  if (m) return Math.round(((+m[1] * 60) + +m[2] + +("0." + m[3])) * fi.rate);
+  m = s.match(/^(\d{1,3}):(\d{1,2})$/);
+  if (m) return Math.round(((+m[1] * 60) + +m[2]) * fi.rate);
+  m = s.match(/^(\d+(?:[.,]\d+)?)s?$/);
+  if (m) return Math.round(parseFloat(m[1].replace(",", ".")) * fi.rate);
+  return null;
+}
+function looksTimey(v){ return parseTime(v, { df:false, rate:25, nominal:25 }) !== null; }
+function secsToClock(sec){
+  sec = Math.max(0, Math.round(sec));
+  return Math.floor(sec / 60) + ":" + pad(sec % 60);
+}
+function parseClock(str){
+  const m = String(str).trim().match(/^(\d{1,3})[:'](\d{1,2})$/);
+  if (m) return (+m[1]) * 60 + (+m[2]);
+  const n = parseFloat(str);
+  return isFinite(n) && n > 0 ? Math.round(n) : null;
+}
+
+/* ---------- delimited text ---------- */
+function sniffDelim(text){
+  const head = text.split(/\r?\n/).slice(0, 25).join("\n");
+  let best = ",", bestN = -1;
+  for (const d of [",", "\t", ";", "|"]){
+    let n = 0, q = false;
+    for (let i = 0; i < head.length; i++){
+      const c = head[i];
+      if (c === '"') q = !q;
+      else if (c === d && !q) n++;
+    }
+    if (n > bestN){ bestN = n; best = d; }
+  }
+  return best;
+}
+function parseDelimited(text){
+  text = text.replace(/^﻿/, "");
+  const d = sniffDelim(text);
+  const rows = [];
+  let row = [], cell = "", q = false;
+  for (let i = 0; i < text.length; i++){
+    const c = text[i];
+    if (q){
+      if (c === '"'){ if (text[i + 1] === '"'){ cell += '"'; i++; } else q = false; }
+      else cell += c;
+    } else if (c === '"') q = true;
+    else if (c === d){ row.push(cell); cell = ""; }
+    else if (c === "\n"){ row.push(cell); rows.push(row); row = []; cell = ""; }
+    else if (c === "\r"){ /* skip */ }
+    else cell += c;
+  }
+  if (cell.length || row.length){ row.push(cell); rows.push(row); }
+  return rows.filter(r => r.some(v => String(v).trim() !== ""));
+}
+
+const COL = {
+  speaker: /^(speaker|speaker\s*name|name|talent|who|character)$/i,
+  start:   /(start|^in$|tc\s*in|in\s*point|begin|from|timecode)/i,
+  end:     /(end|^out$|tc\s*out|out\s*point|finish|^to$)/i,
+  text:    /(text|transcript|caption|dialog|dialogue|content|words|subtitle|speech|line)/i
+};
+/* Work out which column is which, from the header if there is one, else from the data. */
+function mapColumns(rows){
+  const head = rows[0].map(v => String(v).trim());
+  const map = { speaker:-1, start:-1, end:-1, text:-1 };
+  let hits = 0;
+  head.forEach((h, i) => {
+    if (map.speaker < 0 && COL.speaker.test(h)){ map.speaker = i; hits++; return; }
+    if (map.start   < 0 && COL.start.test(h) && !COL.end.test(h)){ map.start = i; hits++; return; }
+    if (map.end     < 0 && COL.end.test(h)){ map.end = i; hits++; return; }
+    if (map.text    < 0 && COL.text.test(h)){ map.text = i; hits++; return; }
+  });
+  const hasHeader = hits >= 2 && !head.some(looksTimey);
+  const body = hasHeader ? rows.slice(1) : rows;
+  if (!body.length) return null;
+
+  if (map.start < 0 || map.text < 0){
+    const n = Math.max(...body.map(r => r.length));
+    const sample = body.slice(0, 40);
+    const timey = [], lengths = [], uniq = [];
+    for (let c = 0; c < n; c++){
+      const vals = sample.map(r => String(r[c] == null ? "" : r[c]).trim());
+      timey[c] = vals.filter(looksTimey).length / Math.max(1, vals.length);
+      lengths[c] = vals.reduce((a, v) => a + v.length, 0) / Math.max(1, vals.length);
+      uniq[c] = new Set(vals.filter(Boolean)).size;
+    }
+    const timeCols = [];
+    for (let c = 0; c < n; c++) if (timey[c] > 0.6) timeCols.push(c);
+    if (map.start < 0 && timeCols.length) map.start = timeCols[0];
+    if (map.end   < 0 && timeCols.length > 1) map.end = timeCols[1];
+    if (map.text < 0){
+      let best = -1, bestLen = 3;
+      for (let c = 0; c < n; c++){
+        if (c === map.start || c === map.end || c === map.speaker) continue;
+        if (lengths[c] > bestLen){ bestLen = lengths[c]; best = c; }
+      }
+      map.text = best;
+    }
+    if (map.speaker < 0){
+      for (let c = 0; c < n; c++){
+        if (c === map.start || c === map.end || c === map.text) continue;
+        if (uniq[c] > 0 && uniq[c] <= Math.max(6, sample.length / 4) && lengths[c] < 32){ map.speaker = c; break; }
+      }
+    }
+  }
+  if (map.start < 0 || map.text < 0) return null;
+  return { map, body };
+}
+
+/* ---------- turning rows into soundbite units ---------- */
+const WORDS = (t) => (String(t).trim().match(/\S+/g) || []).length;
+const ENDS_SENTENCE = /[.!?…]["')\]]?\s*$/;
+const MERGE_GAP = 1.6;      // seconds of silence that still counts as the same thought
+const MAX_WORDS = 42;       // above this a unit gets split at a sentence break
+const SPEAK_RATE = 2.7;     // words per second, for estimating a missing out point
+
+function readSource(text, fi){
+  const rows = parseDelimited(text);
+  if (rows.length < 1) throw new Error("That file has no rows in it.");
+  const mapped = mapColumns(rows);
+  if (!mapped) throw new Error("Couldn't find a timecode column and a text column. Export the transcript from Premiere as CSV and try again.");
+  const { map, body } = mapped;
+
+  const raw = [];
+  for (const r of body){
+    const txt = String(r[map.text] == null ? "" : r[map.text]).replace(/\s+/g, " ").trim();
+    if (!txt) continue;
+    const startF = parseTime(r[map.start], fi);
+    if (startF == null) continue;
+    let endF = map.end >= 0 ? parseTime(r[map.end], fi) : null;
+    const speaker = map.speaker >= 0 ? String(r[map.speaker] || "").trim() : "";
+    raw.push({ speaker: speaker || "Speaker", startF, endF, text: txt });
+  }
+  if (!raw.length) throw new Error("No rows in that file had both a timecode and some words.");
+  raw.sort((a, b) => a.startF - b.startF);
+
+  // fill any missing out points from the next row, or from how long the words take to say
+  for (let i = 0; i < raw.length; i++){
+    if (raw[i].endF == null || raw[i].endF <= raw[i].startF){
+      const spoken = Math.round((WORDS(raw[i].text) / SPEAK_RATE) * fi.rate);
+      const next = raw[i + 1] ? raw[i + 1].startF : null;
+      raw[i].endF = next != null ? Math.min(next, raw[i].startF + spoken) : raw[i].startF + spoken;
+      if (raw[i].endF <= raw[i].startF) raw[i].endF = raw[i].startF + Math.max(1, spoken);
+    }
+  }
+
+  // merge consecutive rows from one speaker into whole thoughts
+  const merged = [];
+  for (const r of raw){
+    const last = merged[merged.length - 1];
+    const gap = last ? (r.startF - last.endF) / fi.rate : Infinity;
+    const joinable = last && last.speaker === r.speaker && gap <= MERGE_GAP &&
+                     WORDS(last.text) + WORDS(r.text) <= MAX_WORDS &&
+                     !(ENDS_SENTENCE.test(last.text) && WORDS(last.text) >= 8);
+    if (joinable){ last.text += " " + r.text; last.endF = Math.max(last.endF, r.endF); }
+    else merged.push({ ...r });
+  }
+
+  // split anything still too long, at sentence breaks, timing it by character count
+  const units = [];
+  for (const u of merged){
+    if (WORDS(u.text) <= MAX_WORDS){ units.push({ ...u, approx:false }); continue; }
+    const sentences = u.text.match(/[^.!?…]+[.!?…]*\s*/g) || [u.text];
+    const groups = []; let cur = "";
+    for (const s of sentences){
+      if (cur && WORDS(cur) + WORDS(s) > MAX_WORDS){ groups.push(cur.trim()); cur = s; }
+      else cur += s;
+    }
+    if (cur.trim()) groups.push(cur.trim());
+    const total = groups.reduce((a, g) => a + g.length, 0) || 1;
+    let at = u.startF;
+    groups.forEach((g, i) => {
+      const span = Math.round((u.endF - u.startF) * (g.length / total));
+      const end = (i === groups.length - 1) ? u.endF : at + span;
+      units.push({ speaker: u.speaker, startF: at, endF: Math.max(at + 1, end), text: g, approx: true });
+      at = end;
+    });
+  }
+  return units;
+}
+</script>
+
+<script>
+"use strict";
+/* ============================================================
+   Part 2: state, sources, rendering
+   ============================================================ */
+
+const S = {
+  sources: [],          // {id, name, units, offsetF, demo}
+  cut: [],              // {uid, role, reason, dropped, inExt, outExt}
+  title: "", treatment: "", notes: "", tag: "",
+  topicMode: "general", topic: "", targetSec: 120, dir: "",
+  tcMode: "sequence", recMode: "assemble",
+  variant: 0, busy: false
+};
+const SRC_IDS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+
+const FI = () => fpsInfo($("fps").value);
+const srcById = (id) => S.sources.find(s => s.id === id);
+
+function allUnits(){
+  const out = [];
+  for (const s of S.sources) s.units.forEach((u, i) => out.push({ ...u, uid: s.id + pad(i + 1, 3), src: s.id, idx: i }));
+  return out;
+}
+function findUnit(uid){
+  const s = srcById(uid[0]);
+  if (!s) return null;
+  const i = parseInt(uid.slice(1), 10) - 1;
+  if (!(i >= 0 && i < s.units.length)) return null;
+  return { ...s.units[i], uid, src: s.id, idx: i, source: s };
+}
+/* A pick can absorb neighbouring units from the same speaker — that is the trim control. */
+function resolve(pick){
+  const base = findUnit(pick.uid);
+  if (!base) return null;
+  const s = base.source, arr = s.units;
+  let a = base.idx, b = base.idx;
+  for (let k = 0; k < (pick.inExt || 0); k++){
+    if (a - 1 < 0 || arr[a - 1].speaker !== arr[a].speaker) break;
+    a--;
+  }
+  for (let k = 0; k < (pick.outExt || 0); k++){
+    if (b + 1 >= arr.length || arr[b + 1].speaker !== arr[b].speaker) break;
+    b++;
+  }
+  const span = arr.slice(a, b + 1);
+  return {
+    uid: pick.uid, src: s.id, sourceName: s.name, demo: s.demo,
+    speaker: base.speaker, a, b, count: arr.length,
+    canIn: a > 0 && arr[a - 1].speaker === arr[a].speaker,
+    canOut: b + 1 < arr.length && arr[b + 1].speaker === arr[b].speaker,
+    canTrimIn: (pick.inExt || 0) > 0, canTrimOut: (pick.outExt || 0) > 0,
+    startF: span[0].startF + s.offsetF,
+    endF: span[span.length - 1].endF + s.offsetF,
+    approx: span.some(u => u.approx),
+    text: span.map(u => u.text).join(" ")
+  };
+}
+const active = () => S.cut.filter(p => !p.dropped);
+function runFrames(){
+  const fi = FI();
+  return active().reduce((a, p) => { const r = resolve(p); return a + (r ? r.endF - r.startF : 0); }, 0);
+}
+const runSecs = () => runFrames() / FI().rate;
+
+/* ---------- meter ---------- */
+function renderMeter(){
+  const run = runSecs(), target = S.targetSec;
+  const max = Math.max(run, target, 1);
+  const under = Math.min(run, target), over = Math.max(0, run - target);
+  $("m-run").textContent = secsToClock(run);
+  $("m-fill").style.width = (under / max * 100) + "%";
+  $("m-over").style.width = (over / max * 100) + "%";
+  $("m-over").style.left = (under / max * 100) + "%";
+  $("m-notch").style.left = (target / max * 100) + "%";
+
+  const diff = run - target, tol = Math.max(4, target * 0.1);
+  const runEl = $("m-run"), verdict = $("m-verdict");
+  runEl.className = ""; $("m-fill").classList.remove("on");
+  if (!S.cut.length){ verdict.innerHTML = 'against a <b style="font-size:13px">' + secsToClock(target) + "</b> target"; }
+  else if (Math.abs(diff) <= tol){
+    runEl.className = "on"; $("m-fill").classList.add("on");
+    verdict.innerHTML = "on target &mdash; " + secsToClock(target);
+  } else if (diff > 0){
+    runEl.className = "over";
+    verdict.innerHTML = secsToClock(diff) + " long &mdash; drop " + (diff > 20 ? "a couple of bites" : "a bite");
+  } else {
+    verdict.innerHTML = secsToClock(-diff) + " short of " + secsToClock(target);
+  }
+}
+
+/* ---------- sources ---------- */
+function renderSources(){
+  const box = $("srcs");
+  box.innerHTML = S.sources.map(s => {
+    const fi = FI();
+    const secs = s.units.reduce((a, u) => a + (u.endF - u.startF), 0) / fi.rate;
+    const speakers = [...new Set(s.units.map(u => u.speaker))];
+    return '<div class="src">' +
+      '<div class="src-top"><span class="src-id">' + s.id + '</span>' +
+      '<span class="src-name" title="' + esc(s.name) + '">' + esc(s.name) + "</span>" +
+      (s.demo ? '<span class="demo-tag">example</span>' : "") +
+      '<button class="btn ghost tiny" type="button" data-drop-src="' + s.id + '" aria-label="Remove ' + esc(s.name) + '">&times;</button></div>' +
+      '<div class="src-meta">' + s.units.length + " bites &middot; " + secsToClock(secs) + " &middot; " +
+        esc(speakers.slice(0, 3).join(", ")) + (speakers.length > 3 ? " +" + (speakers.length - 3) : "") + "</div>" +
+      '<div class="src-tc"><span>' + (S.tcMode === "sequence" ? "relinks&nbsp;to" : "clip") + '</span>' +
+        '<input type="text" value="' + esc(clipOf(s)) + '" data-clip-src="' + s.id +
+        '" style="flex:1 1 auto; width:auto" aria-label="Name of the file the EDL relinks to, for ' + esc(s.name) + '"></div>' +
+      '<div class="src-tc"><span>starts&nbsp;at</span><input type="text" value="' + framesToTC(s.offsetF, fi) +
+        '" data-off-src="' + s.id + '" aria-label="Start timecode for ' + esc(s.name) + '"></div>' +
+    "</div>";
+  }).join("");
+
+  const n = S.sources.length, u = allUnits().length;
+  $("src-count").textContent = n ? n + (n === 1 ? " file · " : " files · ") + u + " bites" : "";
+  $("go").disabled = S.busy || !n;
+  $("go-hint").textContent = !n ? "Add a transcript to begin." : "";
+}
+
+/* ---------- the cut table ---------- */
+const ROLE_ORDER = ["open", "context", "turn", "evidence", "colour", "close"];
+function renderCut(){
+  const body = $("cut-body"), sub = $("cut-sub");
+  if (!S.cut.length){
+    $("ex-card").hidden = !S.sources.length;
+    sub.textContent = "";
+    body.innerHTML = '<div class="empty"><h3>No cut yet</h3>' +
+      "<p>Load your transcripts, set the topic and the length, then press <em>Make the cut</em>. " +
+      "The soundbites Chop Chop chooses land here as a table you can edit.</p></div>";
+    renderMeter(); return;
+  }
+  $("ex-card").hidden = false;
+  const fi = FI(), keep = active().length, dropped = S.cut.length - keep;
+  sub.innerHTML = keep + " soundbite" + (keep === 1 ? "" : "s") +
+    (dropped ? " &middot; " + dropped + " dropped &middot; " +
+      '<button class="btn ghost tiny" type="button" id="b-restore">restore all</button>' : "");
+
+  let evt = 0;
+  const rows = S.cut.map((p, i) => {
+    const r = resolve(p);
+    if (!r) return "";
+    if (!p.dropped) evt++;
+    const dur = (r.endF - r.startF) / fi.rate;
+    return '<tr class="' + (p.dropped ? "dropped" : "") + '">' +
+      '<td class="evt"><b>' + (p.dropped ? "&mdash;" : pad(evt, 3)) + "</b>" + esc(r.uid) + "</td>" +
+      '<td class="who">' + esc(r.speaker) + '<span class="sid">' + esc(r.sourceName.replace(/\.[^.]+$/, "").slice(0, 16)) + "</span></td>" +
+      '<td class="tc">' + framesToTC(r.startF, fi) + "<br>" + framesToTC(r.endF, fi) +
+        '<span class="dur">' + dur.toFixed(1) + "s</span>" +
+        (r.approx ? '<span class="approx">est.</span>' : "") + "</td>" +
+      '<td class="words"><q>' + esc(r.text) + "</q>" +
+        '<div class="trim">' +
+          '<div class="trim-grp"><span>in</span>' +
+            '<button type="button" data-ext="' + i + ':in:1"  ' + (r.canIn ? "" : "disabled") + ' aria-label="Start earlier">&#171;</button>' +
+            '<button type="button" data-ext="' + i + ':in:-1" ' + (r.canTrimIn ? "" : "disabled") + ' aria-label="Start later">&#187;</button></div>' +
+          '<div class="trim-grp"><span>out</span>' +
+            '<button type="button" data-ext="' + i + ':out:-1" ' + (r.canTrimOut ? "" : "disabled") + ' aria-label="End earlier">&#171;</button>' +
+            '<button type="button" data-ext="' + i + ':out:1"  ' + (r.canOut ? "" : "disabled") + ' aria-label="End later">&#187;</button></div>' +
+        "</div></td>" +
+      '<td class="why">' + (p.role ? '<span class="role">' + esc(p.role) + "</span><br>" : "") + esc(p.reason || "") + "</td>" +
+      '<td class="act"><span class="act-row">' +
+        '<button class="btn ghost tiny" type="button" data-move="' + i + ':-1" ' + (i === 0 ? "disabled" : "") + ' aria-label="Move up">&#9650;</button>' +
+        '<button class="btn ghost tiny" type="button" data-move="' + i + ':1" ' + (i === S.cut.length - 1 ? "disabled" : "") + ' aria-label="Move down">&#9660;</button>' +
+        '<button class="btn ghost tiny" type="button" data-kill="' + i + '">' + (p.dropped ? "keep" : "drop") + "</button>" +
+      "</span></td></tr>";
+  }).join("");
+
+  body.innerHTML = '<div class="tbl-scroll"><table>' +
+    '<colgroup><col class="c-evt"><col class="c-who"><col class="c-tc"><col><col class="c-why"><col class="c-act"></colgroup>' +
+    "<thead><tr>" +
+    "<th>Event</th><th>Speaker</th><th>Source&nbsp;TC</th><th>Soundbite</th><th>Why&nbsp;it&rsquo;s&nbsp;in</th><th></th>" +
+    "</tr></thead><tbody>" + rows + "</tbody></table></div>";
+
+  const rb = $("b-restore");
+  if (rb) rb.onclick = () => { S.cut.forEach(p => p.dropped = false); renderCut(); };
+  renderMeter();
+}
+
+function renderTreatment(){
+  const card = $("treat-card");
+  if (!S.title && !S.treatment){ card.hidden = true; return; }
+  card.hidden = false;
+  $("treat-title").textContent = S.title || "Untitled cut";
+  const canRedo = S.sources.length && !S.busy;
+  $("treat-tag").innerHTML = esc(S.tag || "") +
+    (canRedo ? ' <button class="btn ghost tiny" type="button" id="b-again">try a different cut</button>' : "");
+  const again = $("b-again");
+  if (again) again.onclick = () => { S.variant = (S.variant || 0) + 1; makeCut(); };
+  $("treat-body").innerHTML = String(S.treatment || "").split(/\n{2,}/)
+    .filter(Boolean).map(p => "<p>" + esc(p) + "</p>").join("");
+  $("treat-notes").hidden = !S.notes;
+  $("treat-notes").innerHTML = S.notes ? "<b>Worth knowing:</b> " + esc(S.notes) : "";
+}
+function renderExHint(){
+  const el = $("ex-hint");
+  if (!el) return;
+  const names = [...new Set(S.sources.map(clipOf))];
+  el.innerHTML = S.tcMode === "sequence"
+    ? "Every timecode in the table is a timecode on your own timeline. Export the sequence from Premiere as one self-contained file called <b>" +
+      esc(names[0] || "MASTER") + "</b>, import the EDL, and point it at that file &mdash; it conforms frame-accurately. " +
+      "You never have to name the camera files the sequence was cut from."
+    : "The EDL asks Premiere to relink to " +
+      (names.length === 1 ? "a clip called <b>" + esc(names[0]) + "</b>" : "the clip names set on the transcript cards") +
+      ". Change them there if they don't match your project.";
+}
+function renderMode(){
+  const seq = S.tcMode === "sequence", hold = S.recMode === "hold";
+  $("tc-seq").setAttribute("aria-pressed", String(seq));
+  $("tc-clip").setAttribute("aria-pressed", String(!seq));
+  $("tcmode-hint").textContent = seq
+    ? "The transcript is of a finished timeline, so its timecodes are sequence timecodes. Name the export it should relink to on each transcript card above."
+    : "Each transcript belongs to one source clip, and the EDL relinks to a clip of that name.";
+  $("rec-asm").setAttribute("aria-pressed", String(!hold));
+  $("rec-hold").setAttribute("aria-pressed", String(hold));
+  $("rectc-field").hidden = hold;
+  $("recmode-hint").textContent = hold
+    ? "Each bite keeps its own timecode, so the selects land exactly where they sit now, with gaps between them. Events run in timeline order, not story order."
+    : "Cuts run back to back from the record start, in the story order below.";
+  renderExHint();
+}
+function renderAll(){ renderSources(); renderCut(); renderTreatment(); renderMode(); }
+
+/* ---------- status ---------- */
+function setStatus(html){ $("status").innerHTML = html || ""; }
+function working(msg){ setStatus('<div class="working"><span class="spin"></span><span>' + esc(msg) + "</span></div>"); }
+function fail(title, detail){
+  setStatus('<div class="err"><b>' + esc(title) + "</b>" + (detail ? "<br>" + esc(detail) : "") + "</div>");
+}
+let toastT;
+function toast(msg){
+  const host = $("toast-host");
+  host.innerHTML = '<div class="toast">' + esc(msg) + "</div>";
+  clearTimeout(toastT);
+  toastT = setTimeout(() => { host.innerHTML = ""; }, 3200);
+}
+</script>
+
+<script>
+"use strict";
+/* ============================================================
+   Part 3: exports — table CSV, Premiere markers, CMX 3600 EDL, zip
+   ============================================================ */
+
+/* window.claude only exists inside the artifact viewer; everywhere else, degrade. */
+async function cap(name){
+  try { return (window.claude && window.claude.use) ? await window.claude.use(name) : null; }
+  catch (e){ return null; }
+}
+
+const csvQ = (v) => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
+const csvRows = (rows) => rows.map(r => r.map(csvQ).join(",")).join("\r\n") + "\r\n";
+const slug = (s) => (String(s || "chop-chop").toLowerCase().replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-|-$/g, "") || "chop-chop").slice(0, 48);
+const reelOf = (s) => {
+  const c = clipOf(s).toUpperCase().replace(/[^A-Z0-9]/g, "");
+  return (c ? c.slice(0, 8) : "SRC" + s.id) || "AX";
+};
+const clipOf = (s) => (s.clipName || s.name.replace(/\.[^.]+$/, "")).trim() || ("SOURCE" + s.id);
+
+function cutRows(){
+  const fi = FI();
+  const picks = active().map(p => ({ p, r: resolve(p) })).filter(x => x.r);
+  const hold = S.recMode === "hold";
+  if (hold) picks.sort((a, b) => (a.r.startF - b.r.startF) || (a.r.src < b.r.src ? -1 : 1));
+
+  let rec = parseTime($("rectc").value, fi);
+  if (rec == null) rec = 0;
+  const out = [];
+  picks.forEach(({ p, r }, i) => {
+    const len = r.endF - r.startF;
+    const recIn = hold ? Math.max(r.startF, rec) : rec;
+    out.push({ evt: i + 1, r, p, len, recIn, recOut: recIn + len, dur: len / fi.rate });
+    rec = recIn + len;
+  });
+  return out;
+}
+
+function tableCSV(){
+  const fi = FI();
+  const head = ["Event", "Source", "File", "Speaker", "TC In", "TC Out", "Duration (s)",
+                "Record In", "Record Out", "Role", "Soundbite", "Why it's in", "Timecode estimated"];
+  const rows = cutRows().map(x => [
+    pad(x.evt, 3), x.r.src, x.r.sourceName, x.r.speaker,
+    framesToTC(x.r.startF, fi), framesToTC(x.r.endF, fi), x.dur.toFixed(2),
+    framesToTC(x.recIn, fi), framesToTC(x.recOut, fi),
+    x.p.role || "", x.r.text, x.p.reason || "", x.r.approx ? "yes" : ""
+  ]);
+  return csvRows([head, ...rows]);
+}
+
+/* Premiere reads markers per clip, so each source gets its own list. */
+function markerCSVs(){
+  const fi = FI(), bySrc = new Map();
+  cutRows().forEach(x => {
+    if (!bySrc.has(x.r.src)) bySrc.set(x.r.src, []);
+    bySrc.get(x.r.src).push(x);
+  });
+  const files = [];
+  for (const [sid, items] of bySrc){
+    const s = srcById(sid);
+    const rows = items.map(x => [
+      pad(x.evt, 3) + " " + x.r.speaker,
+      (x.p.reason ? x.p.reason + " — " : "") + x.r.text,
+      framesToTC(x.r.startF, fi), framesToTC(x.r.endF, fi),
+      framesToTC(x.len, { ...fi, df: false }), "Comment"
+    ]);
+    files.push({
+      name: (S.tcMode === "sequence" ? "sequence-markers-" : "markers-") + slug(s ? clipOf(s) : sid) + ".csv",
+      text: csvRows([["Marker Name", "Description", "In", "Out", "Duration", "Marker Type"], ...rows])
+    });
+  }
+  return files;
+}
+
+function buildEDL(){
+  const fi = FI();
+  const title = (S.title || "CHOP CHOP CUT").toUpperCase().replace(/[^\x20-\x7E]/g, "").slice(0, 70);
+  const L = ["TITLE: " + title, "FCM: " + (fi.df ? "DROP FRAME" : "NON-DROP FRAME"), ""];
+  cutRows().forEach(x => {
+    const s = srcById(x.r.src);
+    const reel = s ? reelOf(s) : "AX";
+    L.push(pad(x.evt, 3) + "  " + reel.padEnd(8, " ") + " " + "AA/V".padEnd(6, " ") + "C        " +
+      framesToTC(x.r.startF, fi) + " " + framesToTC(x.r.endF, fi) + " " +
+      framesToTC(x.recIn, fi) + " " + framesToTC(x.recOut, fi));
+    if (s) L.push("* FROM CLIP NAME: " + clipOf(s).replace(/[^\x20-\x7E]/g, " ").replace(/\s+/g, " ").trim());
+    const note = (x.r.speaker + ": " + x.r.text).replace(/[^\x20-\x7E]/g, " ").slice(0, 92);
+    L.push("* COMMENT: " + note);
+    L.push("");
+  });
+  return L.join("\r\n");
+}
+
+function buildTreatmentMD(){
+  const fi = FI();
+  const topic = S.topicMode === "named" && S.topic.trim() ? S.topic.trim() : "General — the strongest story in the material";
+  const L = ["# " + (S.title || "Chop Chop cut"), "",
+    "**Topic** " + topic, "**Target length** " + secsToClock(S.targetSec) +
+    "  ·  **Assembled** " + secsToClock(runSecs()) + "  ·  **Frame rate** " + $("fps").value, ""];
+  if (S.treatment) L.push(S.treatment, "");
+  if (S.notes) L.push("> " + S.notes, "");
+  L.push("## The cut", "");
+  L.push("| # | Speaker | In | Out | Dur | Soundbite | Why |", "|---|---|---|---|---|---|---|");
+  cutRows().forEach(x => L.push("| " + pad(x.evt, 3) + " | " + x.r.speaker + " | " +
+    framesToTC(x.r.startF, fi) + " | " + framesToTC(x.r.endF, fi) + " | " + x.dur.toFixed(1) + "s | " +
+    x.r.text.replace(/\|/g, "/") + " | " + (x.p.reason || "").replace(/\|/g, "/") + " |"));
+  L.push("", "## Sources", "");
+  S.sources.forEach(s => L.push("- **" + s.id + "** " + s.name + " — starts at " + framesToTC(s.offsetF, fi) +
+    ", " + s.units.length + " soundbites" + (s.demo ? " *(example material)*" : "")));
+  return L.join("\n");
+}
+
+/* ---------- a minimal stored (uncompressed) zip ---------- */
+const CRC_T = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++){
+    let c = n;
+    for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+function crc32(u8){
+  let c = 0xFFFFFFFF;
+  for (let i = 0; i < u8.length; i++) c = CRC_T[(c ^ u8[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+function makeZip(files){
+  const enc = new TextEncoder();
+  const parts = [], central = [];
+  let offset = 0;
+  const d = new Date();
+  const dosTime = ((d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1)) & 0xFFFF;
+  const dosDate = (((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate()) & 0xFFFF;
+
+  const put = (arr, n, bytes) => { for (let i = 0; i < bytes; i++) arr.push((n >>> (i * 8)) & 0xFF); };
+
+  for (const f of files){
+    const name = enc.encode(f.name);
+    const data = enc.encode(f.text);
+    const crc = crc32(data);
+    const h = [];
+    put(h, 0x04034B50, 4); put(h, 20, 2); put(h, 0x0800, 2); put(h, 0, 2);
+    put(h, dosTime, 2); put(h, dosDate, 2);
+    put(h, crc, 4); put(h, data.length, 4); put(h, data.length, 4);
+    put(h, name.length, 2); put(h, 0, 2);
+    const head = new Uint8Array(h);
+    parts.push(head, name, data);
+
+    const c = [];
+    put(c, 0x02014B50, 4); put(c, 20, 2); put(c, 20, 2); put(c, 0x0800, 2); put(c, 0, 2);
+    put(c, dosTime, 2); put(c, dosDate, 2);
+    put(c, crc, 4); put(c, data.length, 4); put(c, data.length, 4);
+    put(c, name.length, 2); put(c, 0, 2); put(c, 0, 2); put(c, 0, 2); put(c, 0, 2);
+    put(c, 0, 4); put(c, offset, 4);
+    central.push(new Uint8Array(c), name);
+    offset += head.length + name.length + data.length;
+  }
+  const cdSize = central.reduce((a, p) => a + p.length, 0);
+  const e = [];
+  put(e, 0x06054B50, 4); put(e, 0, 2); put(e, 0, 2);
+  put(e, files.length, 2); put(e, files.length, 2);
+  put(e, cdSize, 4); put(e, offset, 4); put(e, 0, 2);
+  return new Blob([...parts, ...central, new Uint8Array(e)], { type: "application/zip" });
+}
+
+/* ---------- handing a file to the viewer ---------- */
+const DL_MSG = {
+  declined: null,
+  rate_limited: "One file at a time — try that again in a moment.",
+  too_large: "That file is too big for the destination you chose.",
+  rejected_extension: "This page can't save that file type.",
+  bad_request: "Something was wrong with that file. Try making the cut again."
+};
+async function offer(filename, data, fallbackText){
+  let dl = null;
+  dl = await cap("downloads");
+  if (!dl) return copyOut(filename, fallbackText);
+  try {
+    await dl.save({ filename, data });
+    toast("Saved " + filename);
+  } catch (e){
+    const code = e && e.code;
+    if (code === "declined") return;
+    const msg = Object.prototype.hasOwnProperty.call(DL_MSG, code) ? DL_MSG[code] : null;
+    if (msg === null && code === "declined") return;
+    if (fallbackText) return copyOut(filename, fallbackText, msg);
+    toast(msg || "Couldn't save that file here.");
+  }
+}
+async function copyOut(filename, text, why){
+  if (!text) return toast(why || "Saving files isn't available on this page.");
+  try {
+    await navigator.clipboard.writeText(text);
+    toast((why ? why + " " : "") + "Copied " + filename + " to the clipboard instead.");
+  } catch (e){
+    toast(why || "Saving files isn't available on this page.");
+  }
+}
+</script>
+
+<script>
+"use strict";
+/* ============================================================
+   Part 4: the brief, Claude, events, first run
+   ============================================================ */
+
+const ENC = new TextEncoder();
+const byteLen = (s) => ENC.encode(s).length;
+
+function unitLine(u, fi){
+  return "[" + u.uid + "] " + ((u.endF - u.startF) / fi.rate).toFixed(1) + "s " +
+         String(u.speaker).toUpperCase() + ": " + u.text;
+}
+function topicLine(){
+  return (S.topicMode === "named" && S.topic.trim())
+    ? '"' + S.topic.trim() + '" — everything chosen must serve this'
+    : "General — find the strongest story this material actually tells";
+}
+
+function briefText(lines){
+  const t = S.targetSec, lo = Math.round(t * 0.92), hi = Math.round(t * 1.08);
+  const speakers = [...new Set(allUnits().map(u => u.speaker))];
+  return [
+"You are a documentary story editor building a paper edit from interview transcripts.",
+"",
+"THE BRIEF",
+"Topic: " + topicLine(),
+"Finished length: " + t + " seconds of speech. The durations you choose must add up to between " + lo + " and " + hi + " seconds.",
+"Voices available: " + speakers.join(", "),
+S.dir.trim() ? "Direction from the editor: " + S.dir.trim() : "",
+S.variant ? "This is attempt " + (S.variant + 1) + ". Find a genuinely different angle from the obvious one." : "",
+"",
+"HOW TO CHOOSE",
+"- Use only the numbered soundbites below. Never invent, reword, or stitch words across two ids.",
+"- Build a film that stands up with no narration: an opening that earns attention, a middle that develops and turns, an ending that lands.",
+"- Story order beats transcript order. Reorder freely, and cut between speakers where it helps.",
+"- Add the durations up as you go. Landing inside the range matters as much as the choices.",
+"- Prefer self-contained bites: no dangling 'it' or 'that', nothing that only makes sense as the answer to a question we never hear.",
+"- Cut filler, false starts and repetition. Where two bites make the same point, keep the better-told one.",
+"- Give every pick a role: open, context, turn, evidence, colour, or close.",
+"",
+"THE SOUNDBITES",
+lines.join("\n"),
+"",
+"Return ONLY a JSON object, no prose and no markdown fence:",
+'{"title":"","treatment":"","picks":[{"id":"","role":"","reason":""}],"notes":""}',
+"title: three to seven words, how you would label this cut on a timeline.",
+"treatment: two to four sentences on the shape of the film and why it holds.",
+"reason: at most fourteen words on why that bite earns that place.",
+'notes: what the editor should know — a gap in the material, a claim nothing backs up, a pickup worth shooting. One or two sentences, or "".'
+  ].filter(l => l !== "").join("\n");
+}
+
+function shortlistText(lines, secs){
+  return [
+"You are a documentary story editor sifting one part of a long interview transcript.",
+"Topic: " + topicLine(),
+"Keep the strongest, most quotable, most self-contained soundbites on that topic — roughly " + secs + " seconds' worth in total.",
+"Discard filler, false starts, repetition, and anything that only makes sense as the answer to a question we never hear.",
+"When in doubt, keep it: a later pass makes the final choice.",
+"",
+"THE SOUNDBITES",
+lines.join("\n"),
+"",
+'Return ONLY JSON: {"picks":[{"id":"","reason":""}]}'
+  ].join("\n");
+}
+
+const idOfLine = (l) => (l.match(/^\[([A-Z]\d+)\]/) || [])[1];
+function splitToBudget(lines, budget){
+  const out = []; let cur = [], n = 0;
+  for (const l of lines){
+    const b = byteLen(l) + 1;
+    if (cur.length && n + b > budget){ out.push(cur); cur = []; n = 0; }
+    cur.push(l); n += b;
+  }
+  if (cur.length) out.push(cur);
+  return out;
+}
+function normId(v){ return String(v == null ? "" : v).replace(/[[\]\s]/g, "").toUpperCase(); }
+
+async function askJSON(sample, prompt, tier){
+  try {
+    return await sample.json(prompt, { modelTier: tier || "default", cache: false });
+  } catch (e){
+    const raw = e && e.text;
+    if (raw){
+      const m = raw.match(/\{[\s\S]*\}/);
+      if (m){ try { return JSON.parse(m[0]); } catch (_){} }
+    }
+    throw e;
+  }
+}
+
+async function chooseBites(sample, lines, budget){
+  let pool = lines, round = 0;
+  const overhead = 2600;
+  while (byteLen(pool.join("\n")) + overhead > budget && round < 4){
+    const chunks = splitToBudget(pool, budget - overhead);
+    if (chunks.length < 2) break;
+    const keepSecs = Math.max(120, Math.round(S.targetSec * 2.5));
+    const per = Math.ceil(keepSecs / chunks.length);
+    const kept = new Set();
+    for (let i = 0; i < chunks.length; i++){
+      working("Reading part " + (i + 1) + " of " + chunks.length + " — " + (round ? "narrowing down" : "sifting for the best material") + "…");
+      const res = await askJSON(sample, shortlistText(chunks[i], per), "quick");
+      (res && res.picks || []).forEach(p => kept.add(normId(p && p.id)));
+    }
+    const next = pool.filter(l => kept.has(idOfLine(l)));
+    if (!next.length || next.length >= pool.length){ pool = splitToBudget(pool, budget - overhead)[0]; break; }
+    pool = next; round++;
+  }
+  working("Shaping the story…");
+  return { res: await askJSON(sample, briefText(pool), "complex"), pool };
+}
+
+function applyResult(res){
+  if (!res || typeof res !== "object") throw new Error("shape");
+  const known = new Set(allUnits().map(u => u.uid));
+  const seen = new Set();
+  const picks = (Array.isArray(res.picks) ? res.picks : [])
+    .map(p => ({ uid: normId(p && p.id), role: String(p && p.role || "").toLowerCase().slice(0, 12),
+                 reason: String(p && p.reason || "").slice(0, 160), dropped: false, inExt: 0, outExt: 0 }))
+    .filter(p => known.has(p.uid) && !seen.has(p.uid) && seen.add(p.uid));
+  if (!picks.length) throw new Error("empty");
+  S.cut = picks;
+  S.title = String(res.title || "").slice(0, 90);
+  S.treatment = String(res.treatment || "").slice(0, 1400);
+  S.notes = String(res.notes || "").slice(0, 600);
+  S.tag = "";
+  renderAll();
+  setStatus("");
+  $("cut-card").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+async function makeCut(){
+  if (S.busy || !S.sources.length) return;
+  S.busy = true; $("go").disabled = true; $("go").textContent = "Cutting…";
+  working("Reading " + allUnits().length + " soundbites…");
+  try {
+    const sample = await cap("sample");
+    if (!sample){
+      fail("Claude isn't available on this page.",
+           "Open “Do it by hand” below the table: copy the brief, paste it into a Claude chat, then paste the JSON back.");
+      $("ex-card").hidden = false;
+      const d = document.querySelector("details.adv"); if (d) d.open = true;
+      return;
+    }
+    let budget = 61000;
+    try { const lim = await sample.limits(); if (lim && lim.maxPromptBytes) budget = Math.floor(lim.maxPromptBytes * 0.95); } catch (e){}
+    const fi = FI();
+    const lines = allUnits().map(u => unitLine(u, fi));
+    const { res } = await chooseBites(sample, lines, budget);
+    applyResult(res);
+  } catch (e){
+    const code = e && e.code;
+    if (code === "cancelled") setStatus("");
+    else if (code === "not_granted") fail("Claude wasn't allowed to run here.", "Reload the page and accept the prompt, or use “Do it by hand” below the table.");
+    else if (code === "rate_limited") fail("Too many requests just now.", "Give it a minute and press Make the cut again.");
+    else if (e && e.message === "empty") fail("Claude didn't choose any soundbites that exist in these transcripts.", "Try again, or narrow the topic.");
+    else fail("That didn't work.", (e && (e.message || e.code)) ? String(e.message || e.code) : "Try again.");
+  } finally {
+    S.busy = false; $("go").textContent = "Make the cut"; renderSources();
+  }
+}
+
+async function suggestTopics(){
+  if (!S.sources.length) return toast("Load a transcript first.");
+  const btn = $("b-suggest"); btn.disabled = true; btn.textContent = "Reading…";
+  try {
+    const sample = await cap("sample");
+    if (!sample) return toast("Claude isn't available on this page.");
+    const fi = FI();
+    let lines = allUnits().map(u => unitLine(u, fi));
+    lines = splitToBudget(lines, 52000)[0];
+    const res = await askJSON(sample, [
+      "Here is an interview transcript, in numbered soundbites.",
+      "Name six topics a short film could be built from, each one genuinely present in this material.",
+      "Each topic is at most six words, and specific — not 'the company' but 'why the old system kept failing'.",
+      "", lines.join("\n"), "",
+      'Return ONLY JSON: {"topics":["",""]}'
+    ].join("\n"), "quick");
+    const topics = (res && Array.isArray(res.topics) ? res.topics : []).slice(0, 6).map(t => String(t).slice(0, 60));
+    $("topic-chips").innerHTML = topics.map(t =>
+      '<button class="chip" type="button" data-topic="' + esc(t) + '">' + esc(t) + "</button>").join("");
+    if (!topics.length) toast("Couldn't find any clear topics in that material.");
+  } catch (e){
+    toast("Couldn't read the transcripts just now.");
+  } finally { btn.disabled = false; btn.textContent = "Suggest topics from the transcripts"; }
+}
+</script>
+
+<script>
+"use strict";
+/* ============================================================
+   Part 5: example material, wiring, first run
+   ============================================================ */
+
+const DEMO_CSV = "Speaker Name,Start Time,End Time,Text\nInterviewer,00:00:04:00,00:00:10:07,\"So tell me where this started. What made you decide you needed a film at all?\"\nNaomi Adeyemi,00:00:11:04,00:00:23:18,\"Honestly, we didn't want a film. We wanted engineers. We had a job advert running for eleven months and we were getting maybe two applications a week, and none of them right.\"\nNaomi Adeyemi,00:00:24:06,00:00:37:24,\"The problem was that nobody could tell what we actually did. If you read our website you would think we made paint. We make a coating that stops turbine blades cracking at nine hundred degrees.\"\nNaomi Adeyemi,00:00:38:11,00:00:47:22,\"We were founded in 2011, we are based just outside Stevenage, and we currently employ around a hundred and forty people across two sites.\"\nInterviewer,00:00:48:09,00:00:51:22,\"And you had worked with a production company before?\"\nNaomi Adeyemi,00:00:52:20,00:01:04:04,\"I had been burned before. The last agency we used turned up with three people and a drone, and gave us four minutes of slow motion and a piano.\"\nNaomi Adeyemi,00:01:04:17,00:01:15:06,\"What sold me on Pearldrop was that Simon asked to spend a day in the lab before he would quote. Nobody had ever asked to do that.\"\nNaomi Adeyemi,00:01:15:19,00:01:25:14,\"He came back with a question I still think about. He asked why anyone outside this building should care that a blade does not crack.\"\nNaomi Adeyemi,00:01:26:01,00:01:37:01,\"The answer, it turns out, is that a cracked blade is an aircraft turning back over the Atlantic. That is the film. It was never in our brief.\"\nInterviewer,00:01:37:13,00:01:39:22,\"How did the shoot itself go?\"\nNaomi Adeyemi,00:01:40:20,00:01:50:15,\"It was two days and I kept waiting for the disruption. It never came. They worked around a live production run without stopping it once.\"\nNaomi Adeyemi,00:01:51:02,00:01:59:18,\"Our chief engineer is not a performer. He had told me flatly, in writing, that he would not be going on camera.\"\nNaomi Adeyemi,00:02:00:05,00:02:10:20,\"They put him at his own bench, gave him a sample to hold, and asked him to explain it to his daughter. He talked for forty minutes.\"\nNaomi Adeyemi,00:02:11:08,00:02:23:02,\"That is the bit everybody quotes back to me. Twenty seconds of a man in a lab coat explaining thermal fatigue to a nine year old who is not there.\"\nNaomi Adeyemi,00:02:23:14,00:02:33:00,\"The catering was good as well, which sounds like a small thing to mention, but on a two day shoot it really is not.\"\nInterviewer,00:02:33:12,00:02:35:21,\"What happened when it went out?\"\nNaomi Adeyemi,00:02:36:18,00:02:45:09,\"We put it on the careers page in March. Applications went from two a week to thirty one in the first fortnight.\"\nNaomi Adeyemi,00:02:45:22,00:02:53:18,\"We have hired nine people off the back of it, and seven of them mentioned the film, unprompted, at interview.\"\nNaomi Adeyemi,00:02:54:05,00:03:04:00,\"It did something I did not expect as well. Our own staff started sending it to their families to explain what they do all day.\"\nNaomi Adeyemi,00:03:04:13,00:03:13:03,\"Was it cheap? No. It cost about the same as one failed recruitment round, which is a comparison I only made afterwards.\"\nInterviewer,00:03:13:16,00:03:17:04,\"What would you say to someone weighing this up?\"\nNaomi Adeyemi,00:03:18:02,00:03:28:07,\"If I was advising someone, I would say pay for the day in the lab. The film is downstream of understanding, not the other way round.\"\nNaomi Adeyemi,00:03:28:19,00:03:38:14,\"The mistake we nearly made was asking for a corporate video. What we needed was somebody to find the story first and then film it.\"\nNaomi Adeyemi,00:03:39:02,00:03:48:12,\"I would have booked three days rather than two. We ran out of light on the second afternoon and lost the exterior we wanted.\"";
+const DEMO_CUT = [
+  [2,  "open",     "Opens on a want, not a company. Human in one line."],
+  [3,  "context",  "The real problem: nobody could tell what they made."],
+  [6,  "turn",     "The scar tissue. Earns the trust the next bite pays off."],
+  [7,  "evidence", "The difference, told as a fact rather than a claim."],
+  [9,  "turn",     "The reframe the whole film turns on."],
+  [12, "context",  "Sets up the reluctant engineer before we meet him."],
+  [13, "evidence", "How the best moment in the film was actually got."],
+  [14, "colour",   "The line the audience quotes back. Proof it landed."],
+  [17, "evidence", "The number. Two a week to thirty-one."],
+  [18, "evidence", "Hires, not views — the result that pays for the film."],
+  [22, "close",    "Ends on advice, which leaves the viewer something to do."]
+];
+const DEMO_TITLE = "Downstream of Understanding";
+const DEMO_TREAT = "The film opens on a shortage, not a company: they wanted engineers and were getting two applications a week. " +
+  "The middle is a change of mind — a bad experience with the last agency, then the day in the lab, then the question that turns a coating into an aircraft turning back over the Atlantic. " +
+  "It lands on the reluctant chief engineer explaining thermal fatigue to a daughter who isn't in the room, and closes on advice rather than a boast.";
+const DEMO_NOTES = "Nothing on screen shows the coating itself failing — worth a pickup, or archive of a cracked blade, to carry the middle.";
+
+/* ---------- loading transcripts ---------- */
+function nextSrcId(){
+  const used = new Set(S.sources.map(s => s.id));
+  for (const c of SRC_IDS) if (!used.has(c)) return c;
+  return "Z";
+}
+function addSource(name, text, opts){
+  const fi = FI();
+  const units = readSource(text, fi);
+  const offsetTC = (opts && opts.offsetTC) || "00:00:00:00";
+  S.sources.push({
+    id: nextSrcId(), name: name.slice(0, 80), clipName: name.replace(/\.[^.]+$/, "").slice(0, 60), raw: text, units,
+    offsetTC, offsetF: parseTime(offsetTC, fi) || 0, demo: !!(opts && opts.demo)
+  });
+}
+function clearDemo(){
+  if (S.sources.some(s => s.demo) && S.sources.length){
+    S.sources = S.sources.filter(s => !s.demo);
+    S.cut = []; S.title = ""; S.treatment = ""; S.notes = ""; S.tag = "";
+  }
+}
+async function addFiles(list){
+  const files = [...list].filter(f => f && f.size >= 0);
+  if (!files.length) return;
+  clearDemo();
+  const bad = [];
+  for (const f of files){
+    try { addSource(f.name, await f.text(), {}); }
+    catch (e){ bad.push(f.name + " — " + (e.message || "couldn't be read")); }
+  }
+  renderAll();
+  if (bad.length) fail(bad.length === files.length ? "Couldn't read that." : "Some files didn't load.", bad.join("  ·  "));
+  else setStatus("");
+}
+function reparse(){
+  const fi = FI();
+  for (const s of S.sources){
+    try { s.units = readSource(s.raw, fi); } catch (e){}
+    s.offsetF = parseTime(s.offsetTC, fi) || 0;
+  }
+  renderAll();
+}
+
+/* ---------- wiring ---------- */
+const LENGTHS = [30, 45, 60, 90, 120, 180, 300];
+function renderLenChips(){
+  $("len-chips").innerHTML = LENGTHS.map(n =>
+    '<button class="chip" type="button" data-len="' + n + '" aria-pressed="' +
+    (S.targetSec === n) + '">' + secsToClock(n) + "</button>").join("");
+}
+function setTarget(sec, fromInput){
+  S.targetSec = Math.max(5, Math.min(3600, sec));
+  if (!fromInput) $("len").value = secsToClock(S.targetSec);
+  renderLenChips(); renderMeter();
+}
+
+function wire(){
+  /* files */
+  const drop = $("drop"), file = $("file");
+  drop.addEventListener("click", () => file.click());
+  drop.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); file.click(); } });
+  file.addEventListener("change", () => { addFiles(file.files); file.value = ""; });
+  ["dragenter", "dragover"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add("hot"); }));
+  ["dragleave", "drop"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove("hot"); }));
+  drop.addEventListener("drop", e => { if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files); });
+  window.addEventListener("dragover", e => e.preventDefault());
+  window.addEventListener("drop", e => e.preventDefault());
+
+  /* sources list */
+  $("srcs").addEventListener("click", e => {
+    const b = e.target.closest("[data-drop-src]");
+    if (!b) return;
+    S.sources = S.sources.filter(s => s.id !== b.dataset.dropSrc);
+    S.cut = S.cut.filter(p => p.uid[0] !== b.dataset.dropSrc);
+    renderAll();
+  });
+  $("srcs").addEventListener("change", e => {
+    const c = e.target.closest("[data-clip-src]");
+    if (c){
+      const src = srcById(c.dataset.clipSrc);
+      if (src){ src.clipName = c.value.trim(); renderSources(); renderExHint(); }
+      return;
+    }
+    const i = e.target.closest("[data-off-src]");
+    if (!i) return;
+    const s = srcById(i.dataset.offSrc);
+    if (!s) return;
+    const f = parseTime(i.value, FI());
+    if (f == null){ toast("That isn't a timecode. Try 01:00:00:00."); i.value = framesToTC(s.offsetF, FI()); return; }
+    s.offsetTC = i.value; s.offsetF = f;
+    renderCut();
+  });
+
+  /* brief */
+  $("t-general").onclick = () => { S.topicMode = "general"; $("t-general").setAttribute("aria-pressed", "true");
+    $("t-named").setAttribute("aria-pressed", "false"); $("topic-box").hidden = true; };
+  $("t-named").onclick = () => { S.topicMode = "named"; $("t-named").setAttribute("aria-pressed", "true");
+    $("t-general").setAttribute("aria-pressed", "false"); $("topic-box").hidden = false; $("topic").focus(); };
+  $("topic").addEventListener("input", e => {
+    S.topic = e.target.value;
+    $("topic-chips").querySelectorAll("[data-topic]").forEach(c =>
+      c.setAttribute("aria-pressed", String(c.dataset.topic === S.topic)));
+  });
+  $("topic-chips").addEventListener("click", e => {
+    const c = e.target.closest("[data-topic]");
+    if (!c) return;
+    S.topic = c.dataset.topic; $("topic").value = S.topic;
+    $("topic-chips").querySelectorAll("[data-topic]").forEach(x => x.setAttribute("aria-pressed", String(x === c)));
+  });
+  $("b-suggest").onclick = suggestTopics;
+
+  $("len-chips").addEventListener("click", e => {
+    const c = e.target.closest("[data-len]");
+    if (c) setTarget(+c.dataset.len, false);
+  });
+  $("len").addEventListener("input", e => { const s = parseClock(e.target.value); if (s) setTarget(s, true); });
+  $("len").addEventListener("blur", () => setTarget(S.targetSec, false));
+  $("dir").addEventListener("input", e => { S.dir = e.target.value; });
+
+  /* timeline */
+  $("tc-seq").onclick = () => { S.tcMode = "sequence"; renderSources(); renderMode(); };
+  $("tc-clip").onclick = () => { S.tcMode = "clips"; renderSources(); renderMode(); };
+  $("rec-asm").onclick = () => { S.recMode = "assemble"; renderMode(); renderCut(); };
+  $("rec-hold").onclick = () => { S.recMode = "hold"; renderMode(); renderCut(); };
+  $("fps").addEventListener("change", reparse);
+  $("rectc").addEventListener("change", () => {
+    if (parseTime($("rectc").value, FI()) == null){ toast("That isn't a timecode. Try 00:00:00:00."); $("rectc").value = "00:00:00:00"; }
+    renderCut();
+  });
+
+  /* the cut */
+  $("go").onclick = makeCut;
+  $("cut-body").addEventListener("click", e => {
+    const mv = e.target.closest("[data-move]");
+    if (mv){
+      const [i, d] = mv.dataset.move.split(":").map(Number);
+      const j = i + d;
+      if (j < 0 || j >= S.cut.length) return;
+      [S.cut[i], S.cut[j]] = [S.cut[j], S.cut[i]];
+      return renderCut();
+    }
+    const kill = e.target.closest("[data-kill]");
+    if (kill){ const i = +kill.dataset.kill; S.cut[i].dropped = !S.cut[i].dropped; return renderCut(); }
+    const ext = e.target.closest("[data-ext]");
+    if (ext){
+      const [i, side, d] = ext.dataset.ext.split(":");
+      const p = S.cut[+i], key = side === "in" ? "inExt" : "outExt";
+      p[key] = Math.max(0, (p[key] || 0) + Number(d));
+      return renderCut();
+    }
+  });
+  $("b-reset").onclick = () => {
+    S.sources = []; S.cut = []; S.title = ""; S.treatment = ""; S.notes = ""; S.variant = 0;
+    setStatus(""); loadDemo(); renderAll();
+  };
+
+  /* exports */
+  const stamp = () => slug(S.title || "chop-chop-cut");
+  $("x-tbl").onclick = () => { const t = tableCSV(); offer(stamp() + "-soundbites.csv", t, t); };
+  $("x-edl").onclick = () => {
+    const edl = buildEDL();
+    offer(stamp() + "-edl.zip", makeZip([{ name: stamp() + ".edl", text: edl }]), edl);
+  };
+  $("x-mark").onclick = () => {
+    const files = markerCSVs();
+    if (!files.length) return;
+    if (files.length === 1) return offer(files[0].name, files[0].text, files[0].text);
+    offer(stamp() + "-markers.zip", makeZip(files), files.map(f => "== " + f.name + "\n" + f.text).join("\n"));
+  };
+  $("x-all").onclick = () => {
+    const files = [
+      { name: stamp() + ".edl", text: buildEDL() },
+      { name: stamp() + "-soundbites.csv", text: tableCSV() },
+      { name: stamp() + "-treatment.md", text: buildTreatmentMD() },
+      ...markerCSVs()
+    ];
+    offer(stamp() + ".zip", makeZip(files), buildTreatmentMD());
+  };
+
+  /* manual route */
+  $("b-copy-prompt").onclick = () => {
+    const fi = FI();
+    copyOut("the brief", briefText(allUnits().map(u => unitLine(u, fi))));
+  };
+  $("b-paste").onclick = () => {
+    const raw = $("paste").value.trim();
+    if (!raw) return toast("Paste the JSON into the box first.");
+    try {
+      const m = raw.match(/\{[\s\S]*\}/);
+      applyResult(JSON.parse(m ? m[0] : raw));
+      S.tag = "pasted in by hand"; renderTreatment();
+      toast("Cut loaded.");
+    } catch (e){ toast("That isn't JSON Chop Chop can read."); }
+  };
+}
+
+/* ---------- first run ---------- */
+function loadDemo(){
+  try {
+    addSource("Ferrolite — Naomi Adeyemi (example).csv", DEMO_CSV, { demo: true });
+    const s = S.sources[S.sources.length - 1];
+    S.cut = DEMO_CUT.filter(([n]) => n <= s.units.length)
+      .map(([n, role, reason]) => ({ uid: s.id + pad(n, 3), role, reason, dropped: false, inExt: 0, outExt: 0 }));
+    S.title = DEMO_TITLE; S.treatment = DEMO_TREAT; S.notes = DEMO_NOTES;
+    S.tag = "example cut — load your own transcripts to replace it";
+  } catch (e){ /* the page is still usable without it */ }
+}
+
+renderLenChips();
+wire();
+loadDemo();
+renderAll();
+</script>
+
+</body>
+</html>

@@ -93,3 +93,13 @@ it into any Claude conversation and paste the JSON back into the box.
 
 This folder is a holding place. Chop Chop belongs in its own repository —
 `pearldrop-lab/chop-chop` — and should move there once it exists.
+
+## Files
+
+- `index.html` — the artifact body, written for the Artifact skeleton. Publish
+  this one; it has no `<!doctype>`, `<html>`, `<head>` or `<body>` tags of its own.
+- `chop-chop.html` — the same page wrapped in a plain HTML skeleton, so it opens
+  by double-clicking. `window.claude` does not exist outside the artifact viewer,
+  so in this copy the story selection falls back to "Do it by hand": copy the
+  brief, paste it into a Claude conversation, paste the JSON back. Parsing,
+  editing and every export work normally.
