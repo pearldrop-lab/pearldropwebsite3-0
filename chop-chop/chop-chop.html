@@ -280,9 +280,9 @@ details.adv .body{margin-top:10px; display:flex; flex-direction:column; gap:9px}
 
       <label class="drop" id="drop" for="file" tabindex="0">
         <strong>Drop your Premiere CSVs here</strong>
-        <span class="hint">or click to choose. Add as many interviews as you like.</span>
+        <span class="hint">As many interviews as you like. Add the sequence XML too and every soundbite is traced back to its camera file.</span>
       </label>
-      <input type="file" id="file" accept=".csv,.tsv,.txt,text/csv" multiple>
+      <input type="file" id="file" accept=".csv,.tsv,.txt,.xml,.fcpxml,text/csv,text/xml" multiple>
 
       <div class="srcs" id="srcs"></div>
     </section>
@@ -333,6 +333,8 @@ details.adv .body{margin-top:10px; display:flex; flex-direction:column; gap:9px}
         </div>
         <p class="hint" id="tcmode-hint" style="margin:7px 0 0"></p>
       </div>
+
+      <div id="tl-box"></div>
 
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
         <div class="field">
@@ -666,7 +668,7 @@ const S = {
   cut: [],              // {uid, role, reason, dropped, inExt, outExt}
   title: "", treatment: "", notes: "", tag: "",
   topicMode: "general", topic: "", targetSec: 120, dir: "",
-  tcMode: "sequence", recMode: "assemble",
+  tcMode: "sequence", recMode: "assemble", timeline: null,
   variant: 0, busy: false
 };
 const SRC_IDS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -760,9 +762,10 @@ function renderSources(){
       '<button class="btn ghost tiny" type="button" data-drop-src="' + s.id + '" aria-label="Remove ' + esc(s.name) + '">&times;</button></div>' +
       '<div class="src-meta">' + s.units.length + " bites &middot; " + secsToClock(secs) + " &middot; " +
         esc(speakers.slice(0, 3).join(", ")) + (speakers.length > 3 ? " +" + (speakers.length - 3) : "") + "</div>" +
-      '<div class="src-tc"><span>' + (S.tcMode === "sequence" ? "relinks&nbsp;to" : "clip") + '</span>' +
+      (S.timeline ? "" :        /* with a sequence XML loaded the reel comes from the camera clip */
+        '<div class="src-tc"><span>' + (S.tcMode === "sequence" ? "relinks&nbsp;to" : "clip") + '</span>' +
         '<input type="text" value="' + esc(clipOf(s)) + '" data-clip-src="' + s.id +
-        '" style="flex:1 1 auto; width:auto" aria-label="Name of the file the EDL relinks to, for ' + esc(s.name) + '"></div>' +
+        '" style="flex:1 1 auto; width:auto" aria-label="Name of the file the EDL relinks to, for ' + esc(s.name) + '"></div>') +
       '<div class="src-tc"><span>starts&nbsp;at</span><input type="text" value="' + framesToTC(s.offsetF, fi) +
         '" data-off-src="' + s.id + '" aria-label="Start timecode for ' + esc(s.name) + '"></div>' +
     "</div>";
@@ -775,7 +778,12 @@ function renderSources(){
 }
 
 /* ---------- the cut table ---------- */
-const ROLE_ORDER = ["open", "context", "turn", "evidence", "colour", "close"];
+function sourceLabel(r){
+  const clips = clipsUnder(r.startF, r.endF);
+  if (!clips) return r.sourceName.replace(/\.[^.]+$/, "").slice(0, 16);
+  if (!clips.length) return "unmapped";
+  return clips.length === 1 ? clips[0].slice(0, 18) : clips.length + " clips";
+}
 function renderCut(){
   const body = $("cut-body"), sub = $("cut-sub");
   if (!S.cut.length){
@@ -800,7 +808,7 @@ function renderCut(){
     const dur = (r.endF - r.startF) / fi.rate;
     return '<tr class="' + (p.dropped ? "dropped" : "") + '">' +
       '<td class="evt"><b>' + (p.dropped ? "&mdash;" : pad(evt, 3)) + "</b>" + esc(r.uid) + "</td>" +
-      '<td class="who">' + esc(r.speaker) + '<span class="sid">' + esc(r.sourceName.replace(/\.[^.]+$/, "").slice(0, 16)) + "</span></td>" +
+      '<td class="who">' + esc(r.speaker) + '<span class="sid">' + esc(sourceLabel(r)) + "</span></td>" +
       '<td class="tc">' + framesToTC(r.startF, fi) + "<br>" + framesToTC(r.endF, fi) +
         '<span class="dur">' + dur.toFixed(1) + "s</span>" +
         (r.approx ? '<span class="approx">est.</span>' : "") + "</td>" +
@@ -851,14 +859,56 @@ function renderExHint(){
   const el = $("ex-hint");
   if (!el) return;
   const names = [...new Set(S.sources.map(clipOf))];
+  if (S.timeline){
+    const t = S.timeline.tracks[S.timeline.trackKey];
+    el.innerHTML = "Each soundbite is traced through <b>" + esc(S.timeline.trackKey) + "</b> of <b>" +
+      esc(S.timeline.name) + "</b> back to the camera file underneath it, so the EDL carries real reel names and real source timecode. " +
+      "Relink to the originals in " + esc(String(t.clips.length)) + " clips &mdash; no flattened master needed. " +
+      "A bite that crosses a cut comes back as the same two events.";
+    return;
+  }
   el.innerHTML = S.tcMode === "sequence"
     ? "Every timecode in the table is a timecode on your own timeline. Export the sequence from Premiere as one self-contained file called <b>" +
       esc(names[0] || "MASTER") + "</b>, import the EDL, and point it at that file &mdash; it conforms frame-accurately. " +
-      "You never have to name the camera files the sequence was cut from."
+      "Drop the sequence XML in to relink to the camera originals instead."
     : "The EDL asks Premiere to relink to " +
       (names.length === 1 ? "a clip called <b>" + esc(names[0]) + "</b>" : "the clip names set on the transcript cards") +
       ". Change them there if they don't match your project.";
 }
+function renderTimeline(){
+  const box = $("tl-box");
+  if (!box) return;
+  const tl = S.timeline;
+  if (!tl){
+    box.innerHTML = '<p class="hint" style="margin:0 0 12px">No sequence XML loaded. ' +
+      'In Premiere: <b>File &rsaquo; Export &rsaquo; Final Cut Pro XML</b>, then drop it in above ' +
+      'and every soundbite is traced back to the camera file it was cut from.</p>';
+    return;
+  }
+  const fi = FI();
+  const keys = Object.keys(tl.tracks);
+  const opts = keys.map(k => {
+    const t = tl.tracks[k];
+    return '<option value="' + k + '"' + (k === tl.trackKey ? " selected" : "") + ">" +
+      k + " · " + t.items.length + " clips · " + t.clips.length + " sources</option>";
+  }).join("");
+  const t = tl.tracks[tl.trackKey];
+  box.innerHTML = '<div class="src" style="margin-bottom:12px; border-left-color:var(--mark)">' +
+    '<div class="src-top"><span class="src-id" style="color:var(--mark)">XML</span>' +
+    '<span class="src-name" title="' + esc(tl.name) + '">' + esc(tl.name) + "</span>" +
+    '<button class="btn ghost tiny" type="button" id="tl-drop" aria-label="Remove the sequence XML">&times;</button></div>' +
+    '<div class="src-meta">' + tl.timebase + (tl.ntsc ? " NTSC" : "") + " fps · starts " +
+      framesToTC(tl.startFrame, fi) + " · " + t.clips.length + " camera clips on " + tl.trackKey + "</div>" +
+    '<div class="src-tc"><span>map&nbsp;from</span><select id="tl-track" style="flex:1 1 auto; width:auto" aria-label="Which track to trace soundbites through">' + opts + "</select></div>" +
+  "</div>" +
+  (tl.retimed ? '<p class="hint" style="margin:0 0 12px; color:var(--mark)">Some clips on this timeline are retimed. Those events are flagged in the EDL — check them by hand.</p>' : "");
+
+  const d = $("tl-drop");
+  if (d) d.onclick = () => { S.timeline = null; renderAll(); };
+  const sel = $("tl-track");
+  if (sel) sel.onchange = () => { S.timeline.trackKey = sel.value; renderAll(); };
+}
+
 function renderMode(){
   const seq = S.tcMode === "sequence", hold = S.recMode === "hold";
   $("tc-seq").setAttribute("aria-pressed", String(seq));
@@ -869,6 +919,7 @@ function renderMode(){
   $("rec-asm").setAttribute("aria-pressed", String(!hold));
   $("rec-hold").setAttribute("aria-pressed", String(hold));
   $("rectc-field").hidden = hold;
+  renderTimeline();
   $("recmode-hint").textContent = hold
     ? "Each bite keeps its own timecode, so the selects land exactly where they sit now, with gaps between them. Events run in timeline order, not story order."
     : "Cuts run back to back from the record start, in the story order below.";
@@ -933,10 +984,10 @@ function cutRows(){
 
 function tableCSV(){
   const fi = FI();
-  const head = ["Event", "Source", "File", "Speaker", "TC In", "TC Out", "Duration (s)",
+  const head = ["Event", "Source", "Camera clip", "Transcript file", "Speaker", "TC In", "TC Out", "Duration (s)",
                 "Record In", "Record Out", "Role", "Soundbite", "Why it's in", "Timecode estimated"];
   const rows = cutRows().map(x => [
-    pad(x.evt, 3), x.r.src, x.r.sourceName, x.r.speaker,
+    pad(x.evt, 3), x.r.src, (clipsUnder(x.r.startF, x.r.endF) || []).join(" + "), x.r.sourceName, x.r.speaker,
     framesToTC(x.r.startF, fi), framesToTC(x.r.endF, fi), x.dur.toFixed(2),
     framesToTC(x.recIn, fi), framesToTC(x.recOut, fi),
     x.p.role || "", x.r.text, x.p.reason || "", x.r.approx ? "yes" : ""
@@ -956,7 +1007,8 @@ function markerCSVs(){
     const s = srcById(sid);
     const rows = items.map(x => [
       pad(x.evt, 3) + " " + x.r.speaker,
-      (x.p.reason ? x.p.reason + " — " : "") + x.r.text,
+      (clipsUnder(x.r.startF, x.r.endF) || []).join(" + ") + (S.timeline ? " — " : "") +
+        (x.p.reason ? x.p.reason + " — " : "") + x.r.text,
       framesToTC(x.r.startF, fi), framesToTC(x.r.endF, fi),
       framesToTC(x.len, { ...fi, df: false }), "Comment"
     ]);
@@ -968,19 +1020,19 @@ function markerCSVs(){
   return files;
 }
 
+const ascii = (v) => String(v == null ? "" : v).replace(/[^\x20-\x7E]/g, " ").replace(/\s+/g, " ").trim();
 function buildEDL(){
   const fi = FI();
-  const title = (S.title || "CHOP CHOP CUT").toUpperCase().replace(/[^\x20-\x7E]/g, "").slice(0, 70);
+  const title = ascii(S.title || "CHOP CHOP CUT").toUpperCase().slice(0, 70);
   const L = ["TITLE: " + title, "FCM: " + (fi.df ? "DROP FRAME" : "NON-DROP FRAME"), ""];
-  cutRows().forEach(x => {
-    const s = srcById(x.r.src);
-    const reel = s ? reelOf(s) : "AX";
-    L.push(pad(x.evt, 3) + "  " + reel.padEnd(8, " ") + " " + "AA/V".padEnd(6, " ") + "C        " +
-      framesToTC(x.r.startF, fi) + " " + framesToTC(x.r.endF, fi) + " " +
-      framesToTC(x.recIn, fi) + " " + framesToTC(x.recOut, fi));
-    if (s) L.push("* FROM CLIP NAME: " + clipOf(s).replace(/[^\x20-\x7E]/g, " ").replace(/\s+/g, " ").trim());
-    const note = (x.r.speaker + ": " + x.r.text).replace(/[^\x20-\x7E]/g, " ").slice(0, 92);
-    L.push("* COMMENT: " + note);
+  edlEvents().forEach(e => {
+    L.push(pad(e.evt, 3) + "  " + e.reel.padEnd(8, " ") + " " + "AA/V".padEnd(6, " ") + "C        " +
+      framesToTC(e.srcIn, fi) + " " + framesToTC(e.srcOut, fi) + " " +
+      framesToTC(e.recIn, fi) + " " + framesToTC(e.recOut, fi));
+    L.push("* FROM CLIP NAME: " + ascii(e.clip));
+    L.push("* COMMENT: " + ascii(e.speaker + ": " + e.text).slice(0, 92));
+    if (e.retimed) L.push("* NOTE: SOURCE IS RETIMED ON THE TIMELINE - CHECK THIS EVENT");
+    if (!e.mapped) L.push("* NOTE: NOTHING ON THE MAPPED TRACK HERE - RELINK BY HAND");
     L.push("");
   });
   return L.join("\r\n");
@@ -1289,6 +1341,193 @@ async function suggestTopics(){
 <script>
 "use strict";
 /* ============================================================
+   Part 4b: reading a Premiere sequence XML, so soundbites can be
+   traced back to the camera files the edit was cut from
+   ============================================================ */
+
+const looksXML = (t) => /^\s*(﻿)?<\?xml|<xmeml|<fcpxml/i.test(t.slice(0, 400));
+
+/* " ... Audio Extracted Audio Extracted.wav" is the same camera clip. */
+function cameraName(n){
+  return String(n || "").replace(/\.[^.]+$/, "")
+    .replace(/(\s*Audio Extracted)+$/i, "").trim() || String(n || "clip");
+}
+/* Camera clips share a long prefix (A016_0613...), so the tail distinguishes
+   them better than the head. Collisions are resolved rather than shipped. */
+function assignReels(names){
+  const out = {}, used = new Set();
+  for (const n of names){
+    const cam = cameraName(n);
+    if (out[cam]) continue;                       // .braw and its extracted .wav are one clip
+    const c = cam.toUpperCase().replace(/[^A-Z0-9]/g, "") || "AX";
+    let reel = c.length > 8 ? c.slice(-8) : c;
+    if (used.has(reel)) reel = c.slice(0, 8);
+    for (let i = 1; used.has(reel) && i < 1000; i++) reel = (c.slice(0, 8 - String(i).length) + i);
+    used.add(reel);
+    out[cam] = reel;
+  }
+  return out;
+}
+
+function readTimelineXML(text, fileName){
+  const doc = new DOMParser().parseFromString(text, "application/xml");
+  if (doc.querySelector("parsererror")) throw new Error("That XML wouldn't parse.");
+  const seqs = [...doc.getElementsByTagName("sequence")];
+  if (!seqs.length) throw new Error("No sequence in that XML. Export from Premiere with File > Export > Final Cut Pro XML.");
+  const seq = seqs.map(s => ({ s, n: s.getElementsByTagName("clipitem").length }))
+                  .sort((a, b) => b.n - a.n)[0].s;
+  const txt = (el, tag) => { const c = el && el.querySelector(":scope > " + tag); return c ? c.textContent.trim() : null; };
+
+  const rateEl = seq.querySelector(":scope > rate");
+  const timebase = parseInt(txt(rateEl, "timebase") || "25", 10);
+  const ntsc = (txt(rateEl, "ntsc") || "FALSE").toUpperCase() === "TRUE";
+  const tcEl = seq.querySelector(":scope > timecode");
+  const startFrame = tcEl ? parseInt(txt(tcEl, "frame") || "0", 10) : 0;
+  const df = tcEl ? (txt(tcEl, "displayformat") || "NDF").toUpperCase() === "DF" : false;
+
+  /* <file id> is spelled out once and referenced by id after that */
+  const files = {};
+  for (const f of seq.getElementsByTagName("file")){
+    const id = f.getAttribute("id");
+    if (!id || files[id] || !f.querySelector(":scope > name")) continue;
+    const ftc = f.querySelector(":scope > timecode");
+    files[id] = {
+      name: txt(f, "name") || id,
+      tcFrame: ftc ? parseInt(txt(ftc, "frame") || "0", 10) : 0,
+      timebase: parseInt((f.querySelector(":scope > rate") && txt(f.querySelector(":scope > rate"), "timebase")) || String(timebase), 10)
+    };
+  }
+
+  const media = seq.querySelector(":scope > media");
+  const tracks = {};
+  let rateWarn = false;
+  for (const kind of ["video", "audio"]){
+    const box = media && media.querySelector(":scope > " + kind);
+    if (!box) continue;
+    let n = 0;
+    for (const tr of box.querySelectorAll(":scope > track")){
+      n++;
+      const items = [];
+      for (const ci of tr.querySelectorAll(":scope > clipitem")){
+        if ((txt(ci, "enabled") || "TRUE").toUpperCase() === "FALSE") continue;
+        const fe = ci.querySelector(":scope > file");
+        const f = fe ? files[fe.getAttribute("id")] : null;
+        const start = parseInt(txt(ci, "start") || "-1", 10);
+        const end = parseInt(txt(ci, "end") || "-1", 10);
+        const inF = parseInt(txt(ci, "in") || "0", 10);
+        const out = parseInt(txt(ci, "out") || "0", 10);
+        if (!(start >= 0 && end > start)) continue;          // -1 marks a transition, not a clip
+        if (f && f.timebase && f.timebase !== timebase) rateWarn = true;
+        const name = (f && f.name) || txt(ci, "name") || "clip";
+        items.push({
+          start, end, in: inF,
+          retimed: (end - start) !== (out - inF),
+          tcFrame: f ? f.tcFrame : 0,
+          clip: cameraName(name), rawName: name
+        });
+      }
+      if (!items.length) continue;
+      items.sort((a, b) => a.start - b.start);
+      const key = (kind === "video" ? "V" : "A") + n;
+      tracks[key] = {
+        key, kind, items,
+        covered: items.reduce((a, i) => a + (i.end - i.start), 0),
+        clips: [...new Set(items.map(i => i.clip))]
+      };
+    }
+  }
+  if (!Object.keys(tracks).length) throw new Error("That sequence has no clips on any track.");
+  const reels = assignReels([...new Set(Object.values(tracks).flatMap(t => t.items.map(i => i.rawName)))]);
+  for (const t of Object.values(tracks)) for (const i of t.items) i.reel = reels[i.clip] || "AX";
+
+  const audioFirst = Object.values(tracks).filter(t => t.kind === "audio").sort((a, b) => b.covered - a.covered);
+  const anyFirst = Object.values(tracks).sort((a, b) => b.covered - a.covered);
+  return {
+    name: txt(seq, "name") || fileName.replace(/\.[^.]+$/, ""),
+    fileName, timebase, ntsc, df, startFrame, tracks, rateWarn,
+    trackKey: (audioFirst[0] || anyFirst[0]).key,
+    fpsValue: pickFpsValue(timebase, ntsc, df),
+    retimed: Object.values(tracks).some(t => t.items.some(i => i.retimed))
+  };
+}
+function pickFpsValue(timebase, ntsc, df){
+  if (!ntsc) return String(timebase);
+  if (timebase === 30) return df ? "29.97df" : "29.97";
+  if (timebase === 60) return df ? "59.94df" : "59.94";
+  if (timebase === 24) return "23.976";
+  return String(timebase);
+}
+
+/* Split a stretch of sequence time into the source clips underneath it. */
+function mapRange(a, b){
+  const tl = S.timeline;
+  if (!tl) return null;
+  const items = tl.tracks[tl.trackKey].items;
+  const off = tl.startFrame;
+  const A = a - off, B = b - off;
+  const segs = [];
+  const gap = (s, e) => segs.push({ startF: s + off, endF: e + off, mapped: false, reel: "BL", clip: "no clip here", srcIn: s + off });
+  let cur = A;
+  for (const it of items){
+    if (it.end <= cur) continue;
+    if (it.start >= B) break;
+    if (it.start > cur){ gap(cur, Math.min(it.start, B)); cur = Math.min(it.start, B); if (cur >= B) break; }
+    const s = Math.max(cur, it.start), e = Math.min(B, it.end);
+    if (e > s) segs.push({
+      startF: s + off, endF: e + off, mapped: true, retimed: it.retimed,
+      reel: it.reel, clip: it.clip, srcIn: it.tcFrame + it.in + (s - it.start)
+    });
+    cur = e;
+    if (cur >= B) break;
+  }
+  if (cur < B) gap(cur, B);
+  return segs;
+}
+function clipsUnder(a, b){
+  const segs = mapRange(a, b);
+  return segs ? [...new Set(segs.filter(s => s.mapped).map(s => s.clip))] : null;
+}
+
+/* One EDL event per source clip a soundbite sits on, so a bite that
+   crosses a cut comes back as the same two cuts. */
+function edlEvents(){
+  const rows = cutRows();
+  const hold = S.recMode === "hold";
+  const out = [];
+  let n = 0;
+  for (const x of rows){
+    const s = srcById(x.r.src);
+    const segs = mapRange(x.r.startF, x.r.endF) ||
+      [{ startF: x.r.startF, endF: x.r.endF, mapped: true, reel: s ? reelOf(s) : "AX", clip: s ? clipOf(s) : "source", srcIn: x.r.startF }];
+    const merged = [];
+    for (const sg of segs){
+      const last = merged[merged.length - 1];
+      if (last && last.mapped && sg.mapped && last.reel === sg.reel &&
+          last.clip === sg.clip && last.srcIn + (last.endF - last.startF) === sg.srcIn){
+        last.endF = sg.endF;                       // same clip, no cut between them
+        last.retimed = last.retimed || sg.retimed;
+      } else merged.push({ ...sg });
+    }
+    let rec = x.recIn;
+    for (const sg of merged){
+      const len = sg.endF - sg.startF;
+      if (len <= 0) continue;
+      const recIn = hold ? x.recIn + (sg.startF - x.r.startF) : rec;
+      out.push({
+        evt: ++n, reel: sg.reel, clip: sg.clip, mapped: sg.mapped, retimed: !!sg.retimed,
+        srcIn: sg.srcIn, srcOut: sg.srcIn + len, recIn, recOut: recIn + len,
+        speaker: x.r.speaker, text: x.r.text
+      });
+      rec += len;
+    }
+  }
+  return out;
+}
+</script>
+
+<script>
+"use strict";
+/* ============================================================
    Part 5: example material, wiring, first run
    ============================================================ */
 
@@ -1321,7 +1560,8 @@ function nextSrcId(){
 function addSource(name, text, opts){
   const fi = FI();
   const units = readSource(text, fi);
-  const offsetTC = (opts && opts.offsetTC) || "00:00:00:00";
+  const offsetTC = (opts && opts.offsetTC) ||
+    (S.timeline && !(opts && opts.demo) ? framesToTC(S.timeline.startFrame, fi) : "00:00:00:00");
   S.sources.push({
     id: nextSrcId(), name: name.slice(0, 80), clipName: name.replace(/\.[^.]+$/, "").slice(0, 60), raw: text, units,
     offsetTC, offsetF: parseTime(offsetTC, fi) || 0, demo: !!(opts && opts.demo)
@@ -1336,11 +1576,24 @@ function clearDemo(){
 async function addFiles(list){
   const files = [...list].filter(f => f && f.size >= 0);
   if (!files.length) return;
-  clearDemo();
   const bad = [];
-  for (const f of files){
-    try { addSource(f.name, await f.text(), {}); }
-    catch (e){ bad.push(f.name + " — " + (e.message || "couldn't be read")); }
+  const read = [];
+  for (const f of files) read.push([f.name, await f.text()]);
+  clearDemo();
+  for (const [name, text] of read){
+    try {
+      if (looksXML(text)){
+        S.timeline = readTimelineXML(text, name);
+        S.tcMode = "sequence";
+        if (S.timeline.fpsValue && $("fps").value !== S.timeline.fpsValue){
+          $("fps").value = S.timeline.fpsValue;
+          reparse();
+        }
+        for (const src of S.sources){ src.offsetTC = framesToTC(S.timeline.startFrame, FI()); src.offsetF = S.timeline.startFrame; }
+      } else {
+        addSource(name, text, {});
+      }
+    } catch (e){ bad.push(name + " — " + (e.message || "couldn't be read")); }
   }
   renderAll();
   if (bad.length) fail(bad.length === files.length ? "Couldn't read that." : "Some files didn't load.", bad.join("  ·  "));
@@ -1464,7 +1717,7 @@ function wire(){
     }
   });
   $("b-reset").onclick = () => {
-    S.sources = []; S.cut = []; S.title = ""; S.treatment = ""; S.notes = ""; S.variant = 0;
+    S.sources = []; S.cut = []; S.title = ""; S.treatment = ""; S.notes = ""; S.variant = 0; S.timeline = null;
     setStatus(""); loadDemo(); renderAll();
   };
 

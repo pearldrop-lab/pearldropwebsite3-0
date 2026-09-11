@@ -72,6 +72,37 @@ Two record layouts:
   written in timeline order rather than story order, because EDL record
   timecodes have to ascend.
 
+## Tracing soundbites back to the camera files
+
+Drop the sequence XML in alongside the transcripts — in Premiere, **File >
+Export > Final Cut Pro XML** — and Chop Chop reads the timeline itself. It is
+FCP7 `xmeml`: every `clipitem` carries its position on the timeline (`start`,
+`end`), its offset into the media (`in`), and a `file` whose `timecode/frame`
+gives the media's own start timecode. Absolute source timecode is therefore
+`file.timecode.frame + clipitem.in + (sequenceFrame - clipitem.start)`.
+
+What that buys:
+
+- **Real reel names and real source timecode in the EDL**, so it conforms to the
+  camera originals rather than to a flattened master.
+- **A bite that crosses a cut comes back as the same cuts.** One soundbite
+  becomes one EDL event per clip underneath it. Segments that turn out to be
+  contiguous in the source are merged back into one event.
+- **The table names the camera clip** each bite came from, in place of the
+  transcript filename.
+- **Frame rate and sequence start** are taken from the XML.
+
+Pick which track to trace through in the Timeline panel. It defaults to the
+audio track with the most coverage, which is normally A1. Premiere's extracted
+audio is folded back to its camera clip, so `A016_..._C002 Audio Extracted.wav`
+and `A016_..._C002.braw` are treated as one source. Reels are the last eight
+alphanumeric characters of the clip name, because camera files share a long
+prefix; collisions fall back to the first eight.
+
+Two things are flagged rather than guessed: a clipitem whose source length does
+not match its timeline length is retimed, and a stretch of the bite with nothing
+on the mapped track is a gap. Both get a `* NOTE:` line in the EDL.
+
 ## Exports
 
 | File | What it is |
