@@ -177,7 +177,8 @@ img,svg{display:block}
   --accent:#00dcff;
   background:linear-gradient(180deg, #dfeaf7 0%, #edf4fc 30%, #f4f8fd 100%);
   color:var(--navy);
-  padding:18px var(--gutter) 30px;
+  /* breathing room between the video and the first row of cards */
+  padding:clamp(40px,4.4vw,72px) var(--gutter) 30px;
 }
 .wrap{max-width:1320px; margin:0 auto}
 .row{display:grid; gap:18px; margin-top:18px}
