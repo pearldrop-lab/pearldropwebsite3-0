@@ -110,11 +110,7 @@ img,svg{display:block}
 @keyframes drift{to{transform:translate3d(-7%,1%,0)}}
 /* the footage sits on top of the sky, cover-fitted */
 .hero__video{position:absolute; inset:0; z-index:-4; overflow:hidden; pointer-events:none}
-.hero__video iframe{
-  position:absolute; left:50%; top:50%; border:0;
-  width:max(100%, 177.78vh, 1280px); height:max(100%, 56.25vw);
-  transform:translate(-50%,-50%);
-}
+.hero__video video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
 /* 3. vignette + the cyan uplight */
 .hero__shade{
   position:absolute; inset:0; z-index:-3; pointer-events:none;
@@ -123,12 +119,15 @@ img,svg{display:block}
     radial-gradient(90% 80% at 0% 100%, rgba(5,11,31,.55), transparent 60%),
     linear-gradient(180deg, rgba(5,11,31,.55) 0%, rgba(5,11,31,0) 20%);
 }
-/* 4. the directional scrim, exactly the homepage's */
+/* 4. the directional scrim. Same geometry as the homepage's, held longer:
+   the homepage hero is dark artwork, this is daylight footage with white
+   marquees and projection screens that can land right behind the headline,
+   so the type zone needs more than the homepage's 50% reach. */
 .hero__scrim{
   position:absolute; inset:0; z-index:-2; pointer-events:none;
   background:
-    linear-gradient(95deg, rgba(var(--deep),.80) 0%, rgba(var(--deep),.42) 22%, rgba(3,8,24,0) 50%),
-    linear-gradient(0deg, rgba(var(--deep),.70) 0%, rgba(var(--deep),.18) 24%, rgba(3,8,24,0) 46%);
+    linear-gradient(95deg, rgba(var(--deep),.84) 0%, rgba(var(--deep),.64) 30%, rgba(var(--deep),.2) 56%, rgba(3,8,24,0) 72%),
+    linear-gradient(0deg, rgba(var(--deep),.8) 0%, rgba(var(--deep),.34) 30%, rgba(3,8,24,0) 58%);
 }
 /* the last stretch settles onto the exact colour the sky below starts from,
    so hero and page are one surface */
@@ -1265,10 +1264,15 @@ img,svg{display:block}
   <div class="hero__sky" aria-hidden="true"></div>
   <div class="hero__clouds" aria-hidden="true"></div>
   <div class="hero__video" aria-hidden="true">
-    <!-- TEMPORARY: Simon's YouTube cut, until the file is uploaded to the repo.
-         Swap for a <video> tag then — it will load faster and start sooner. -->
-    <iframe src="https://www.youtube-nocookie.com/embed/5NEcR_sgXTw?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=5NEcR_sgXTw&amp;controls=0&amp;rel=0&amp;modestbranding=1&amp;playsinline=1&amp;disablekb=1&amp;iv_load_policy=3"
-            title="Pearldrop aerial footage" allow="autoplay; encrypted-media" tabindex="-1"></iframe>
+    <!-- Simon's drone hero, v1: 9 s, no audio, looped. Masters live at the repo
+         root; these are web encodes (H.264, faststart). The phone size is picked
+         by the source media query, and the poster is the first frame so there
+         is never a blank box while it loads. -->
+    <video autoplay muted loop playsinline preload="auto"
+           poster="media/drone-hero-v1-poster.webp">
+      <source src="media/drone-hero-v1-1080.mp4" type="video/mp4" media="(min-width: 901px)" />
+      <source src="media/drone-hero-v1-720.mp4" type="video/mp4" />
+    </video>
   </div>
   <div class="hero__shade" aria-hidden="true"></div>
   <div class="hero__scrim" aria-hidden="true"></div>
@@ -1494,6 +1498,13 @@ img,svg{display:block}
 </div>
 
 <script>
+/* motion off at the system level means the hero holds on its first frame */
+(function(){
+  var v = document.querySelector('.hero__video video');
+  if(v && window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){
+    v.removeAttribute('autoplay'); v.pause();
+  }
+})();
 /* the showreel loads its player only when asked — a YouTube embed is ~1 MB of
    script the page should not pay for up front */
 (function(){
