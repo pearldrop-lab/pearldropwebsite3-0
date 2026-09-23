@@ -119,6 +119,11 @@ def scope_selectors(prelude, scope):
             parts.append((scope + s[4:]).strip())
         elif s.startswith(scope):
             parts.append(s)
+        elif s.startswith('#pd-hero'):
+            # a page reaching deliberately for the site chrome, e.g. a page that
+            # lets the header scroll away. Already scoped; prefixing it again
+            # would make it match nothing.
+            parts.append(s)
         elif s.startswith('*'):
             parts.append(scope + ' ' + s)
         else:
