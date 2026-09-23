@@ -138,11 +138,13 @@ img,svg{display:block}
   background:linear-gradient(180deg, rgba(5,11,31,0), #050b1f);
 }
 
-/* the hero copy sits on the same 1320px column as the cards below it, so on a
-   wide screen the headline lines up with the first card instead of hugging the
-   edge of the window. At 1440 and under the two already coincide. */
+/* On a wide screen the hero copy sits HALFWAY between the window's gutter and
+   the 1320px card column below: flush with the cards looked too boxed in,
+   flush with the window looked adrift. Halfway works out to a column of
+   50vw + 588px — e.g. 186px in at 1920 (window 72, cards 300), 346px at 2560
+   (72 / 620). At 1440 and under all three coincide, so nothing moves there. */
 .hero__foot{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:40px; align-items:end;
-  width:100%; max-width:1320px; margin:0 auto}
+  width:100%; max-width:calc(50vw + 588px); margin:0 auto}
 .hero__copy{max-width:760px}
 .crumbs{font-size:12.5px; font-weight:600; letter-spacing:.4px; color:var(--txt3); margin-bottom:22px}
 .crumbs a{text-decoration:none}
