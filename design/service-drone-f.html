@@ -67,14 +67,8 @@ img{display:block; max-width:100%}
 .more:hover{text-decoration:underline}
 .ctas{display:flex; gap:26px; align-items:center; justify-content:center; flex-wrap:wrap}
 
-/* ---- the global site nav scrolls away (rule after the menu block); the local nav takes over */
-.local{position:sticky; top:0; z-index:9000; height:52px;
-  background:rgba(22,22,23,.78); -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
-  border-bottom:1px solid rgba(255,255,255,.1)}
-.local__in{width:var(--wide); height:100%; margin:0 auto; display:flex; align-items:center; gap:24px}
-.local__t{font-size:21px; font-weight:600; letter-spacing:.01em; margin-right:auto}
-.local__nav{display:flex; gap:22px; font-size:12px; color:rgba(255,255,255,.8)}
-.local__nav a:hover{color:#fff}
+/* ---- the global site nav scrolls away with the hero (rule after the menu block):
+   fixed, its white links would vanish over the white sections */
 .page{padding-top:92px}                          /* room for the global nav at the top */
 
 /* ---- reveal on arrival -------------------------------------------------- */
@@ -93,7 +87,7 @@ img{display:block; max-width:100%}
 .hero .ctas{margin-top:32px}
 /* the film sits in a rounded frame and opens to full width as you scroll */
 .film{position:relative; height:190vh; margin-top:clamp(50px,6vw,80px)}
-.film__stick{position:sticky; top:52px; height:calc(100vh - 52px); display:grid; place-items:center; overflow:hidden}
+.film__stick{position:sticky; top:0; height:100vh; display:grid; place-items:center; overflow:hidden}
 .film__frame{position:relative; width:78vw; height:min(44vw,74vh); border-radius:32px; overflow:hidden;
   will-change:width,height,border-radius; background:#111}
 .film__frame video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
@@ -112,6 +106,20 @@ img{display:block; max-width:100%}
 .inner{width:var(--w); margin:0 auto}
 .statement{font-size:clamp(28px,3.6vw,48px); line-height:1.18; font-weight:600; letter-spacing:-.02em; color:#86868b; max-width:960px}
 .statement b{color:var(--ink); font-weight:600}
+
+
+/* the statement builds itself word by word as it arrives: each word rises,
+   sharpens out of a blur and fades up, one after another, then the
+   highlighted phrases darken and the last one lights up in blue */
+.statement.r{opacity:1; transform:none}   /* the words move, not the block */
+.statement .w{display:inline-block; opacity:0; transform:translateY(.45em); filter:blur(8px);
+  transition:opacity .7s var(--ease), transform .8s var(--ease), filter .7s var(--ease), color .6s ease;
+  transition-delay:calc(var(--i) * 45ms)}
+.statement.in .w{opacity:1; transform:none; filter:none}
+.statement b .w{color:#86868b}
+.statement.in b .w{color:var(--ink); transition-delay:calc(var(--i) * 45ms), calc(var(--i) * 45ms), calc(var(--i) * 45ms), calc(var(--n) * 45ms + 300ms)}
+.statement .grad-warm .w{background:inherit; -webkit-background-clip:text; background-clip:text}
+@media (prefers-reduced-motion:reduce){ .statement .w{opacity:1; transform:none; filter:none; transition:none} .statement b .w{color:var(--ink)} }
 
 /* ========================================================================= */
 /*  PRODUCT (black): the kit, and the specs                                   */
@@ -217,7 +225,6 @@ img{display:block; max-width:100%}
   .icons{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:734px){
-  .local__nav{display:none}
   .film{height:auto} .film__stick{position:static; height:auto; padding:0 16px}
   .film__frame{width:100%!important; height:auto!important; aspect-ratio:16/10}
   .film__cap{opacity:1!important; font-size:22px; bottom:18px}
@@ -1143,17 +1150,6 @@ img{display:block; max-width:100%}
 
 <main class="page">
 
-<!-- local nav, Apple-style: product name left, a few anchors, one blue pill -->
-<nav class="local" aria-label="Aerial and drone">
-  <div class="local__in">
-    <span class="local__t">Aerial &amp; Drone</span>
-    <div class="local__nav">
-      <a href="#overview">Overview</a><a href="#why">Why Pearldrop</a><a href="#benefits">Benefits</a><a href="#industries">Industries</a>
-    </div>
-    <a class="pill pill--sm" href="#quote">Get a quote</a>
-  </div>
-</nav>
-
 <!-- ============================ HERO ============================ -->
 <section class="hero" id="overview">
   <p class="eyebrow r">Aerial &amp; Drone Video</p>
@@ -1180,7 +1176,7 @@ img{display:block; max-width:100%}
 <!-- ============================ STATEMENT ============================ -->
 <section class="light sec">
   <div class="inner">
-    <p class="statement r">Perfect for <b>property showcases, event coverage, promotional videos
+    <p class="statement" data-build>Perfect for <b>property showcases, event coverage, promotional videos
       and inspections</b>, our drone footage adds a cinematic touch that <span class="grad-warm">sets your
       content apart.</span></p>
   </div>
@@ -1340,10 +1336,32 @@ img{display:block; max-width:100%}
   var narrow = function(){ return matchMedia('(max-width:734px)').matches; };
   var clamp = function(v){ return v < 0 ? 0 : v > 1 ? 1 : v; };
 
+
+  /* the statement: split into words, then let the reveal observer add .in */
+  document.querySelectorAll('[data-build]').forEach(function(el){
+    var n = 0;
+    (function split(node){
+      Array.prototype.slice.call(node.childNodes).forEach(function(c){
+        if(c.nodeType === 3){
+          var f = document.createDocumentFragment();
+          c.textContent.split(/(\s+)/).forEach(function(t){
+            if(!t) return;
+            if(/^\s+$/.test(t)){ f.appendChild(document.createTextNode(' ')); return; }
+            var w = document.createElement('span'); w.className = 'w'; w.style.setProperty('--i', n++);
+            w.textContent = t; f.appendChild(w);
+          });
+          c.parentNode.replaceChild(f, c);
+        } else if(c.nodeType === 1){ split(c); }
+      });
+    })(el);
+    el.style.setProperty('--n', n);
+    el.classList.add('r');
+  });
+
   /* reveal on arrival */
   var io = 'IntersectionObserver' in window ? new IntersectionObserver(function(es){
     es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, {rootMargin:'0px 0px -12% 0px'}) : null;
+  }, {rootMargin:'0px 0px -22% 0px'}) : null;
   document.querySelectorAll('.r').forEach(function(el){ io ? io.observe(el) : el.classList.add('in'); });
 
   var v = document.querySelector('.film video');
@@ -1356,9 +1374,9 @@ img{display:block; max-width:100%}
   function frameTick(){
     if(reduce || narrow()){ frame.style.cssText = ''; return; }
     var r = film.getBoundingClientRect(), vh = window.innerHeight;
-    var p = clamp((vh - 52 - r.top) / (vh * .9));          /* starts as the frame arrives */
+    var p = clamp((vh - r.top) / (vh * .9));          /* starts as the frame arrives */
     var e = 1 - Math.pow(1 - p, 3);
-    var W = window.innerWidth, H = vh - 52;
+    var W = window.innerWidth, H = vh;
     frame.style.width = (W * .78 + (W - W * .78) * e) + 'px';
     frame.style.height = (Math.min(W * .44, H * .74) + (H - Math.min(W * .44, H * .74)) * e) + 'px';
     frame.style.borderRadius = (32 * (1 - e)) + 'px';
