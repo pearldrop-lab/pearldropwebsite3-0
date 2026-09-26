@@ -385,7 +385,7 @@ details.adv .body{margin-top:10px; display:flex; flex-direction:column; gap:9px}
     <section class="card sec" id="ex-card" hidden>
       <div class="sec-h"><h2>Take it into Premiere</h2></div>
       <div class="exports">
-        <button class="btn ex" type="button" id="x-edl"><strong>Sequence &mdash; EDL</strong><span>CMX 3600, cuts in order. Arrives in a zip &mdash; unzip, import, relink.</span></button>
+        <button class="btn ex" type="button" id="x-edl"><strong>Sequence &mdash; EDL</strong><span id="x-edl-note">CMX 3600, cuts in order. Import as a sequence and relink.</span></button>
         <button class="btn ex" type="button" id="x-mark"><strong>Markers &mdash; CSV</strong><span>One marker per soundbite, at the timecodes in the table.</span></button>
         <button class="btn ex" type="button" id="x-tbl"><strong>The table &mdash; CSV</strong><span>Speaker, timecode, words and reasoning. For the spreadsheet.</span></button>
         <button class="btn ex" type="button" id="x-all"><strong>Everything &mdash; ZIP</strong><span>EDL, markers, table and the treatment in one folder.</span></button>
@@ -859,6 +859,10 @@ function renderTreatment(){
   $("treat-notes").innerHTML = S.notes ? "<b>Worth knowing:</b> " + esc(S.notes) : "";
 }
 function renderExHint(){
+  const note = $("x-edl-note");
+  if (note) note.textContent = canSaveDirect()
+    ? "CMX 3600, cuts in order. Import as a sequence and relink."
+    : "CMX 3600, cuts in order. Arrives in a zip — unzip, import, relink.";
   const el = $("ex-hint");
   if (!el) return;
   const names = [...new Set(S.sources.map(clipOf))];
@@ -1167,9 +1171,30 @@ const DL_MSG = {
   rejected_extension: "This page can't save that file type.",
   bad_request: "Something was wrong with that file. Try making the cut again."
 };
+/* Inside the artifact viewer the page cannot start its own download — that is what
+   the downloads capability is for. Served anywhere else, an ordinary browser save
+   works, and the file can carry any extension it likes. */
+const inViewer = () => !!(window.claude && window.claude.use);
+const canSaveDirect = () => !inViewer();
+const MIME = { edl: "text/plain", csv: "text/csv", md: "text/markdown",
+               txt: "text/plain", zip: "application/zip", json: "application/json" };
+function nativeSave(filename, data){
+  const ext = (filename.split(".").pop() || "").toLowerCase();
+  const blob = data instanceof Blob ? data : new Blob([data], { type: (MIME[ext] || "application/octet-stream") + ";charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename; a.rel = "noopener";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 20000);
+  toast("Saved " + filename + " to your downloads.");
+}
+
 async function offer(filename, data, fallbackText){
-  let dl = null;
-  dl = await cap("downloads");
+  if (canSaveDirect()){
+    try { return nativeSave(filename, data); }
+    catch (e){ return copyOut(filename, fallbackText); }
+  }
+  const dl = await cap("downloads");
   if (!dl) return copyOut(filename, fallbackText);
   try {
     await dl.save({ filename, data });
@@ -1892,6 +1917,7 @@ function wire(){
   $("x-tbl").onclick = () => { const t = tableCSV(); offer(stamp() + "-soundbites.csv", t, t); };
   $("x-edl").onclick = () => {
     const edl = buildEDL();
+    if (canSaveDirect()) return offer(stamp() + ".edl", edl, edl);
     offer(stamp() + "-edl.zip", makeZip([{ name: stamp() + ".edl", text: edl }]), edl);
   };
   $("x-mark").onclick = () => {

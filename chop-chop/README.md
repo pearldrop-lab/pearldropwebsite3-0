@@ -117,13 +117,23 @@ on the mapped track is a gap. Both get a `* NOTE:` line in the EDL.
 
 | File | What it is |
 | --- | --- |
-| `<title>.edl` | CMX 3600, one event per soundbite, record timecode contiguous from the record start. Shipped inside a zip because `.edl` is not a saveable extension in the viewer. |
+| `<title>.edl` | CMX 3600, one event per soundbite, record timecode contiguous from the record start. Served from your own machine it downloads as a plain `.edl`; inside the artifact viewer it arrives in a zip, because `.edl` is not on that surface's saveable-extension list. |
 | `markers-<clip>.csv` | Premiere marker import format, one file per source clip. |
 | `<title>-soundbites.csv` | The table, with record timecodes and reasoning. |
 | `<title>-treatment.md` | The treatment, the table and the source list. |
 
 Reel names come from the CSV filename, which is usually the clip name, and the
 `* FROM CLIP NAME:` comment carries the full name for relinking.
+
+## Saving files
+
+Two routes, chosen the same way as the Claude route. Outside the artifact viewer
+the page saves through an ordinary object-URL anchor, so files land in the
+browser's downloads with whatever extension suits. Inside the viewer a page
+cannot start its own download at all, so saves go through the `downloads`
+capability, which the viewer confirms with the user and which accepts only an
+allowlist of extensions — hence the zip around the EDL there. If neither is
+available the text goes to the clipboard.
 
 ## Reaching Claude
 
