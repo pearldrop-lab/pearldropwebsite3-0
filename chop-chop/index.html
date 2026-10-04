@@ -315,7 +315,7 @@ details.adv .body{margin-top:10px; display:flex; flex-direction:column; gap:9px}
       <label class="check" for="intros">
         <input type="checkbox" id="intros">
         <span><b>Keep self-introductions</b>
-        <i>Bites where someone gives their name, job title or what the company does. Off by default &mdash; most films don&rsquo;t want them.</i></span>
+        <i>Bites where someone states their own name or job title. Off by default. What the company does is kept either way.</i></span>
       </label>
     </section>
 
@@ -1271,8 +1271,9 @@ function briefText(lines){
 "Finished length: about " + t + " seconds of speech. Anything between " + lo + " and " + hi + " seconds is fine.",
 "Length is elastic and a clipped sentence is not. If the only way to hit the number is to cut someone off mid-thought, run long instead.",
 S.intros
-  ? "Self-introductions are welcome: a bite where someone gives their name, role or company can open the film."
-  : "Leave out self-introductions. Skip any bite that is mostly someone giving their name, job title, or an account of what their company does — we rarely use them.",
+  ? "Self-introductions are welcome: a bite where someone gives their own name and job title can open the film."
+  : "Leave out self-introductions. Skip any bite that is mostly someone stating their own name, job title or role — we rarely use those. "
+    + "What the company or organisation does is NOT a self-introduction: keep those bites, they are often exactly what the film needs.",
 "Voices available: " + speakers.join(", "),
 S.dir.trim() ? "Direction from the editor: " + S.dir.trim() : "",
 S.variant ? "This is attempt " + (S.variant + 1) + ". Find a genuinely different angle from the obvious one." : "",

@@ -61,8 +61,9 @@ has no full stop.
 The target is a guide, not a constraint. The brief tells Claude anything from
 -10% to +25% is fine and that running long always beats a clipped sentence, and
 the running-time meter reads "on target" across that whole band. Self-
-introductions — name, job title, what the company does — are excluded unless the
-brief's checkbox says otherwise.
+introductions are excluded unless the brief's checkbox says otherwise, and that
+means a person stating their own name or job title. What the company or
+organisation does is not treated as a self-introduction and is kept either way.
 
 ## Choosing the cut
 
