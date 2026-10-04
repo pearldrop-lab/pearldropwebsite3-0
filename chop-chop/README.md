@@ -167,9 +167,14 @@ against the live API: the CORS preflight admits `content-type`, `x-api-key`,
 `anthropic-version` and `anthropic-dangerous-direct-browser-access` from any
 origin, and the last of those is what the API requires to accept a browser call.
 Requests carry `model`, `max_tokens: 16000`, `output_config.effort` and one user
-message; nothing else. Model is selectable — Opus 5 by default, Sonnet 5 or
-Haiku 4.5 for less. Sifting passes on a transcript too big for one prompt use
-Haiku regardless; only the final cut uses the chosen model.
+message; nothing else. Model is selectable. Once a key is saved the page calls
+`GET /v1/models` and builds the dropdown from what that key can actually reach,
+so a newly released model appears without this file being edited; the hard-coded
+list is only the fallback before a key exists. Default is `claude-opus-5-5`.
+Sifting passes on a transcript too big for one prompt always use Haiku; only the
+final cut uses the chosen model. Effort is sent as `output_config.effort`, and a
+model that rejects it — Haiku today, anything unforeseen tomorrow — is retried
+once without it rather than failing.
 
 The key is held in `localStorage` on that browser, per person, and is sent
 nowhere but api.anthropic.com. Anyone with access to that browser profile can

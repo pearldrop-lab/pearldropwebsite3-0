@@ -913,6 +913,14 @@ function renderExHint(){
       (names.length === 1 ? "a clip called <b>" + esc(names[0]) + "</b>" : "the clip names set on the transcript cards") +
       ". Change them there if they don't match your project.";
 }
+function modelOptions(){
+  const list = modelList().slice();
+  const chosen = apiModel();
+  if (!list.some(m => m[0] === chosen)) list.unshift([chosen, chosen + " (not in this key's list)"]);
+  return list.map(m => '<option value="' + esc(m[0]) + '"' + (m[0] === chosen ? " selected" : "") +
+    ">" + esc(m[1]) + "</option>").join("");
+}
+
 function renderEngine(){
   const state = $("engine-state"), body = $("engine-body");
   if (!state || !body) return;
@@ -936,8 +944,10 @@ function renderEngine(){
   body.innerHTML =
     '<div class="field"><label class="lbl" for="api-key">Anthropic API key</label>' +
       '<input type="password" id="api-key" autocomplete="off" spellcheck="false" placeholder="sk-ant-…" value="' + esc(key) + '"></div>' +
-    '<div class="field" style="margin-top:10px"><label class="lbl" for="api-model">Model</label><select id="api-model">' +
-      MODELS.map(m => '<option value="' + m[0] + '"' + (m[0] === apiModel() ? " selected" : "") + ">" + esc(m[1]) + "</option>").join("") +
+    '<div class="field" style="margin-top:10px"><label class="lbl" for="api-model">Model' +
+      (LIVE_MODELS ? ' <span style="text-transform:none; letter-spacing:0">(live list)</span>' : "") +
+      '</label><select id="api-model">' +
+      modelOptions() +
     "</select></div>" +
     '<div style="display:flex; gap:8px; margin-top:10px">' +
       '<button class="btn tiny" type="button" id="api-save">Save to this browser</button>' +
@@ -952,8 +962,10 @@ function renderEngine(){
     const v = (k.value || "").trim();
     if (!v) return toast("Paste a key first.");
     store(KEY_STORE, v); store(MODEL_STORE, m.value);
+    LIVE_MODELS = null;
     renderEngine(); renderSources(); setStatus("");
     toast("Key saved to this browser.");
+    loadModelList();
   };
   if (forget) forget.onclick = () => { store(KEY_STORE, null); renderEngine(); renderSources(); toast("Key forgotten."); };
   if (k) k.addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); save && save.click(); } });
@@ -1345,13 +1357,45 @@ function normId(v){ return String(v == null ? "" : v).replace(/[[\]\s]/g, "").to
 /* Two ways to reach Claude: the artifact runtime, which needs nothing, or a key
    of your own when this page is served from somewhere else. */
 const KEY_STORE = "chopchop.apiKey", MODEL_STORE = "chopchop.model";
+/* Fallback only — the real list is read from the API once a key is saved, so a
+   newly released model turns up here without anyone editing this file. */
 const MODELS = [
-  ["claude-opus-5", "Opus 5 — the best judgement"],
-  ["claude-sonnet-5", "Sonnet 5 — quicker and cheaper"],
-  ["claude-haiku-4-5", "Haiku 4.5 — cheapest"]
+  ["claude-opus-5-5", "Opus 5.5 — the best judgement"],
+  ["claude-sonnet-5-5", "Sonnet 5.5 — quicker and cheaper"],
+  ["claude-haiku-4-5", "Haiku 4.5 — cheapest"],
+  ["claude-fable-5-1", "Fable 5.1 — heaviest reasoning, priciest"]
 ];
+const DEFAULT_MODEL = "claude-opus-5-5";
 const WORKER_MODEL = "claude-haiku-4-5";      /* sifting long transcripts, not the final cut */
-const NO_EFFORT = { "claude-haiku-4-5": true };
+let LIVE_MODELS = null;                       /* [[id, label], …] from GET /v1/models */
+const modelList = () => LIVE_MODELS && LIVE_MODELS.length ? LIVE_MODELS : MODELS;
+
+/* Effort is not accepted on every model, and a brand new one may reject it in a
+   way this page cannot predict, so a rejection retries without it. */
+const NO_EFFORT = { "claude-haiku-4-5": true, "claude-haiku-4-5-20251001": true };
+const effortRejected = (e) =>
+  /effort|output_config/i.test(String((e && e.message) || "")) && /invalid|unexpected|not supported|unsupported/i.test(String((e && e.message) || ""));
+
+const API_HEADERS = () => ({
+  "content-type": "application/json",
+  "x-api-key": apiKey(),
+  "anthropic-version": "2023-06-01",
+  "anthropic-dangerous-direct-browser-access": "true"
+});
+
+/* The Models API carries id and display_name for everything this key can reach. */
+async function loadModelList(){
+  if (!apiKey()) return;
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/models?limit=100", { headers: API_HEADERS() });
+    if (!res.ok) return;
+    const data = await res.json();
+    const rows = (data && Array.isArray(data.data) ? data.data : [])
+      .filter(m => m && m.id)
+      .map(m => [m.id, m.display_name || m.id]);
+    if (rows.length){ LIVE_MODELS = rows; renderEngine(); }
+  } catch (e){ /* the fallback list still works */ }
+}
 
 function store(k, v){
   try {
@@ -1360,7 +1404,7 @@ function store(k, v){
   } catch (e){ return null; }
 }
 const apiKey = () => (store(KEY_STORE) || "").trim();
-const apiModel = () => store(MODEL_STORE) || MODELS[0][0];
+const apiModel = () => store(MODEL_STORE) || DEFAULT_MODEL;
 
 let ENGINE = { kind: "checking" };
 const engineReady = () => ENGINE.kind === "sample" || (ENGINE.kind === "api" && !!apiKey());
@@ -1368,23 +1412,17 @@ async function detectEngine(){
   const sample = await cap("sample");
   ENGINE = sample ? { kind: "sample", sample } : { kind: "api" };
   renderEngine(); renderSources();
+  if (ENGINE.kind === "api") loadModelList();
 }
 
-async function callAPI(prompt, quick){
+async function callAPI(prompt, quick, noEffort){
   const model = quick ? WORKER_MODEL : apiModel();
   const body = { model, max_tokens: 16000, messages: [{ role: "user", content: prompt }] };
-  if (!NO_EFFORT[model]) body.output_config = { effort: quick ? "low" : "high" };
+  if (!NO_EFFORT[model] && !noEffort) body.output_config = { effort: quick ? "low" : "high" };
   let res;
   try {
     res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": apiKey(),
-        "anthropic-version": "2023-06-01",
-        "anthropic-dangerous-direct-browser-access": "true"
-      },
-      body: JSON.stringify(body)
+      method: "POST", headers: API_HEADERS(), body: JSON.stringify(body)
     });
   } catch (e){
     const err = new Error("Couldn't reach the Claude API from this page."); err.code = "offline"; throw err;
@@ -1397,6 +1435,7 @@ async function callAPI(prompt, quick){
              : e.type === "permission_error" ? "bad_key"
              : e.type === "rate_limit_error" ? "rate_limited"
              : e.type === "overloaded_error" ? "overloaded" : "api_error";
+    if (!noEffort && body.output_config && effortRejected(err)) return callAPI(prompt, quick, true);
     throw err;
   }
   if (data && data.stop_reason === "refusal"){
