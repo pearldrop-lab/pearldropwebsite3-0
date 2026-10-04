@@ -136,6 +136,10 @@ input[type=file]{display:none}
 .seg button:last-child{border-right:0}
 .seg button[aria-pressed="true"]{background:var(--accent); color:#fff; font-weight:600}
 :root[data-theme="dark"] .seg button[aria-pressed="true"]{color:#06121F}
+.check{display:flex; gap:9px; align-items:flex-start; cursor:pointer}
+.check input{margin:2px 0 0; accent-color:var(--accent); width:15px; height:15px; flex:0 0 auto}
+.check b{display:block; font-size:13.5px; font-weight:500; line-height:1.35}
+.check i{display:block; font-style:normal; color:var(--muted); font-size:12.5px; line-height:1.4; margin-top:2px}
 .chips{display:flex; flex-wrap:wrap; gap:6px}
 .chip{border:1px solid var(--line); background:var(--panel-2); border-radius:99px; padding:3px 11px; font-size:12.5px; cursor:pointer; font-family:"IBM Plex Mono",monospace}
 .chip[aria-pressed="true"]{border-color:var(--accent); background:var(--accent-soft); color:var(--accent); font-weight:500}
@@ -172,8 +176,6 @@ input[type=file]{display:none}
 .src-tc{display:flex; gap:6px; align-items:center; margin-top:7px}
 .src-tc input{padding:3px 6px; font-family:"IBM Plex Mono",monospace; font-size:12px; width:104px; flex:0 0 auto}
 .src-tc span{font-size:11px; color:var(--muted); letter-spacing:.05em; text-transform:uppercase}
-.demo-tag{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.08em;
-  text-transform:uppercase; color:var(--mark); border:1px solid var(--mark); border-radius:99px; padding:0 6px}
 
 /* ---------- treatment ---------- */
 .treat h3{font-family:Archivo,sans-serif; font-size:25px; line-height:1.2; margin-bottom:8px}
@@ -310,7 +312,7 @@ details.adv .body{margin-top:10px; display:flex; flex-direction:column; gap:9px}
         <div class="chips" id="len-chips" role="group" aria-labelledby="lbl-len"></div>
         <div style="display:flex; gap:8px; align-items:center; margin-top:9px">
           <input type="text" id="len" value="2:00" inputmode="numeric" style="width:88px; font-family:'IBM Plex Mono',monospace; text-align:center" aria-label="Target length, minutes and seconds">
-          <span class="hint">mm:ss &mdash; Chop Chop aims within &plusmn;10%.</span>
+          <span class="hint">mm:ss &mdash; a little over is fine. Chop Chop runs long rather than clip a sentence.</span>
         </div>
       </div>
 
@@ -320,6 +322,14 @@ details.adv .body{margin-top:10px; display:flex; flex-direction:column; gap:9px}
         <label class="lbl" for="dir">Direction <span style="text-transform:none; letter-spacing:0">(optional)</span></label>
         <textarea id="dir" placeholder="Tone, audience, anything to avoid. e.g. warm and plain-spoken, for a science client, no jargon."></textarea>
       </div>
+
+      <div class="rule"></div>
+
+      <label class="check" for="intros">
+        <input type="checkbox" id="intros">
+        <span><b>Keep self-introductions</b>
+        <i>Bites where someone gives their name, job title or what the company does. Off by default &mdash; most films don&rsquo;t want them.</i></span>
+      </label>
     </section>
 
     <section class="card sec">
@@ -599,8 +609,11 @@ function unglue(t){
     .replace(/\s+/g, " ").trim();           /* caption line breaks live inside the field */
 }
 const ENDS_SENTENCE = /[.!?…]["')\]]?\s*$/;
-const MERGE_GAP = 1.6;      // seconds of silence that still counts as the same thought
-const MAX_WORDS = 42;       // above this a unit gets split at a sentence break
+const MERGE_GAP = 1.6;      // silence that still counts as the same thought
+const HARD_GAP = 2.5;       // silence that ends a bite even mid-sentence
+const SOFT_WORDS = 8;       // a finished sentence this long is a good place to stop
+const HARD_WORDS = 110;     // a bite this long is broken up whatever the punctuation says
+const SPLIT_WORDS = 45;     // target size when breaking one up
 const SPEAK_RATE = 2.7;     // words per second, for estimating a missing out point
 
 function readSource(text, fi){
@@ -633,14 +646,18 @@ function readSource(text, fi){
     }
   }
 
-  // merge consecutive rows from one speaker into whole thoughts
+  /* Merge rows into whole thoughts. A bite ends only where the speaker finishes a
+     sentence — a word count never breaks one mid-thought, which is what used to
+     leave people clipped in the middle of a line. */
   const merged = [];
   for (const r of raw){
     const last = merged[merged.length - 1];
-    const gap = last ? (r.startF - last.endF) / fi.rate : Infinity;
-    const joinable = last && last.speaker === r.speaker && gap <= MERGE_GAP &&
-                     WORDS(last.text) + WORDS(r.text) <= MAX_WORDS &&
-                     !(ENDS_SENTENCE.test(last.text) && WORDS(last.text) >= 8);
+    if (!last || last.speaker !== r.speaker){ merged.push({ ...r }); continue; }
+    const gap = (r.startF - last.endF) / fi.rate;
+    const words = WORDS(last.text);
+    const settled = ENDS_SENTENCE.test(last.text) && words >= SOFT_WORDS;
+    const gapOK = settled ? gap <= MERGE_GAP : gap <= HARD_GAP;
+    const joinable = !settled && gapOK && words + WORDS(r.text) <= HARD_WORDS;
     if (joinable){ last.text += " " + r.text; last.endF = Math.max(last.endF, r.endF); }
     else merged.push({ ...r });
   }
@@ -648,11 +665,11 @@ function readSource(text, fi){
   // split anything still too long, at sentence breaks, timing it by character count
   const units = [];
   for (const u of merged){
-    if (WORDS(u.text) <= MAX_WORDS){ units.push({ ...u, approx:false }); continue; }
+    if (WORDS(u.text) <= HARD_WORDS){ units.push({ ...u, approx:false }); continue; }
     const sentences = u.text.match(/[^.!?…]+[.!?…]*\s*/g) || [u.text];
     const groups = []; let cur = "";
     for (const s of sentences){
-      if (cur && WORDS(cur) + WORDS(s) > MAX_WORDS){ groups.push(cur.trim()); cur = s; }
+      if (cur && WORDS(cur) + WORDS(s) > SPLIT_WORDS){ groups.push(cur.trim()); cur = s; }
       else cur += s;
     }
     if (cur.trim()) groups.push(cur.trim());
@@ -676,11 +693,11 @@ function readSource(text, fi){
    ============================================================ */
 
 const S = {
-  sources: [],          // {id, name, units, offsetF, demo}
+  sources: [],          // {id, name, units, offsetF}
   cut: [],              // {uid, role, reason, dropped, inExt, outExt}
   title: "", treatment: "", notes: "", tag: "",
   topicMode: "general", topic: "", targetSec: 120, dir: "",
-  tcMode: "sequence", recMode: "assemble", timeline: null,
+  tcMode: "sequence", recMode: "assemble", timeline: null, intros: false,
   variant: 0, busy: false
 };
 const SRC_IDS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -716,7 +733,7 @@ function resolve(pick){
   }
   const span = arr.slice(a, b + 1);
   return {
-    uid: pick.uid, src: s.id, sourceName: s.name, demo: s.demo,
+    uid: pick.uid, src: s.id, sourceName: s.name,
     speaker: s.hasSpeaker ? base.speaker : (s.speaker || "Speaker"), a, b, count: arr.length,
     canIn: a > 0 && arr[a - 1].speaker === arr[a].speaker,
     canOut: b + 1 < arr.length && arr[b + 1].speaker === arr[b].speaker,
@@ -745,13 +762,16 @@ function renderMeter(){
   $("m-over").style.left = (under / max * 100) + "%";
   $("m-notch").style.left = (target / max * 100) + "%";
 
-  const diff = run - target, tol = Math.max(4, target * 0.1);
+  /* Running a little long is normal and fine — whole sentences cost seconds. */
+  const diff = run - target;
+  const tolUnder = Math.max(4, target * 0.10), tolOver = Math.max(8, target * 0.25);
   const runEl = $("m-run"), verdict = $("m-verdict");
   runEl.className = ""; $("m-fill").classList.remove("on");
   if (!S.cut.length){ verdict.innerHTML = 'against a <b style="font-size:13px">' + secsToClock(target) + "</b> target"; }
-  else if (Math.abs(diff) <= tol){
+  else if (diff >= -tolUnder && diff <= tolOver){
     runEl.className = "on"; $("m-fill").classList.add("on");
-    verdict.innerHTML = "on target &mdash; " + secsToClock(target);
+    verdict.innerHTML = diff > 2 ? "on target &mdash; " + secsToClock(diff) + " over " + secsToClock(target)
+                                 : "on target &mdash; " + secsToClock(target);
   } else if (diff > 0){
     runEl.className = "over";
     verdict.innerHTML = secsToClock(diff) + " long &mdash; drop " + (diff > 20 ? "a couple of bites" : "a bite");
@@ -770,7 +790,6 @@ function renderSources(){
     return '<div class="src">' +
       '<div class="src-top"><span class="src-id">' + s.id + '</span>' +
       '<span class="src-name" title="' + esc(s.name) + '">' + esc(s.name) + "</span>" +
-      (s.demo ? '<span class="demo-tag">example</span>' : "") +
       '<button class="btn ghost tiny" type="button" data-drop-src="' + s.id + '" aria-label="Remove ' + esc(s.name) + '">&times;</button></div>' +
       '<div class="src-meta">' + s.units.length + " bites &middot; " + secsToClock(secs) + " &middot; " +
         esc(speakers.slice(0, 3).join(", ")) + (speakers.length > 3 ? " +" + (speakers.length - 3) : "") + "</div>" +
@@ -1118,7 +1137,7 @@ function buildTreatmentMD(){
     x.r.text.replace(/\|/g, "/") + " | " + (x.p.reason || "").replace(/\|/g, "/") + " |"));
   L.push("", "## Sources", "");
   S.sources.forEach(s => L.push("- **" + s.id + "** " + s.name + " — starts at " + framesToTC(s.offsetF, fi) +
-    ", " + s.units.length + " soundbites" + (s.demo ? " *(example material)*" : "")));
+    ", " + s.units.length + " soundbites"));
   return L.join("\n");
 }
 
@@ -1254,7 +1273,7 @@ function topicLine(){
 }
 
 function briefText(lines){
-  const t = S.targetSec, lo = Math.round(t * 0.92), hi = Math.round(t * 1.08);
+  const t = S.targetSec, lo = Math.round(t * 0.9), hi = Math.round(t * 1.25);
   const speakers = [...new Set(S.sources.map(s => s.hasSpeaker ? null : (s.speaker || "Speaker"))
     .filter(Boolean).concat(allUnits().filter(u => srcById(u.src) && srcById(u.src).hasSpeaker).map(u => u.speaker)))];
   return [
@@ -1262,7 +1281,11 @@ function briefText(lines){
 "",
 "THE BRIEF",
 "Topic: " + topicLine(),
-"Finished length: " + t + " seconds of speech. The durations you choose must add up to between " + lo + " and " + hi + " seconds.",
+"Finished length: about " + t + " seconds of speech. Anything between " + lo + " and " + hi + " seconds is fine.",
+"Length is elastic and a clipped sentence is not. If the only way to hit the number is to cut someone off mid-thought, run long instead.",
+S.intros
+  ? "Self-introductions are welcome: a bite where someone gives their name, role or company can open the film."
+  : "Leave out self-introductions. Skip any bite that is mostly someone giving their name, job title, or an account of what their company does — we rarely use them.",
 "Voices available: " + speakers.join(", "),
 S.dir.trim() ? "Direction from the editor: " + S.dir.trim() : "",
 S.variant ? "This is attempt " + (S.variant + 1) + ". Find a genuinely different angle from the obvious one." : "",
@@ -1271,7 +1294,8 @@ S.variant ? "This is attempt " + (S.variant + 1) + ". Find a genuinely different
 "- Use only the numbered soundbites below. Never invent, reword, or stitch words across two ids.",
 "- Build a film that stands up with no narration: an opening that earns attention, a middle that develops and turns, an ending that lands.",
 "- Story order beats transcript order. Reorder freely, and cut between speakers where it helps.",
-"- Add the durations up as you go. Landing inside the range matters as much as the choices.",
+"- Every pick must be a whole thought. Never start a bite part-way through a sentence, and never end one before the speaker has finished the sentence they are in.",
+"- Add the durations up as you go, but treat the range as a guide. Going over is far better than a bite that stops mid-sentence.",
 "- Prefer self-contained bites: no dangling 'it' or 'that', nothing that only makes sense as the answer to a question we never hear.",
 "- Cut filler, false starts and repetition. Where two bites make the same point, keep the better-told one.",
 "- Give every pick a role: open, context, turn, evidence, colour, or close.",
@@ -1292,6 +1316,7 @@ function shortlistText(lines, secs){
   return [
 "You are a documentary story editor sifting one part of a long interview transcript.",
 "Topic: " + topicLine(),
+"Keep whole thoughts only — never a fragment that starts or ends mid-sentence.",
 "Keep the strongest, most quotable, most self-contained soundbites on that topic — roughly " + secs + " seconds' worth in total.",
 "Discard filler, false starts, repetition, and anything that only makes sense as the answer to a question we never hear.",
 "When in doubt, keep it: a later pass makes the final choice.",
@@ -1727,25 +1752,6 @@ function edlEvents(){
    Part 5: example material, wiring, first run
    ============================================================ */
 
-const DEMO_CSV = "Speaker Name,Start Time,End Time,Text\nInterviewer,00:00:04:00,00:00:10:07,\"So tell me where this started. What made you decide you needed a film at all?\"\nNaomi Adeyemi,00:00:11:04,00:00:23:18,\"Honestly, we didn't want a film. We wanted engineers. We had a job advert running for eleven months and we were getting maybe two applications a week, and none of them right.\"\nNaomi Adeyemi,00:00:24:06,00:00:37:24,\"The problem was that nobody could tell what we actually did. If you read our website you would think we made paint. We make a coating that stops turbine blades cracking at nine hundred degrees.\"\nNaomi Adeyemi,00:00:38:11,00:00:47:22,\"We were founded in 2011, we are based just outside Stevenage, and we currently employ around a hundred and forty people across two sites.\"\nInterviewer,00:00:48:09,00:00:51:22,\"And you had worked with a production company before?\"\nNaomi Adeyemi,00:00:52:20,00:01:04:04,\"I had been burned before. The last agency we used turned up with three people and a drone, and gave us four minutes of slow motion and a piano.\"\nNaomi Adeyemi,00:01:04:17,00:01:15:06,\"What sold me on Pearldrop was that Simon asked to spend a day in the lab before he would quote. Nobody had ever asked to do that.\"\nNaomi Adeyemi,00:01:15:19,00:01:25:14,\"He came back with a question I still think about. He asked why anyone outside this building should care that a blade does not crack.\"\nNaomi Adeyemi,00:01:26:01,00:01:37:01,\"The answer, it turns out, is that a cracked blade is an aircraft turning back over the Atlantic. That is the film. It was never in our brief.\"\nInterviewer,00:01:37:13,00:01:39:22,\"How did the shoot itself go?\"\nNaomi Adeyemi,00:01:40:20,00:01:50:15,\"It was two days and I kept waiting for the disruption. It never came. They worked around a live production run without stopping it once.\"\nNaomi Adeyemi,00:01:51:02,00:01:59:18,\"Our chief engineer is not a performer. He had told me flatly, in writing, that he would not be going on camera.\"\nNaomi Adeyemi,00:02:00:05,00:02:10:20,\"They put him at his own bench, gave him a sample to hold, and asked him to explain it to his daughter. He talked for forty minutes.\"\nNaomi Adeyemi,00:02:11:08,00:02:23:02,\"That is the bit everybody quotes back to me. Twenty seconds of a man in a lab coat explaining thermal fatigue to a nine year old who is not there.\"\nNaomi Adeyemi,00:02:23:14,00:02:33:00,\"The catering was good as well, which sounds like a small thing to mention, but on a two day shoot it really is not.\"\nInterviewer,00:02:33:12,00:02:35:21,\"What happened when it went out?\"\nNaomi Adeyemi,00:02:36:18,00:02:45:09,\"We put it on the careers page in March. Applications went from two a week to thirty one in the first fortnight.\"\nNaomi Adeyemi,00:02:45:22,00:02:53:18,\"We have hired nine people off the back of it, and seven of them mentioned the film, unprompted, at interview.\"\nNaomi Adeyemi,00:02:54:05,00:03:04:00,\"It did something I did not expect as well. Our own staff started sending it to their families to explain what they do all day.\"\nNaomi Adeyemi,00:03:04:13,00:03:13:03,\"Was it cheap? No. It cost about the same as one failed recruitment round, which is a comparison I only made afterwards.\"\nInterviewer,00:03:13:16,00:03:17:04,\"What would you say to someone weighing this up?\"\nNaomi Adeyemi,00:03:18:02,00:03:28:07,\"If I was advising someone, I would say pay for the day in the lab. The film is downstream of understanding, not the other way round.\"\nNaomi Adeyemi,00:03:28:19,00:03:38:14,\"The mistake we nearly made was asking for a corporate video. What we needed was somebody to find the story first and then film it.\"\nNaomi Adeyemi,00:03:39:02,00:03:48:12,\"I would have booked three days rather than two. We ran out of light on the second afternoon and lost the exterior we wanted.\"";
-const DEMO_CUT = [
-  [2,  "open",     "Opens on a want, not a company. Human in one line."],
-  [3,  "context",  "The real problem: nobody could tell what they made."],
-  [6,  "turn",     "The scar tissue. Earns the trust the next bite pays off."],
-  [7,  "evidence", "The difference, told as a fact rather than a claim."],
-  [9,  "turn",     "The reframe the whole film turns on."],
-  [12, "context",  "Sets up the reluctant engineer before we meet him."],
-  [13, "evidence", "How the best moment in the film was actually got."],
-  [14, "colour",   "The line the audience quotes back. Proof it landed."],
-  [17, "evidence", "The number. Two a week to thirty-one."],
-  [18, "evidence", "Hires, not views — the result that pays for the film."],
-  [22, "close",    "Ends on advice, which leaves the viewer something to do."]
-];
-const DEMO_TITLE = "Downstream of Understanding";
-const DEMO_TREAT = "The film opens on a shortage, not a company: they wanted engineers and were getting two applications a week. " +
-  "The middle is a change of mind — a bad experience with the last agency, then the day in the lab, then the question that turns a coating into an aircraft turning back over the Atlantic. " +
-  "It lands on the reluctant chief engineer explaining thermal fatigue to a daughter who isn't in the room, and closes on advice rather than a boast.";
-const DEMO_NOTES = "Nothing on screen shows the coating itself failing — worth a pickup, or archive of a cracked blade, to carry the middle.";
 
 /* ---------- loading transcripts ---------- */
 function nextSrcId(){
@@ -1758,18 +1764,12 @@ function addSource(name, text, opts){
   const read = readSource(text, fi);
   const units = read.units;
   const offsetTC = (opts && opts.offsetTC) ||
-    (S.timeline && !(opts && opts.demo) ? framesToTC(S.timeline.startFrame, fi) : "00:00:00:00");
+    (S.timeline ? framesToTC(S.timeline.startFrame, fi) : "00:00:00:00");
   S.sources.push({
     id: nextSrcId(), name: name.slice(0, 80), clipName: name.replace(/\.[^.]+$/, "").slice(0, 60), raw: text, units,
-    offsetTC, offsetF: parseTime(offsetTC, fi) || 0, demo: !!(opts && opts.demo),
+    offsetTC, offsetF: parseTime(offsetTC, fi) || 0,
     hasSpeaker: read.hasSpeaker, speaker: read.hasSpeaker ? null : "Speaker"
   });
-}
-function clearDemo(){
-  if (S.sources.some(s => s.demo) && S.sources.length){
-    S.sources = S.sources.filter(s => !s.demo);
-    S.cut = []; S.title = ""; S.treatment = ""; S.notes = ""; S.tag = "";
-  }
 }
 async function addFiles(list){
   const files = [...list].filter(f => f && f.size >= 0);
@@ -1777,7 +1777,6 @@ async function addFiles(list){
   const bad = [];
   const read = [];
   for (const f of files) read.push([f.name, await f.text()]);
-  clearDemo();
   for (const [name, text] of read){
     try {
       if (looksXML(text)){
@@ -1887,6 +1886,7 @@ function wire(){
   $("len").addEventListener("input", e => { const s = parseClock(e.target.value); if (s) setTarget(s, true); });
   $("len").addEventListener("blur", () => setTarget(S.targetSec, false));
   $("dir").addEventListener("input", e => { S.dir = e.target.value; });
+  $("intros").addEventListener("change", e => { S.intros = e.target.checked; });
 
   /* timeline */
   $("tc-seq").onclick = () => { S.tcMode = "sequence"; renderSources(); renderMode(); };
@@ -1921,8 +1921,9 @@ function wire(){
     }
   });
   $("b-reset").onclick = () => {
-    S.sources = []; S.cut = []; S.title = ""; S.treatment = ""; S.notes = ""; S.variant = 0; S.timeline = null;
-    setStatus(""); loadDemo(); renderAll();
+    S.sources = []; S.cut = []; S.title = ""; S.treatment = ""; S.notes = ""; S.tag = "";
+    S.variant = 0; S.timeline = null;
+    setStatus(""); renderAll();
   };
 
   /* exports */
@@ -1966,21 +1967,9 @@ function wire(){
   };
 }
 
-/* ---------- first run ---------- */
-function loadDemo(){
-  try {
-    addSource("Ferrolite — Naomi Adeyemi (example).csv", DEMO_CSV, { demo: true });
-    const s = S.sources[S.sources.length - 1];
-    S.cut = DEMO_CUT.filter(([n]) => n <= s.units.length)
-      .map(([n, role, reason]) => ({ uid: s.id + pad(n, 3), role, reason, dropped: false, inExt: 0, outExt: 0 }));
-    S.title = DEMO_TITLE; S.treatment = DEMO_TREAT; S.notes = DEMO_NOTES;
-    S.tag = "example cut — load your own transcripts to replace it";
-  } catch (e){ /* the page is still usable without it */ }
-}
 
 renderLenChips();
 wire();
-loadDemo();
 renderAll();
 renderEngine();
 detectEngine();

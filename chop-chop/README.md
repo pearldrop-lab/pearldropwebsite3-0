@@ -42,11 +42,27 @@ from how long the words take to say.
 
 ## How a soundbite is built
 
-Consecutive rows from one speaker merge into whole thoughts, stopping at a
-sentence end, a gap over 1.6 seconds, or 42 words. Anything still longer is split
-at sentence breaks with timings interpolated by character count — those rows are
-marked `est.` in the table, because their in and out points are estimates rather
-than measured. Each unit gets an id like `A012`: source letter, then its position.
+Consecutive rows from one speaker merge into whole thoughts. A bite ends only
+where the speaker finishes a sentence — specifically at the first full stop once
+it is at least 8 words long, or at a silence over 2.5 seconds, or at a speaker
+change. **No word count ever breaks a bite mid-sentence**, which is what used to
+leave people clipped in the middle of a line. A ceiling of 110 words catches a
+rambling answer with no punctuation; anything past it is split at sentence
+breaks with timings interpolated by character count, and those rows are marked
+`est.` in the table because their in and out points are estimated rather than
+measured. Each unit gets an id like `A012`: source letter, then its position.
+
+On a real 25fps caption transcript this turns 78 rows into 31 soundbites, median
+7.6 seconds, with every one ending on a sentence except where the source itself
+has no full stop.
+
+## Length
+
+The target is a guide, not a constraint. The brief tells Claude anything from
+-10% to +25% is fine and that running long always beats a clipped sentence, and
+the running-time meter reads "on target" across that whole band. Self-
+introductions — name, job title, what the company does — are excluded unless the
+brief's checkbox says otherwise.
 
 ## Choosing the cut
 
