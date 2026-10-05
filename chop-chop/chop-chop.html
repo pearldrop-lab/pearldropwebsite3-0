@@ -136,6 +136,25 @@ input[type=file]{display:none}
 .seg button:last-child{border-right:0}
 .seg button[aria-pressed="true"]{background:var(--accent); color:#fff; font-weight:600}
 :root[data-theme="dark"] .seg button[aria-pressed="true"]{color:#06121F}
+tbody tr.line-head td{background:var(--panel-2); border-top:1px solid var(--line); padding:9px 10px 7px; font-size:13.5px; line-height:1.45}
+tbody tr.line-head:hover{background:var(--panel-2)}
+tr.line-head .ln{font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:12.5px; color:var(--accent); margin-right:10px}
+tr.line-head b{font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:600; letter-spacing:.07em; color:var(--ink-2); margin-right:8px}
+tr.line-head .sl{color:var(--ink)}
+tr.line-head .cnt{float:right; margin-left:12px; font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--muted)}
+tr.line-head.none .sl{color:var(--muted)}
+tr.line-head.none .cnt{color:var(--mark)}
+.badge{display:inline-block; font-size:10px; letter-spacing:.08em; text-transform:uppercase; border:1px solid var(--accent-line); color:var(--accent); border-radius:2px; padding:0 5px; margin:0 4px 4px 0}
+.badge.warn{border-color:var(--mark); color:var(--mark)}
+.seg-mode{margin-bottom:-2px}
+.seg-mode button{padding:9px 6px; font-family:Archivo,sans-serif; font-weight:600; font-size:13.5px}
+.drop.sm{padding:11px 12px}
+.drop.sm strong{font-size:13.5px}
+#script-text{min-height:110px; font-family:"IBM Plex Mono",monospace; font-size:12.5px; margin-top:8px}
+#script-lines{margin:8px 0 0; padding-left:0; list-style:none; max-height:240px; overflow:auto; font-size:12.5px; line-height:1.45}
+#script-lines li{padding:3px 0; border-bottom:1px solid var(--line-soft)}
+#script-lines .mono{color:var(--accent); font-size:11.5px; margin-right:6px}
+#script-lines b{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.06em; color:var(--ink-2); margin-right:4px}
 .check{display:flex; gap:9px; align-items:flex-start; cursor:pointer}
 .check input{margin:2px 0 0; accent-color:var(--accent); width:15px; height:15px; flex:0 0 auto}
 .check b{display:block; font-size:13.5px; font-weight:500; line-height:1.35}
@@ -277,12 +296,17 @@ details.adv .body{margin-top:10px; display:flex; flex-direction:column; gap:9px}
   <!-- ================= RAIL ================= -->
   <form class="rail" id="rail" onsubmit="return false">
 
+    <div class="seg seg-mode" role="group" aria-label="What are you making?">
+      <button type="button" id="mode-story" aria-pressed="true">Story from interviews</button>
+      <button type="button" id="mode-script" aria-pressed="false">Assemble a script</button>
+    </div>
+
     <section class="card sec">
       <div class="sec-h"><h2>Transcripts</h2><span class="hint" id="src-count"></span></div>
 
       <label class="drop" id="drop" for="file" tabindex="0">
-        <strong>Drop your Premiere CSVs here</strong>
-        <span class="hint">As many interviews as you like. Add the sequence XML too and every soundbite is traced back to its camera file.</span>
+        <strong id="drop-h">Drop your Premiere CSVs here</strong>
+        <span class="hint" id="drop-hint">As many interviews as you like. Add the sequence XML too and every soundbite is traced back to its camera file.</span>
       </label>
       <input type="file" id="file" accept=".csv,.tsv,.txt,.xml,.fcpxml,text/csv,text/xml" multiple>
 
@@ -291,6 +315,47 @@ details.adv .body{margin-top:10px; display:flex; flex-direction:column; gap:9px}
 
     <section class="card sec">
       <div class="sec-h"><h2>The brief</h2></div>
+
+      <div id="script-brief" hidden>
+        <div class="field">
+          <span class="lbl">The script</span>
+          <label class="drop sm" id="script-drop" for="script-file" tabindex="0">
+            <strong>Drop the script here</strong>
+            <span class="hint">Final Draft, Fountain or plain text &mdash; or paste it below.</span>
+          </label>
+          <input type="file" id="script-file" accept=".fdx,.fountain,.txt,.text,.md">
+          <textarea id="script-text" spellcheck="false" placeholder="SARAH: I never said that.&#10;TOM: You didn't have to.&#10;VO: Mercer Kitchens. Built around you."></textarea>
+          <p class="hint" id="script-count" style="margin:6px 0 0"></p>
+          <details class="adv" id="script-lines-box" hidden style="margin-top:6px">
+            <summary>Show the lines</summary>
+            <ol id="script-lines"></ol>
+          </details>
+        </div>
+
+        <div class="rule"></div>
+
+        <label class="check" for="partials">
+          <input type="checkbox" id="partials">
+          <span><b>Keep false starts</b>
+          <i>Stumbles that stop, and pick-ups of only part of a line. Off by default.</i></span>
+        </label>
+
+        <div class="rule"></div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
+          <div class="field">
+            <label class="lbl" for="gap-take">Gap between takes</label>
+            <input type="number" id="gap-take" value="0.5" min="0" max="30" step="0.1" style="font-family:'IBM Plex Mono',monospace">
+          </div>
+          <div class="field">
+            <label class="lbl" for="gap-line">Gap between lines</label>
+            <input type="number" id="gap-line" value="2" min="0" max="60" step="0.5" style="font-family:'IBM Plex Mono',monospace">
+          </div>
+        </div>
+        <p class="hint" style="margin:7px 0 0">Seconds of black on the timeline, so each line&rsquo;s takes read as a group.</p>
+      </div>
+
+      <div id="story-brief">
 
       <div class="field">
         <span class="lbl" id="lbl-topic">Topic</span>
@@ -330,6 +395,7 @@ details.adv .body{margin-top:10px; display:flex; flex-direction:column; gap:9px}
         <span><b>Keep self-introductions</b>
         <i>Bites where someone states their own name or job title. Off by default. What the company does is kept either way.</i></span>
       </label>
+      </div>
     </section>
 
     <section class="card sec">
@@ -391,7 +457,7 @@ details.adv .body{margin-top:10px; display:flex; flex-direction:column; gap:9px}
     <div id="status"></div>
 
     <section class="card sec treat" id="treat-card" hidden>
-      <div class="sec-h"><h2>The story</h2><span class="hint" id="treat-tag"></span></div>
+      <div class="sec-h"><h2 id="treat-h">The story</h2><span class="hint" id="treat-tag"></span></div>
       <h3 id="treat-title"></h3>
       <div id="treat-body"></div>
       <div class="notes" id="treat-notes" hidden></div>
@@ -399,7 +465,7 @@ details.adv .body{margin-top:10px; display:flex; flex-direction:column; gap:9px}
 
     <section class="card sec" id="cut-card">
       <div class="sec-h">
-        <h2>The cut</h2>
+        <h2 id="cut-h">The cut</h2>
         <span class="hint" id="cut-sub"></span>
       </div>
       <div id="cut-body"></div>
@@ -409,12 +475,12 @@ details.adv .body{margin-top:10px; display:flex; flex-direction:column; gap:9px}
       <div class="sec-h"><h2>Take it into Premiere</h2></div>
       <div class="exports">
         <button class="btn ex" type="button" id="x-edl"><strong>Sequence &mdash; EDL</strong><span id="x-edl-note">CMX 3600, cuts in order. Import as a sequence and relink.</span></button>
-        <button class="btn ex" type="button" id="x-mark"><strong>Markers &mdash; CSV</strong><span>One marker per soundbite, at the timecodes in the table.</span></button>
-        <button class="btn ex" type="button" id="x-tbl"><strong>The table &mdash; CSV</strong><span>Speaker, timecode, words and reasoning. For the spreadsheet.</span></button>
+        <button class="btn ex" type="button" id="x-mark"><strong>Markers &mdash; CSV</strong><span id="x-mark-note">One marker per soundbite, at the timecodes in the table.</span></button>
+        <button class="btn ex" type="button" id="x-tbl"><strong id="x-tbl-h">The table &mdash; CSV</strong><span id="x-tbl-note">Speaker, timecode, words and reasoning. For the spreadsheet.</span></button>
         <button class="btn ex" type="button" id="x-all"><strong>Everything &mdash; ZIP</strong><span>EDL, markers, table and the treatment in one folder.</span></button>
       </div>
       <p class="hint" id="ex-hint" style="margin:12px 0 0; max-width:70ch"></p>
-      <details class="adv">
+      <details class="adv" id="manual-box">
         <summary>Do it by hand</summary>
         <div class="body">
           <p class="hint">If Claude isn't available on this page, copy the brief below into any Claude chat, then paste the JSON it gives you back here.</p>
@@ -646,6 +712,10 @@ function readSource(text, fi){
     }
   }
 
+  /* Script mode keeps every transcript row as its own unit: Claude decides which
+     rows are one reading of a line, so nothing is merged across a take here. */
+  if (S.mode === "script") return { units: raw.map(r => ({ ...r, approx: false })), hasSpeaker: mapped.hasSpeaker };
+
   /* Merge rows into whole thoughts. A bite ends only where the speaker finishes a
      sentence — a word count never breaks one mid-thought, which is what used to
      leave people clipped in the middle of a line. */
@@ -698,6 +768,10 @@ const S = {
   title: "", treatment: "", notes: "", tag: "",
   topicMode: "general", topic: "", targetSec: 120, dir: "",
   tcMode: "sequence", recMode: "assemble", timeline: null, intros: false,
+  mode: "story",                                            /* story | script */
+  script: { raw: "", fileName: "", lines: [], format: "" },
+  scriptOpts: { partials: false, takeGap: 0.5, lineGap: 2 },
+  match: null,                                              /* uid -> {line, kind, cont, rew} */
   variant: 0, busy: false
 };
 const SRC_IDS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -722,21 +796,22 @@ function resolve(pick){
   const base = findUnit(pick.uid);
   if (!base) return null;
   const s = base.source, arr = s.units;
+  const same = (x, y) => pick.free || x.speaker === y.speaker;
   let a = base.idx, b = base.idx;
   for (let k = 0; k < (pick.inExt || 0); k++){
-    if (a - 1 < 0 || arr[a - 1].speaker !== arr[a].speaker) break;
+    if (a - 1 < 0 || !same(arr[a - 1], arr[a])) break;
     a--;
   }
   for (let k = 0; k < (pick.outExt || 0); k++){
-    if (b + 1 >= arr.length || arr[b + 1].speaker !== arr[b].speaker) break;
+    if (b + 1 >= arr.length || !same(arr[b + 1], arr[b])) break;
     b++;
   }
   const span = arr.slice(a, b + 1);
   return {
     uid: pick.uid, src: s.id, sourceName: s.name,
     speaker: s.hasSpeaker ? base.speaker : (s.speaker || "Speaker"), a, b, count: arr.length,
-    canIn: a > 0 && arr[a - 1].speaker === arr[a].speaker,
-    canOut: b + 1 < arr.length && arr[b + 1].speaker === arr[b].speaker,
+    canIn: a > 0 && same(arr[a - 1], arr[a]),
+    canOut: b + 1 < arr.length && same(arr[b + 1], arr[b]),
     canTrimIn: (pick.inExt || 0) > 0, canTrimOut: (pick.outExt || 0) > 0,
     startF: span[0].startF + s.offsetF,
     endF: span[span.length - 1].endF + s.offsetF,
@@ -753,6 +828,19 @@ const runSecs = () => runFrames() / FI().rate;
 
 /* ---------- meter ---------- */
 function renderMeter(){
+  if (S.mode === "script"){
+    const rows = cutRows(), fi = FI();
+    const len = rows.length ? (rows[rows.length - 1].recOut - rows[0].recIn) / fi.rate : 0;
+    $("m-run").textContent = secsToClock(len); $("m-run").className = "";
+    $("m-fill").classList.remove("on");
+    $("m-fill").style.width = rows.length ? "100%" : "0";
+    $("m-over").style.width = "0"; $("m-notch").style.left = "100%";
+    const lines = new Set(rows.filter(x => x.p.line > 0).map(x => x.p.line)).size;
+    $("m-verdict").innerHTML = rows.length
+      ? "stringout &mdash; " + rows.length + (rows.length === 1 ? " take" : " takes") + " across " + lines + " of " + S.script.lines.length + " lines"
+      : "stringout &mdash; " + (S.script.lines.length ? S.script.lines.length + " lines to find" : "add a script");
+    return;
+  }
   const run = runSecs(), target = S.targetSec;
   const max = Math.max(run, target, 1);
   const under = Math.min(run, target), over = Math.max(0, run - target);
@@ -806,10 +894,18 @@ function renderSources(){
   }).join("");
 
   const n = S.sources.length, u = allUnits().length;
-  $("src-count").textContent = n ? n + (n === 1 ? " file · " : " files · ") + u + " bites" : "";
+  $("src-count").textContent = n ? n + (n === 1 ? " file · " : " files · ") + u + (S.mode === "script" ? " rows" : " bites") : "";
   $("go").disabled = S.busy || !n;
   $("go-hint").textContent = !n ? "Add a transcript to begin."
+    : (S.mode === "script" && !S.script.lines.length) ? "Add the script in the brief."
     : (ENGINE.kind === "api" && !apiKey()) ? "Add an API key below." : "";
+  renderGo();
+}
+function renderGo(){
+  const g = $("go");
+  if (!g) return;
+  const script = S.mode === "script";
+  g.textContent = S.busy ? (script ? "Matching…" : "Cutting…") : (script ? "Assemble the takes" : "Make the cut");
 }
 
 /* ---------- the cut table ---------- */
@@ -819,56 +915,106 @@ function sourceLabel(r){
   if (!clips.length) return "unmapped";
   return clips.length === 1 ? clips[0].slice(0, 18) : clips.length + " clips";
 }
+function rowHTML(p, i, r, fi, evtHTML, notesHTML, canUp, canDown){
+  const dur = (r.endF - r.startF) / fi.rate;
+  return '<tr class="' + (p.dropped ? "dropped" : "") + '">' +
+    '<td class="evt">' + evtHTML + "</td>" +
+    '<td class="who">' + esc(r.speaker) + '<span class="sid">' + esc(sourceLabel(r)) + "</span></td>" +
+    '<td class="tc">' + framesToTC(r.startF, fi) + "<br>" + framesToTC(r.endF, fi) +
+      '<span class="dur">' + dur.toFixed(1) + "s</span>" +
+      (r.approx ? '<span class="approx">est.</span>' : "") + "</td>" +
+    '<td class="words"><q>' + esc(r.text) + "</q>" +
+      '<div class="trim">' +
+        '<div class="trim-grp"><span>in</span>' +
+          '<button type="button" data-ext="' + i + ':in:1"  ' + (r.canIn ? "" : "disabled") + ' aria-label="Start earlier">&#171;</button>' +
+          '<button type="button" data-ext="' + i + ':in:-1" ' + (r.canTrimIn ? "" : "disabled") + ' aria-label="Start later">&#187;</button></div>' +
+        '<div class="trim-grp"><span>out</span>' +
+          '<button type="button" data-ext="' + i + ':out:-1" ' + (r.canTrimOut ? "" : "disabled") + ' aria-label="End earlier">&#171;</button>' +
+          '<button type="button" data-ext="' + i + ':out:1"  ' + (r.canOut ? "" : "disabled") + ' aria-label="End later">&#187;</button></div>' +
+      "</div></td>" +
+    '<td class="why">' + notesHTML + "</td>" +
+    '<td class="act"><span class="act-row">' +
+      '<button class="btn ghost tiny" type="button" data-move="' + i + ':-1" ' + (canUp ? "" : "disabled") + ' aria-label="Move up">&#9650;</button>' +
+      '<button class="btn ghost tiny" type="button" data-move="' + i + ':1" ' + (canDown ? "" : "disabled") + ' aria-label="Move down">&#9660;</button>' +
+      '<button class="btn ghost tiny" type="button" data-kill="' + i + '">' + (p.dropped ? "keep" : "drop") + "</button>" +
+    "</span></td></tr>";
+}
+
+function storyRows(fi){
+  let evt = 0;
+  return S.cut.map((p, i) => {
+    const r = resolve(p);
+    if (!r) return "";
+    if (!p.dropped) evt++;
+    return rowHTML(p, i, r, fi,
+      "<b>" + (p.dropped ? "&mdash;" : pad(evt, 3)) + "</b>" + esc(r.uid),
+      (p.role ? '<span class="role">' + esc(p.role) + "</span><br>" : "") + esc(p.reason || ""),
+      i > 0, i < S.cut.length - 1);
+  }).join("");
+}
+
+/* Every script line gets a header — including the ones nobody recorded — and its
+   takes sit beneath it. Takes only move within their own line. */
+function scriptRows(fi){
+  const byLine = new Map();
+  S.cut.forEach((p, i) => { if (!byLine.has(p.line)) byLine.set(p.line, []); byLine.get(p.line).push(i); });
+  const order = S.script.lines.map(l => l.n).concat(byLine.has(-1) ? [-1] : []);
+  let html = "";
+  for (const n of order){
+    const idx = byLine.get(n) || [];
+    const l = n > 0 ? S.script.lines[n - 1] : null;
+    const live = idx.filter(i => !S.cut[i].dropped).length;
+    html += '<tr class="line-head' + (idx.length ? "" : " none") + '"><td colspan="6">' +
+      '<span class="cnt">' + (idx.length ? live + (live === 1 ? " take" : " takes") : "no take found") + "</span>" +
+      '<span class="ln">' + (n > 0 ? "L" + n : "Off script") + "</span>" +
+      (l ? (l.who ? "<b>" + esc(l.who) + "</b>" : "") + '<span class="sl">' + esc(l.text) + "</span>"
+         : '<span class="sl">Alts, wild lines and ad-libs that match no script line</span>') +
+      "</td></tr>";
+    for (const i of idx){
+      const p = S.cut[i], r = resolve(p);
+      if (!r) continue;
+      const notes = '<span class="badge' + (p.kind === "partial" ? " warn" : "") + '">' +
+        (p.kind === "partial" ? "false start" : "take") + "</span>" +
+        (p.rew ? '<span class="badge warn">rewritten</span>' : "");
+      const shown = Object.assign({}, r, { speaker: (l && l.who) || (n === -1 ? "Off script" : r.speaker) });
+      html += rowHTML(p, i, shown, fi,
+        "<b>T" + p.take + "</b>of " + p.of, notes,
+        i > 0 && S.cut[i - 1].line === p.line,
+        i < S.cut.length - 1 && S.cut[i + 1].line === p.line);
+    }
+  }
+  return html;
+}
+
 function renderCut(){
   const body = $("cut-body"), sub = $("cut-sub");
+  const script = S.mode === "script";
+  $("cut-h").textContent = script ? "The stringout" : "The cut";
   if (!S.cut.length){
     $("ex-card").hidden = !S.sources.length;
     sub.textContent = "";
-    body.innerHTML = '<div class="empty"><h3>No cut yet</h3>' +
-      "<p>Load your transcripts, set the topic and the length, then press <em>Make the cut</em>. " +
-      "The soundbites Chop Chop chooses land here as a table you can edit.</p></div>";
+    body.innerHTML = script
+      ? '<div class="empty"><h3>No stringout yet</h3>' +
+        "<p>Load the transcript of your timeline of takes and its Final Cut Pro XML, add the script in the brief, " +
+        "then press <em>Assemble the takes</em>. Every take of every line lands here, in script order.</p></div>"
+      : '<div class="empty"><h3>No cut yet</h3>' +
+        "<p>Load your transcripts, set the topic and the length, then press <em>Make the cut</em>. " +
+        "The soundbites Chop Chop chooses land here as a table you can edit.</p></div>";
     renderMeter(); return;
   }
   $("ex-card").hidden = false;
   const fi = FI(), keep = active().length, dropped = S.cut.length - keep;
-  sub.innerHTML = keep + " soundbite" + (keep === 1 ? "" : "s") +
+  const noun = script ? "take" : "soundbite";
+  sub.innerHTML = keep + " " + noun + (keep === 1 ? "" : "s") +
     (dropped ? " &middot; " + dropped + " dropped &middot; " +
       '<button class="btn ghost tiny" type="button" id="b-restore">restore all</button>' : "");
 
-  let evt = 0;
-  const rows = S.cut.map((p, i) => {
-    const r = resolve(p);
-    if (!r) return "";
-    if (!p.dropped) evt++;
-    const dur = (r.endF - r.startF) / fi.rate;
-    return '<tr class="' + (p.dropped ? "dropped" : "") + '">' +
-      '<td class="evt"><b>' + (p.dropped ? "&mdash;" : pad(evt, 3)) + "</b>" + esc(r.uid) + "</td>" +
-      '<td class="who">' + esc(r.speaker) + '<span class="sid">' + esc(sourceLabel(r)) + "</span></td>" +
-      '<td class="tc">' + framesToTC(r.startF, fi) + "<br>" + framesToTC(r.endF, fi) +
-        '<span class="dur">' + dur.toFixed(1) + "s</span>" +
-        (r.approx ? '<span class="approx">est.</span>' : "") + "</td>" +
-      '<td class="words"><q>' + esc(r.text) + "</q>" +
-        '<div class="trim">' +
-          '<div class="trim-grp"><span>in</span>' +
-            '<button type="button" data-ext="' + i + ':in:1"  ' + (r.canIn ? "" : "disabled") + ' aria-label="Start earlier">&#171;</button>' +
-            '<button type="button" data-ext="' + i + ':in:-1" ' + (r.canTrimIn ? "" : "disabled") + ' aria-label="Start later">&#187;</button></div>' +
-          '<div class="trim-grp"><span>out</span>' +
-            '<button type="button" data-ext="' + i + ':out:-1" ' + (r.canTrimOut ? "" : "disabled") + ' aria-label="End earlier">&#171;</button>' +
-            '<button type="button" data-ext="' + i + ':out:1"  ' + (r.canOut ? "" : "disabled") + ' aria-label="End later">&#187;</button></div>' +
-        "</div></td>" +
-      '<td class="why">' + (p.role ? '<span class="role">' + esc(p.role) + "</span><br>" : "") + esc(p.reason || "") + "</td>" +
-      '<td class="act"><span class="act-row">' +
-        '<button class="btn ghost tiny" type="button" data-move="' + i + ':-1" ' + (i === 0 ? "disabled" : "") + ' aria-label="Move up">&#9650;</button>' +
-        '<button class="btn ghost tiny" type="button" data-move="' + i + ':1" ' + (i === S.cut.length - 1 ? "disabled" : "") + ' aria-label="Move down">&#9660;</button>' +
-        '<button class="btn ghost tiny" type="button" data-kill="' + i + '">' + (p.dropped ? "keep" : "drop") + "</button>" +
-      "</span></td></tr>";
-  }).join("");
-
+  const head = script
+    ? "<th>Take</th><th>Voice</th><th>Source&nbsp;TC</th><th>What was said</th><th>Notes</th><th></th>"
+    : "<th>Event</th><th>Speaker</th><th>Source&nbsp;TC</th><th>Soundbite</th><th>Why&nbsp;it&rsquo;s&nbsp;in</th><th></th>";
   body.innerHTML = '<div class="tbl-scroll"><table>' +
     '<colgroup><col class="c-evt"><col class="c-who"><col class="c-tc"><col><col class="c-why"><col class="c-act"></colgroup>' +
-    "<thead><tr>" +
-    "<th>Event</th><th>Speaker</th><th>Source&nbsp;TC</th><th>Soundbite</th><th>Why&nbsp;it&rsquo;s&nbsp;in</th><th></th>" +
-    "</tr></thead><tbody>" + rows + "</tbody></table></div>";
+    "<thead><tr>" + head + "</tr></thead><tbody>" + (script ? scriptRows(fi) : storyRows(fi)) + "</tbody></table></div>";
 
   const rb = $("b-restore");
   if (rb) rb.onclick = () => { S.cut.forEach(p => p.dropped = false); renderCut(); };
@@ -881,14 +1027,19 @@ function renderTreatment(){
   card.hidden = false;
   $("treat-title").textContent = S.title || "Untitled cut";
   const canRedo = S.sources.length && !S.busy;
+  const script = S.mode === "script";
   $("treat-tag").innerHTML = esc(S.tag || "") +
-    (canRedo ? ' <button class="btn ghost tiny" type="button" id="b-again">try a different cut</button>' : "");
+    (canRedo ? ' <button class="btn ghost tiny" type="button" id="b-again">' +
+      (script ? "match again" : "try a different cut") + "</button>" : "");
   const again = $("b-again");
-  if (again) again.onclick = () => { S.variant = (S.variant || 0) + 1; makeCut(); };
+  if (again) again.onclick = () => {
+    if (script) return assembleScript();
+    S.variant = (S.variant || 0) + 1; makeCut();
+  };
   $("treat-body").innerHTML = String(S.treatment || "").split(/\n{2,}/)
     .filter(Boolean).map(p => "<p>" + esc(p) + "</p>").join("");
   $("treat-notes").hidden = !S.notes;
-  $("treat-notes").innerHTML = S.notes ? "<b>Worth knowing:</b> " + esc(S.notes) : "";
+  $("treat-notes").innerHTML = S.notes ? "<b>" + (S.mode === "script" ? "Missing" : "Worth knowing") + ":</b> " + esc(S.notes) : "";
 }
 function renderExHint(){
   const note = $("x-edl-note");
@@ -899,10 +1050,10 @@ function renderExHint(){
   if (!el) return;
   const names = [...new Set(S.sources.map(clipOf))];
   if (S.timeline){
-    el.innerHTML = "Each soundbite is traced through <b>" + esc(trackKeys(S.timeline, S.timeline.trackKey).join(", ")) + "</b> of <b>" +
+    el.innerHTML = "Each " + (S.mode === "script" ? "take" : "soundbite") + " is traced through <b>" + esc(trackKeys(S.timeline, S.timeline.trackKey).join(", ")) + "</b> of <b>" +
       esc(S.timeline.name) + "</b> back to the camera file underneath it, so the EDL carries real reel names and real source timecode. " +
       "Relink to the originals in " + esc(String(S.timeline.mergedClips.length)) + " clips &mdash; no flattened master needed. " +
-      "A bite that crosses a cut comes back as the same two events.";
+      "A " + (S.mode === "script" ? "take" : "bite") + " that crosses a cut comes back as the same two events.";
     return;
   }
   el.innerHTML = S.tcMode === "sequence"
@@ -1014,7 +1165,23 @@ function renderMode(){
     : "Each transcript belongs to one source clip, and the EDL relinks to a clip of that name.";
   $("rec-asm").setAttribute("aria-pressed", String(!hold));
   $("rec-hold").setAttribute("aria-pressed", String(hold));
-  $("rectc-field").hidden = hold;
+  $("rectc-field").hidden = hold && S.mode !== "script";
+  $("lbl-recmode").parentElement.hidden = S.mode === "script";
+  const script = S.mode === "script";
+  $("treat-h").textContent = script ? "The shoot" : "The story";
+  $("drop-h").textContent = script ? "Drop the transcript and the XML here" : "Drop your Premiere CSVs here";
+  $("drop-hint").textContent = script
+    ? "The CSV transcript of your timeline of takes, and that timeline exported as Final Cut Pro XML."
+    : "As many interviews as you like. Add the sequence XML too and every soundbite is traced back to its camera file.";
+  $("x-mark-note").textContent = script ? "One marker per take, named by line and take number." : "One marker per soundbite, at the timecodes in the table.";
+  $("x-tbl-h").innerHTML = script ? "The line sheet &mdash; CSV" : "The table &mdash; CSV";
+  $("x-tbl-note").textContent = script
+    ? "Every line with its takes, camera timecode and what was said — lines with no take included."
+    : "Speaker, timecode, words and reasoning. For the spreadsheet.";
+  $("mode-story").setAttribute("aria-pressed", String(S.mode === "story"));
+  $("mode-script").setAttribute("aria-pressed", String(S.mode === "script"));
+  $("story-brief").hidden = S.mode !== "story";
+  $("script-brief").hidden = S.mode !== "script";
   renderTimeline();
   $("recmode-hint").textContent = hold
     ? "Each bite keeps its own timecode, so the selects land exactly where they sit now, with gaps between them. Events run in timeline order, not story order."
@@ -1022,6 +1189,18 @@ function renderMode(){
   renderExHint();
 }
 function renderAll(){ renderSources(); renderCut(); renderTreatment(); renderMode(); }
+
+/* Changing job throws away the result — a cut and a stringout are not the same
+   thing — and rebuilds the units, because script mode keeps every row whole. */
+function setMode(m){
+  if (m !== "story" && m !== "script") return;
+  if (S.mode === m) return;
+  S.mode = m;
+  store("chopchop.mode", m);
+  S.cut = []; S.title = ""; S.treatment = ""; S.notes = ""; S.tag = ""; S.match = null;
+  setStatus("");
+  reparse();
+}
 
 /* ---------- status ---------- */
 function setStatus(html){ $("status").innerHTML = html || ""; }
@@ -1063,13 +1242,19 @@ const clipOf = (s) => (s.clipName || s.name.replace(/\.[^.]+$/, "")).trim() || (
 function cutRows(){
   const fi = FI();
   const picks = active().map(p => ({ p, r: resolve(p) })).filter(x => x.r);
-  const hold = S.recMode === "hold";
+  const script = S.mode === "script";
+  const hold = !script && S.recMode === "hold";
   if (hold) picks.sort((a, b) => (a.r.startF - b.r.startF) || (a.r.src < b.r.src ? -1 : 1));
 
   let rec = parseTime($("rectc").value, fi);
   if (rec == null) rec = 0;
+  const takeGap = Math.max(0, Math.round((+S.scriptOpts.takeGap || 0) * fi.rate));
+  const lineGap = Math.max(0, Math.round((+S.scriptOpts.lineGap || 0) * fi.rate));
   const out = [];
+  let prevLine = null;
   picks.forEach(({ p, r }, i) => {
+    if (script && i > 0) rec += (p.line !== prevLine ? lineGap : takeGap);
+    prevLine = p.line;
     const len = r.endF - r.startF;
     const recIn = hold ? Math.max(r.startF, rec) : rec;
     out.push({ evt: i + 1, r, p, len, recIn, recOut: recIn + len, dur: len / fi.rate });
@@ -1078,7 +1263,34 @@ function cutRows(){
   return out;
 }
 
+const lineOf = (p) => p && p.line > 0 ? S.script.lines[p.line - 1] : null;
+function lineSheetCSV(){
+  const fi = FI();
+  const head = ["Line", "Voice", "Script", "Take", "Of", "Kind", "Rewritten", "Camera clip", "Camera TC In",
+                "Timeline In", "Timeline Out", "Duration (s)", "Record In", "Record Out", "What was said"];
+  const rows = cutRows().map(x => {
+    const l = lineOf(x.p);
+    const segs = mapRange(x.r.startF, x.r.endF);
+    const first = segs && segs.find(sg => sg.mapped);
+    return [x.p.line > 0 ? "L" + x.p.line : "Off script", l ? l.who : "", l ? l.text : "",
+      x.p.take, x.p.of, x.p.kind === "partial" ? "false start" : "take", x.p.rew ? "yes" : "",
+      (clipsUnder(x.r.startF, x.r.endF) || []).join(" + "), first ? framesToTC(first.srcIn, fi) : "",
+      framesToTC(x.r.startF, fi), framesToTC(x.r.endF, fi), x.dur.toFixed(2),
+      framesToTC(x.recIn, fi), framesToTC(x.recOut, fi), x.r.text];
+  });
+  /* lines nobody recorded still belong on the sheet */
+  const found = new Set(S.cut.map(p => p.line));
+  S.script.lines.filter(l => !found.has(l.n)).forEach(l =>
+    rows.push(["L" + l.n, l.who, l.text, "", 0, "no take found", "", "", "", "", "", "", "", "", ""]));
+  rows.sort((a, b) => {
+    const n = (v) => v === "Off script" ? 1e9 : parseInt(String(v).slice(1), 10);
+    return (n(a[0]) - n(b[0])) || ((+a[3] || 0) - (+b[3] || 0));
+  });
+  return csvRows([head, ...rows]);
+}
+
 function tableCSV(){
+  if (S.mode === "script") return lineSheetCSV();
   const fi = FI();
   const head = ["Event", "Source", "Camera clip", "Transcript file", "Speaker", "TC In", "TC Out", "Duration (s)",
                 "Record In", "Record Out", "Role", "Soundbite", "Why it's in", "Timecode estimated"];
@@ -1101,7 +1313,14 @@ function markerCSVs(){
   const files = [];
   for (const [sid, items] of bySrc){
     const s = srcById(sid);
-    const rows = items.map(x => [
+    const rows = items.map(x => S.mode === "script" ? [
+      (x.p.line > 0 ? "L" + x.p.line : "OFF") + " T" + x.p.take + "/" + x.p.of +
+        (lineOf(x.p) && lineOf(x.p).who ? " " + lineOf(x.p).who : ""),
+      (x.p.kind === "partial" ? "FALSE START — " : "") + (x.p.rew ? "REWRITTEN — " : "") +
+        (lineOf(x.p) ? "Script: " + lineOf(x.p).text + " — Said: " : "") + x.r.text,
+      framesToTC(x.r.startF, fi), framesToTC(x.r.endF, fi),
+      framesToTC(x.len, { ...fi, df: false }), "Comment"
+    ] : [
       pad(x.evt, 3) + " " + x.r.speaker,
       (clipsUnder(x.r.startF, x.r.endF) || []).join(" + ") + (S.timeline ? " — " : "") +
         (x.p.reason ? x.p.reason + " — " : "") + x.r.text,
@@ -1126,7 +1345,16 @@ function buildEDL(){
       framesToTC(e.srcIn, fi) + " " + framesToTC(e.srcOut, fi) + " " +
       framesToTC(e.recIn, fi) + " " + framesToTC(e.recOut, fi));
     L.push("* FROM CLIP NAME: " + ascii(e.clip));
-    L.push("* COMMENT: " + ascii(e.speaker + ": " + e.text).slice(0, 92));
+    if (S.mode === "script" && e.p){
+      const l = e.p.line > 0 ? S.script.lines[e.p.line - 1] : null;
+      L.push("* COMMENT: " + ascii((e.p.line > 0 ? "LINE " + e.p.line : "OFF SCRIPT") +
+        " TAKE " + e.p.take + "/" + e.p.of + (l && l.who ? " " + l.who : "") +
+        (e.p.kind === "partial" ? " FALSE START" : "") + (e.p.rew ? " REWRITTEN" : "")).slice(0, 92));
+      if (l) L.push("* SCRIPT: " + ascii(l.text).slice(0, 92));
+      L.push("* SAID: " + ascii(e.text).slice(0, 92));
+    } else {
+      L.push("* COMMENT: " + ascii(e.speaker + ": " + e.text).slice(0, 92));
+    }
     if (e.retimed) L.push("* NOTE: SOURCE IS RETIMED ON THE TIMELINE - CHECK THIS EVENT");
     if (!e.mapped) L.push("* NOTE: NOTHING ON THE MAPPED TRACK HERE - RELINK BY HAND");
     L.push("");
@@ -1134,7 +1362,33 @@ function buildEDL(){
   return L.join("\r\n");
 }
 
+function lineSheetMD(){
+  const fi = FI();
+  const L = ["# " + (S.title || "Line stringout"), "",
+    "**Script** " + (S.script.fileName || "pasted") + " · " + S.script.lines.length + " lines" +
+    "  ·  **Frame rate** " + $("fps").value, ""];
+  if (S.treatment) L.push(S.treatment, "");
+  if (S.notes) L.push("> " + S.notes, "");
+  const rows = cutRows();
+  const groups = S.script.lines.map(l => ({ l, takes: rows.filter(x => x.p.line === l.n) }));
+  const off = rows.filter(x => x.p.line === -1);
+  if (off.length) groups.push({ l: null, takes: off });
+  for (const g of groups){
+    L.push("## " + (g.l ? "L" + g.l.n + (g.l.who ? " · " + g.l.who : "") : "Off script"), "");
+    if (g.l) L.push("> " + g.l.text, "");
+    if (!g.takes.length){ L.push("_No take found._", ""); continue; }
+    L.push("| Take | Clip | In | Out | Dur | Said |", "|---|---|---|---|---|---|");
+    g.takes.forEach(x => L.push("| " + x.p.take + "/" + x.p.of + (x.p.kind === "partial" ? " (false start)" : "") +
+      (x.p.rew ? " (rewritten)" : "") + " | " + (clipsUnder(x.r.startF, x.r.endF) || []).join(" + ") + " | " +
+      framesToTC(x.r.startF, fi) + " | " + framesToTC(x.r.endF, fi) + " | " + x.dur.toFixed(1) + "s | " +
+      x.r.text.replace(/\|/g, "/") + " |"));
+    L.push("");
+  }
+  return L.join("\n");
+}
+
 function buildTreatmentMD(){
+  if (S.mode === "script") return lineSheetMD();
   const fi = FI();
   const topic = S.topicMode === "named" && S.topic.trim() ? S.topic.trim() : "General — the strongest story in the material";
   const L = ["# " + (S.title || "Chop Chop cut"), "",
@@ -1509,7 +1763,7 @@ async function makeCut(){
       fail("Chop Chop can't reach Claude yet.",
            "Paste an Anthropic API key into the Claude panel on the left, or use “Do it by hand” below the table.");
       $("ex-card").hidden = false;
-      const d = document.querySelector("details.adv"); if (d) d.open = true;
+      const d = $("manual-box"); if (d) d.open = true;
       $("api-key") && $("api-key").focus();
       return;
     }
@@ -1534,7 +1788,7 @@ async function makeCut(){
     else if (e && e.message === "empty") fail("Claude didn't choose any soundbites that exist in these transcripts.", "Try again, or narrow the topic.");
     else fail("That didn't work.", (e && (e.message || e.code)) ? String(e.message || e.code) : "Try again.");
   } finally {
-    S.busy = false; $("go").textContent = "Make the cut"; renderSources();
+    S.busy = false; renderSources();
   }
 }
 
@@ -1753,7 +2007,7 @@ function clipsUnder(a, b){
    crosses a cut comes back as the same two cuts. */
 function edlEvents(){
   const rows = cutRows();
-  const hold = S.recMode === "hold";
+  const hold = S.mode !== "script" && S.recMode === "hold";
   const out = [];
   let n = 0;
   for (const x of rows){
@@ -1777,12 +2031,318 @@ function edlEvents(){
       out.push({
         evt: ++n, reel: sg.reel, clip: sg.clip, mapped: sg.mapped, retimed: !!sg.retimed,
         srcIn: sg.srcIn, srcOut: sg.srcIn + len, recIn, recOut: recIn + len,
-        speaker: x.r.speaker, text: x.r.text
+        speaker: x.r.speaker, text: x.r.text, p: x.p
       });
       rec += len;
     }
   }
   return out;
+}
+</script>
+
+<script>
+"use strict";
+/* ============================================================
+   Part 4c: script mode — a written script, a timeline of takes recorded
+   out of order, and a stringout of every take in script order
+   ============================================================ */
+
+/* ---------- reading the script ---------- */
+const CUE_EXT = /\s*\((?:V\.?\s*O\.?|O\.?\s*S\.?|O\.?\s*C\.?|CONT'?D|CONT\.?|PRE-?LAP|FILTERED|ON PHONE)[^)]*\)\s*/gi;
+const NOT_A_CUE = /^(INT\.|EXT\.|INT\/EXT|I\/E|FADE|CUT TO|DISSOLVE|SMASH|MATCH CUT|THE END|TITLE|SUPER|SCENE|SFX|MUSIC|END)/;
+const cleanWho = (w) => String(w || "").replace(CUE_EXT, " ").replace(/\s+/g, " ").trim().toUpperCase();
+const cleanLine = (t) => String(t || "").replace(/\[[^\]]*\]/g, " ").replace(/\s+/g, " ").trim();
+
+function parseScript(text, fileName){
+  text = String(text || "").replace(/^﻿/, "");
+  const lines = [];
+  const add = (who, t) => { t = cleanLine(t); if (t) lines.push({ who: cleanWho(who), text: t }); };
+
+  /* Final Draft: dialogue paragraphs follow a character paragraph */
+  if (/<FinalDraft/i.test(text.slice(0, 2000))){
+    const doc = new DOMParser().parseFromString(text, "application/xml");
+    if (doc.querySelector("parsererror")) throw new Error("That Final Draft file wouldn't open.");
+    let who = "";
+    for (const p of doc.getElementsByTagName("Paragraph")){
+      const type = (p.getAttribute("Type") || "").toLowerCase();
+      const t = [...p.getElementsByTagName("Text")].map(x => x.textContent).join("");
+      if (type === "character") who = t;
+      else if (type === "dialogue") add(who, t);
+      else if (type === "parenthetical") continue;
+      else who = "";
+    }
+    return { lines: number(lines), format: "Final Draft" };
+  }
+
+  const rows = text.replace(/\r\n?/g, "\n").split("\n").map(r => r.replace(/\s+$/, ""));
+  const filled = rows.filter(r => r.trim());
+  if (!filled.length) return { lines: [], format: "empty" };
+
+  /* NAME: line — the usual shape of an ad or VO script */
+  const COLON = /^\s*(?:\d+[.)]\s*)?([A-Za-z][A-Za-z0-9 .'&\-]{0,28}?(?:\s*\([^)]*\))?)\s*:\s+(\S.*)$/;
+  const colonHits = filled.filter(r => {
+    const m = r.match(COLON);
+    return m && m[1].trim().split(/\s+/).length <= 4 && !/^\d/.test(m[1]) && !NOT_A_CUE.test(m[1].trim().toUpperCase());
+  }).length;
+
+  /* screenplay — a cue in capitals, dialogue beneath it until a blank line */
+  const isCue = (r) => {
+    const t = r.trim();
+    if (!t || t.length > 40 || /[a-z]/.test(t.replace(CUE_EXT, "")) || !/[A-Z]/.test(t)) return false;
+    if (NOT_A_CUE.test(t) || /[.!?,]$/.test(t.replace(CUE_EXT, "").trim())) return false;
+    return t.replace(CUE_EXT, "").trim().split(/\s+/).length <= 4;
+  };
+  let cueHits = 0;
+  for (let i = 0; i < rows.length - 1; i++) if (isCue(rows[i]) && rows[i + 1].trim() && !isCue(rows[i + 1])) cueHits++;
+
+  if (colonHits >= 2 && colonHits >= filled.length * 0.3){
+    let open = null;
+    for (const r of rows){
+      const m = r.match(COLON);
+      if (m && m[1].trim().split(/\s+/).length <= 4 && !NOT_A_CUE.test(m[1].trim().toUpperCase())){
+        open = { who: m[1], text: m[2] }; lines.push(open);
+      } else if (!r.trim()) open = null;
+      else if (open && !/^\s*[\[(]/.test(r)) open.text += " " + r.trim();     /* wrapped dialogue */
+      else open = null;                                                     /* direction */
+    }
+    for (const l of lines){ l.who = cleanWho(l.who); l.text = cleanLine(l.text); }
+    return { lines: number(lines.filter(l => l.text)), format: "NAME: line" };
+  }
+
+  if (cueHits >= 2){
+    let who = null, buf = [];
+    const flush = () => { if (who && buf.length) add(who, buf.join(" ")); buf = []; };
+    for (const r of rows){
+      const t = r.trim();
+      if (!t){ flush(); who = null; continue; }
+      if (isCue(r)){ flush(); who = t; continue; }
+      if (who && /^\(.*\)$/.test(t)) continue;                               /* (beat) */
+      if (who) buf.push(t);
+    }
+    flush();
+    return { lines: number(lines), format: "screenplay" };
+  }
+
+  /* numbered, or simply one line per row */
+  for (const r of filled){
+    const t = r.replace(/^\s*(?:\d+[.)]|[-–•*])\s*/, "");
+    if (/^\s*[\[(].*[\])]\s*$/.test(t)) continue;
+    add("", t);
+  }
+  return { lines: number(lines), format: "one line per row" };
+}
+function number(lines){ return lines.map((l, i) => ({ n: i + 1, who: l.who, text: l.text })); }
+
+/* A Final Draft file reads back into the box as NAME: line, so whatever was
+   loaded can be edited in one place and re-read the same way. */
+function loadScriptText(text, fileName){
+  const parsed = parseScript(text, fileName);
+  const box = $("script-text");
+  if (parsed.format === "Final Draft")
+    box.value = parsed.lines.map(l => (l.who ? l.who + ": " : "") + l.text).join("\n");
+  else box.value = text;
+  setScript(box.value, fileName);
+  if (parsed.format === "Final Draft"){ S.script.format = "Final Draft"; renderScript(); }
+  renderSources(); renderMeter();
+}
+
+function setScript(text, fileName){
+  const parsed = parseScript(text, fileName);
+  S.script = { raw: text, fileName: fileName || "", lines: parsed.lines, format: parsed.format };
+  renderScript();
+}
+function renderScript(){
+  const box = $("script-count"), list = $("script-lines");
+  if (!box) return;
+  const L = S.script.lines;
+  if (!L.length){
+    box.textContent = S.script.raw.trim() ? "No dialogue lines found in that." : "";
+    if (list) list.innerHTML = "";
+    $("script-lines-box").hidden = true;
+    return;
+  }
+  const who = [...new Set(L.map(l => l.who).filter(Boolean))];
+  box.textContent = L.length + " lines" + (who.length ? " · " + who.length + (who.length === 1 ? " voice" : " voices") + " (" + who.slice(0, 4).join(", ") + (who.length > 4 ? "…" : "") + ")" : "") +
+    " · read as " + S.script.format;
+  $("script-lines-box").hidden = false;
+  list.innerHTML = L.map(l => "<li><span class=\"mono\">L" + l.n + "</span> " + (l.who ? "<b>" + esc(l.who) + "</b> " : "") + esc(l.text) + "</li>").join("");
+}
+
+/* ---------- matching rows to lines ---------- */
+function scriptLineText(l){ return "[L" + l.n + "] " + (l.who ? l.who + ": " : "") + l.text; }
+
+function rowLine(u, fi){
+  const s = srcById(u.src);
+  const clips = clipsUnder(u.startF + (s ? s.offsetF : 0), u.endF + (s ? s.offsetF : 0));
+  const who = s && s.hasSpeaker ? " · " + u.speaker : "";
+  return "[" + u.uid + "] " + framesToTC(u.startF + (s ? s.offsetF : 0), fi) +
+    (clips && clips.length ? " · clip " + clips.join("+") : "") + who + ' · "' + u.text + '"';
+}
+
+function matchText(rows){
+  return [
+"You are an assistant editor building a line-by-line stringout from a shoot.",
+"Actors recorded the script's lines out of order, across several days, often several takes each, and some lines were rewritten on the day.",
+"",
+"THE SCRIPT",
+S.script.lines.map(scriptLineText).join("\n"),
+"",
+"WHAT WAS RECORDED",
+"Each row is a stretch of speech from the rushes, in the order it sits on the editor's timeline. Rows sharing a clip name come from one continuous recording.",
+rows.join("\n"),
+"",
+"FOR EVERY ROW, decide:",
+"- line: the number of the script line being performed (L7 is 7). Use 0 for anything that is not a performance: slates, \"action\", \"cut\", \"going again\", the director, crew, notes, laughter, chat. Use -1 for a genuine performance that matches no script line — an alt, a wild line, an ad-lib.",
+"- kind: \"t\" for a complete performance of the line; \"p\" for a false start, a stumble that stops, or a pick-up of only part of the line.",
+"- cont: 1 if this row carries on the same attempt as the row immediately before it (one reading ran across two rows); otherwise 0. A fresh attempt at the same line is 0.",
+"- rew: 1 if the words differ from the script by more than small slips — a line rewritten on the day; otherwise 0.",
+"",
+"Match on meaning and on where a line sits in the scene, not on exact words. If one row holds two different lines, give it the line it mostly contains.",
+"",
+'Return ONLY JSON, one entry for EVERY row, in this compact form: {"rows":[["A001",7,"t",0,0],["A002",0,"t",0,0]]}',
+"Each entry is [row id, line, kind, cont, rew]."
+  ].join("\n");
+}
+
+async function matchRows(budget){
+  const fi = FI();
+  const units = allUnits();
+  const rows = units.map(u => rowLine(u, fi));
+  const fixed = byteLen(matchText([])) + 400;
+  if (fixed > budget * 0.7){
+    const err = new Error("This script is too long to send alongside the takes on this route. Add an API key in the Claude panel — that route takes far more.");
+    err.code = "too_big"; throw err;
+  }
+  /* small chunks keep each answer well inside the output limit */
+  const chunks = [];
+  let cur = [], n = 0;
+  for (const r of rows){
+    const b = byteLen(r) + 1;
+    if (cur.length && (n + b > budget - fixed || cur.length >= 180)){ chunks.push(cur); cur = []; n = 0; }
+    cur.push(r); n += b;
+  }
+  if (cur.length) chunks.push(cur);
+
+  const known = new Set(units.map(u => u.uid));
+  const maxLine = S.script.lines.length;
+  const out = new Map();
+  for (let i = 0; i < chunks.length; i++){
+    working(chunks.length > 1
+      ? "Matching takes to the script — part " + (i + 1) + " of " + chunks.length + "…"
+      : "Matching " + rows.length + " stretches of speech to " + maxLine + " script lines…");
+    const res = await askJSON(matchText(chunks[i]), false);
+    readMatches(res, known, maxLine, out);
+  }
+  return out;
+}
+function readMatches(res, known, maxLine, out){
+  for (const e of (res && Array.isArray(res.rows) ? res.rows : [])){
+    const id = normId(Array.isArray(e) ? e[0] : e && (e.id || e.i));
+    if (!known.has(id)) continue;
+    let line = parseInt(Array.isArray(e) ? e[1] : (e.line != null ? e.line : e.l), 10);
+    if (!isFinite(line) || line > maxLine || line < -1) line = 0;
+    const kind = String(Array.isArray(e) ? e[2] : (e.kind || e.k || "t")).toLowerCase().startsWith("p") ? "p" : "t";
+    const cont = !!+(Array.isArray(e) ? e[3] : (e.cont || e.c || 0));
+    const rew  = !!+(Array.isArray(e) ? e[4] : (e.rew || e.rewritten || e.r || 0));
+    out.set(id, { line, kind, cont, rew });
+  }
+  return out;
+}
+
+/* ---------- rows into takes, takes into script order ---------- */
+function buildTakes(match){
+  const takes = [];
+  for (const s of S.sources){
+    let cur = null;
+    s.units.forEach((u, i) => {
+      const a = match.get(s.id + pad(i + 1, 3));
+      if (!a || a.line === 0){ cur = null; return; }
+      if (cur && a.cont && a.line === cur.line && i === cur.last + 1){
+        cur.last = i; cur.kinds.push(a.kind); cur.rew = cur.rew || a.rew;
+      } else {
+        cur = { src: s.id, first: i, last: i, line: a.line, kinds: [a.kind], rew: a.rew,
+                at: u.startF + s.offsetF };
+        takes.push(cur);
+      }
+    });
+  }
+  const keep = takes.filter(t => S.scriptOpts.partials || t.kinds.includes("t"));
+  /* script order; within a line, the order they sit on the timeline */
+  const rank = (l) => l === -1 ? 1e9 : l;
+  keep.sort((a, b) => (rank(a.line) - rank(b.line)) || (a.at - b.at));
+  const count = {};
+  keep.forEach(t => { count[t.line] = (count[t.line] || 0) + 1; });
+  const seen = {};
+  return keep.map(t => {
+    seen[t.line] = (seen[t.line] || 0) + 1;
+    return {
+      uid: t.src + pad(t.first + 1, 3), inExt: 0, outExt: t.last - t.first, free: true,
+      line: t.line, take: seen[t.line], of: count[t.line],
+      kind: t.kinds.includes("t") ? "take" : "partial", rew: t.rew,
+      role: "", reason: "", dropped: false
+    };
+  });
+}
+
+function applyScriptResult(match){
+  const picks = buildTakes(match);
+  if (!picks.length) throw Object.assign(new Error("empty"), { code: "no_takes" });
+  S.cut = picks;
+  const L = S.script.lines;
+  const found = new Set(picks.map(p => p.line));
+  const missing = L.filter(l => !found.has(l.n));
+  const takes = picks.filter(p => p.line > 0).length;
+  const offScript = picks.filter(p => p.line === -1).length;
+  const rew = picks.filter(p => p.rew && p.line > 0).length;
+  const falseStarts = picks.filter(p => p.kind === "partial").length;
+  S.title = "Line stringout";
+  S.treatment = takes + " takes across " + (L.length - missing.length) + " of " + L.length + " script lines, laid out in script order with each line's takes in the order they sit on your timeline." +
+    (rew ? " " + rew + (rew === 1 ? " take was" : " takes were") + " rewritten on the day." : "") +
+    (offScript ? " " + offScript + " off-script performance" + (offScript === 1 ? " sits" : "s sit") + " at the end." : "") +
+    (falseStarts ? " " + falseStarts + " false start" + (falseStarts === 1 ? " is" : "s are") + " included." : "");
+  S.notes = missing.length
+    ? "No take found for " + missing.slice(0, 12).map(l => "L" + l.n + (l.who ? " " + l.who : "")).join(", ") +
+      (missing.length > 12 ? " and " + (missing.length - 12) + " more" : "") + "."
+    : "";
+  S.tag = "";
+  renderAll();
+  setStatus("");
+  $("cut-card").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+async function assembleScript(){
+  if (S.busy || !S.sources.length) return;
+  if (!S.script.lines.length){ fail("There's no script yet.", "Drop the script into the brief, or paste it in."); return; }
+  S.busy = true; $("go").disabled = true; $("go").textContent = "Matching…";
+  try {
+    if (ENGINE.kind === "checking") await detectEngine();
+    if (!engineReady()){
+      fail("Chop Chop can't reach Claude yet.",
+           "Paste an Anthropic API key into the Claude panel on the left, or use “Do it by hand” below the table.");
+      $("ex-card").hidden = false;
+      const d = $("manual-box"); if (d) d.open = true;
+      return;
+    }
+    let budget = 400000;
+    if (ENGINE.kind === "sample"){
+      budget = 61000;
+      try { const lim = await ENGINE.sample.limits(); if (lim && lim.maxPromptBytes) budget = Math.floor(lim.maxPromptBytes * 0.95); } catch (e){}
+    }
+    S.match = await matchRows(budget);
+    applyScriptResult(S.match);
+  } catch (e){
+    const code = e && e.code;
+    if (code === "no_takes") fail("None of the recorded speech matched the script.", "Check the transcript is of the right timeline, and that the script is the one that was shot.");
+    else if (code === "too_big") fail("The script is too long for this route.", e.message);
+    else if (code === "bad_key") fail("That API key was refused.", "Check it in the Claude panel on the left.");
+    else if (code === "offline") fail("Couldn't reach the Claude API from this page.", "Check the machine has outbound access to api.anthropic.com.");
+    else if (code === "rate_limited") fail("Your account hit its rate limit.", "Give it a minute and try again.");
+    else if (code === "overloaded") fail("Claude is busy just now.", "Try again in a moment.");
+    else if (code === "not_json") fail("Claude's answer came back in the wrong shape.", "Try again — it usually lands second time.");
+    else fail("That didn't work.", (e && (e.message || e.code)) ? String(e.message || e.code) : "Try again.");
+  } finally {
+    S.busy = false; renderGo(); renderSources();
+  }
 }
 </script>
 
@@ -1819,6 +2379,11 @@ async function addFiles(list){
   for (const f of files) read.push([f.name, await f.text()]);
   for (const [name, text] of read){
     try {
+      if (/<FinalDraft/i.test(text.slice(0, 2000)) || /\.(fdx|fountain)$/i.test(name)){
+        loadScriptText(text, name);
+        if (S.mode !== "script") setMode("script");
+        continue;
+      }
       if (looksXML(text)){
         S.timeline = readTimelineXML(text, name);
         S.tcMode = "sequence";
@@ -1940,7 +2505,35 @@ function wire(){
   });
 
   /* the cut */
-  $("go").onclick = makeCut;
+  $("go").onclick = () => S.mode === "script" ? assembleScript() : makeCut();
+
+  /* script mode */
+  $("mode-story").onclick = () => setMode("story");
+  $("mode-script").onclick = () => setMode("script");
+  const sfile = $("script-file"), sdrop = $("script-drop");
+  sdrop.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); sfile.click(); } });
+  sfile.addEventListener("change", async () => {
+    const f = sfile.files && sfile.files[0];
+    if (f) loadScriptText(await f.text(), f.name);
+    sfile.value = "";
+  });
+  ["dragenter", "dragover"].forEach(t => sdrop.addEventListener(t, e => { e.preventDefault(); e.stopPropagation(); sdrop.classList.add("hot"); }));
+  ["dragleave", "drop"].forEach(t => sdrop.addEventListener(t, e => { e.preventDefault(); e.stopPropagation(); sdrop.classList.remove("hot"); }));
+  sdrop.addEventListener("drop", async e => {
+    const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) loadScriptText(await f.text(), f.name);
+  });
+  let scriptT;
+  $("script-text").addEventListener("input", e => {
+    clearTimeout(scriptT);
+    scriptT = setTimeout(() => { setScript(e.target.value, S.script.fileName); renderSources(); renderMeter(); }, 250);
+  });
+  $("partials").addEventListener("change", e => {
+    S.scriptOpts.partials = e.target.checked;
+    if (S.match && S.mode === "script"){ try { applyScriptResult(S.match); } catch (err){ S.cut = []; renderAll(); } }
+  });
+  $("gap-take").addEventListener("input", e => { S.scriptOpts.takeGap = Math.max(0, parseFloat(e.target.value) || 0); renderMeter(); });
+  $("gap-line").addEventListener("input", e => { S.scriptOpts.lineGap = Math.max(0, parseFloat(e.target.value) || 0); renderMeter(); });
   $("cut-body").addEventListener("click", e => {
     const mv = e.target.closest("[data-move]");
     if (mv){
@@ -1993,6 +2586,10 @@ function wire(){
   /* manual route */
   $("b-copy-prompt").onclick = () => {
     const fi = FI();
+    if (S.mode === "script"){
+      if (!S.script.lines.length) return toast("Add the script first.");
+      return copyOut("the brief", matchText(allUnits().map(u => rowLine(u, fi))));
+    }
     copyOut("the brief", briefText(allUnits().map(u => unitLine(u, fi))));
   };
   $("b-paste").onclick = () => {
@@ -2000,9 +2597,13 @@ function wire(){
     if (!raw) return toast("Paste the JSON into the box first.");
     try {
       const m = raw.match(/\{[\s\S]*\}/);
-      applyResult(JSON.parse(m ? m[0] : raw));
+      const obj = JSON.parse(m ? m[0] : raw);
+      if (S.mode === "script" && obj && Array.isArray(obj.rows)){
+        S.match = readMatches(obj, new Set(allUnits().map(u => u.uid)), S.script.lines.length, new Map());
+        applyScriptResult(S.match);
+      } else applyResult(obj);
       S.tag = "pasted in by hand"; renderTreatment();
-      toast("Cut loaded.");
+      toast(S.mode === "script" ? "Stringout loaded." : "Cut loaded.");
     } catch (e){ toast("That isn't JSON Chop Chop can read."); }
   };
 }
@@ -2010,6 +2611,7 @@ function wire(){
 
 renderLenChips();
 wire();
+if (store("chopchop.mode") === "script") S.mode = "script";
 renderAll();
 renderEngine();
 detectEngine();

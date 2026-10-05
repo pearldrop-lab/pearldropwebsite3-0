@@ -19,6 +19,73 @@ The file is written for the Artifact skeleton: no `<!doctype>`, `<html>`,
 `<head>` or `<body>` tags of its own. To open it as an ordinary web page, wrap it
 in that skeleton first.
 
+## Two jobs
+
+The switch at the top of the left rail chooses what Chop Chop is making. The
+choice is remembered per browser, and changing it clears the current result.
+
+- **Story from interviews** — everything below this section.
+- **Assemble a script** — a line stringout for drama and scripted ads.
+
+## Assemble a script
+
+For shoots where a script was recorded line by line, out of order, across days,
+with several takes of each line and some lines rewritten on the day. Give it:
+
+1. The **transcript** of a timeline holding all the takes, as CSV.
+2. That **timeline as Final Cut Pro XML**, so every take is traced to its camera
+   file and camera timecode.
+3. The **script** — dropped or pasted into the brief.
+
+It returns every take of every line, in script order, as an EDL you import as a
+new sequence, with a line sheet alongside.
+
+**Scripts it reads.** Final Draft `.fdx` (character and dialogue paragraphs);
+screenplay text (a capitalised cue, dialogue beneath until a blank line);
+`NAME: line` ad and VO scripts, with wrapped lines joined; and anything else as
+one line per row, numbered or not. Cue extensions such as (V.O.) and (CONT'D),
+parentheticals, bracketed directions, scene headings and transitions are left
+out. A Final Draft file is written back into the box as `NAME: line` so the
+script can be corrected in one place. The panel shows the line count, the voices
+found and which format it read; "Show the lines" lists them numbered.
+
+**Matching.** Script mode keeps every transcript row as its own unit rather than
+merging rows into sentences, so nothing is joined across a take. Claude labels
+every row with the script line being performed — or 0 for slates, "action",
+"cut", direction and chat, or -1 for an off-script performance such as an alt or
+ad-lib — plus whether it is a complete take or a false start, whether it carries
+on the attempt in the row before, and whether the words were rewritten on the
+day. It is told to match on meaning and position in the scene, not exact words.
+The script travels with every request; rows are sent 180 at a time so each
+answer stays well inside the output limit.
+
+**Assembly.** Consecutive rows marked as one attempt become one take. Takes are
+ordered by script line, and within a line by where they sit on your timeline.
+Off-script performances go at the end. False starts are left out unless the
+brief's checkbox says otherwise, and toggling it re-sorts without asking Claude
+again. Gaps of black between takes and between lines are set in seconds.
+
+**What comes back.**
+
+- The table: a header for every script line — including the ones nobody
+  recorded, marked "no take found" — with its takes beneath, badged as take,
+  false start or rewritten. Takes can be dropped, trimmed, and reordered within
+  their own line.
+- The EDL: one event per take per camera clip, with comments naming the line,
+  take number, voice, script text and what was actually said.
+- The line sheet CSV: line, voice, script, take, kind, rewritten, camera clip,
+  camera timecode, timeline timecode, record timecode and what was said, with
+  unrecorded lines kept in place.
+- Markers named `L7 T2/4 SARAH`, and a markdown line sheet in the zip.
+- A summary of how many lines were found, how many takes were rewritten, and
+  which lines have no take at all.
+
+Tested end to end against a synthetic two-day shoot — seven clips recorded out
+of order with slates, a false start, a rewritten line, a VO read that ran across
+two transcript rows, an ad-lib and a script line nobody recorded — with Claude's
+answer mocked. The matching itself has not yet been run against the live API on
+a real shoot.
+
 ## What it reads
 
 Any delimited transcript. A transcript with no speaker column — Premiere's
