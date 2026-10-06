@@ -9,6 +9,10 @@ function of time, so each frame is exact. Nothing is screen-recorded.
     python3 cta/render.py --format portrait --fps 50
     python3 cta/render.py --config my.json --hold 2 --out cta/out/card.mp4
     python3 cta/render.py --page pearldrop.html             # cta/pearldrop.json if present
+    python3 cta/render.py --res hd                          # 1920x1080 instead of UHD
+
+Renders at UHD by default (3840x2160 for 16:9, 2160x3840 for 9:16 ...): the card is
+laid out at HD and drawn at 2x device scale, so type and shapes are sharp, not upscaled.
 
 Needs ffmpeg on PATH (or `pip install imageio-ffmpeg`).
 """
@@ -37,6 +41,7 @@ def main():
                     '(default cta/config.json for index.html, cta/<page>.json otherwise)')
     ap.add_argument('--format', choices=['landscape', 'square', 'feed', 'portrait'], help='overrides the config')
     ap.add_argument('--fps', type=int, help='overrides the config (default 25)')
+    ap.add_argument('--res', choices=['uhd', 'hd'], default='uhd', help='uhd = 2x the card size (default), hd = 1x')
     ap.add_argument('--hold', type=float, default=0, help='seconds to hold the final frame after the 5 s build')
     ap.add_argument('--crf', type=int, default=14, help='x264 quality; lower is better (default 14)')
     ap.add_argument('--out', help='output path (default cta/out/<company>-<format>-<fps>.mp4)')
@@ -62,7 +67,8 @@ def main():
             browser = pw.chromium.launch()
         except Exception:
             browser = pw.chromium.launch(executable_path=CHROME_FALLBACK)
-        page = browser.new_page(viewport={'width': 1920, 'height': 1080})
+        scale = 2 if a.res == 'uhd' else 1
+        page = browser.new_page(viewport={'width': 1920, 'height': 1080}, device_scale_factor=scale)
         page.goto((HERE / a.page).as_uri() + '?render')
         page.wait_for_function('window.CTA && document.fonts.status === "loaded" && window.CTA.ready !== false')
         w, h = page.evaluate('c => window.CTA.set(c)', cfg)
@@ -74,14 +80,14 @@ def main():
         hold = round(a.hold * fps)
 
         slug = ''.join(ch for ch in str(cfg.get('company', stem)).lower() if ch.isalnum()) or 'card'
-        out = Path(a.out) if a.out else HERE / 'out' / f'{slug}-cta-{cfg["format"]}-{fps}fps.mp4'
+        out = Path(a.out) if a.out else HERE / 'out' / f'{slug}-cta-{cfg["format"]}-{a.res}-{fps}fps.mp4'
         out.parent.mkdir(parents=True, exist_ok=True)
 
         cmd = [ffmpeg_exe(), '-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', str(fps),
                '-i', '-', '-c:v', 'libx264', '-preset', 'slow', '-crf', str(a.crf),
                '-pix_fmt', 'yuv420p', '-tune', 'animation', '-movflags', '+faststart', str(out)]
         enc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
-        print(f'{w}x{h} @ {fps} fps, {frames + hold} frames -> {out}')
+        print(f'{w * scale}x{h * scale} @ {fps} fps, {frames + hold} frames -> {out}')
         for i in range(frames):
             page.evaluate('t => window.CTA.seek(t)', i * 1000 / fps)
             png = page.screenshot(type='png', clip={'x': 0, 'y': 0, 'width': w, 'height': h})

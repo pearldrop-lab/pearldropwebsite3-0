@@ -283,3 +283,19 @@ Known defects on the live site, carried into the menu because the slug is real:
 `bristish-sign-language-bsl-production` and `lifestyle-photography-portolio`
 are both misspelled in WordPress. Fix them there first if you want clean URLs —
 don't "correct" them here or the links 404.
+
+## Animated end cards (`cta/`)
+
+Five-second call-to-action cards that start on white and build in:
+`cta/pearldrop.html` (ours) and `cta/index.html` (Northfold, an invented demo
+brand). Each is an editor page; every property is a pure function of time, so
+`cta/render.py` steps it frame by frame in headless Chromium and pipes to ffmpeg.
+
+- **Deliver at UHD.** `render.py` renders 3840×2160 (2160×3840 portrait) by
+  default — the card is laid out at HD and drawn at 2× device scale, so it is
+  sharp, not upscaled. `--res hd` for a quick 1080p proof.
+- `python3 cta/render.py --page pearldrop.html [--format portrait] [--fps 50] [--hold 2]`
+  reads `cta/pearldrop.json` (settings copied from the editor) if present.
+- The pearl is rebuilt as SVG layers so it can animate, then crossfades to the
+  real artwork (`cta/pearldrop/pearl.png`, 669px). Keep raster assets at least
+  2× their on-card size, or UHD renders go soft.
