@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render the end card in cta/index.html to an MP4, frame by frame.
+"""Render an end card (cta/index.html, cta/pearldrop.html) to an MP4, frame by frame.
 
 The page exposes window.CTA.seek(ms): every property on the card is a pure
 function of time, so each frame is exact. Nothing is screen-recorded.
@@ -8,6 +8,7 @@ function of time, so each frame is exact. Nothing is screen-recorded.
     python3 cta/render.py                                   # cta/config.json if present
     python3 cta/render.py --format portrait --fps 50
     python3 cta/render.py --config my.json --hold 2 --out cta/out/card.mp4
+    python3 cta/render.py --page pearldrop.html             # cta/pearldrop.json if present
 
 Needs ffmpeg on PATH (or `pip install imageio-ffmpeg`).
 """
@@ -31,7 +32,9 @@ def ffmpeg_exe():
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--config', default=str(HERE / 'config.json'), help='settings JSON copied from the editor')
+    ap.add_argument('--page', default='index.html', help='card page inside cta/ (default index.html)')
+    ap.add_argument('--config', help='settings JSON copied from the editor '
+                    '(default cta/config.json for index.html, cta/<page>.json otherwise)')
     ap.add_argument('--format', choices=['landscape', 'square', 'feed', 'portrait'], help='overrides the config')
     ap.add_argument('--fps', type=int, help='overrides the config (default 25)')
     ap.add_argument('--hold', type=float, default=0, help='seconds to hold the final frame after the 5 s build')
@@ -39,6 +42,9 @@ def main():
     ap.add_argument('--out', help='output path (default cta/out/<company>-<format>-<fps>.mp4)')
     a = ap.parse_args()
 
+    stem = Path(a.page).stem
+    if not a.config:
+        a.config = str(HERE / ('config.json' if stem == 'index' else f'{stem}.json'))
     cfg = {}
     if Path(a.config).is_file():
         cfg = json.loads(Path(a.config).read_text())
@@ -57,8 +63,8 @@ def main():
         except Exception:
             browser = pw.chromium.launch(executable_path=CHROME_FALLBACK)
         page = browser.new_page(viewport={'width': 1920, 'height': 1080})
-        page.goto((HERE / 'index.html').as_uri() + '?render')
-        page.wait_for_function('window.CTA && document.fonts.status === "loaded"')
+        page.goto((HERE / a.page).as_uri() + '?render')
+        page.wait_for_function('window.CTA && document.fonts.status === "loaded" && window.CTA.ready !== false')
         w, h = page.evaluate('c => window.CTA.set(c)', cfg)
         page.set_viewport_size({'width': w, 'height': h})
         cfg = page.evaluate('window.CTA.config()')
@@ -67,7 +73,7 @@ def main():
         frames = round(dur / 1000 * fps) + 1          # include the settled last frame
         hold = round(a.hold * fps)
 
-        slug = ''.join(ch for ch in cfg['company'].lower() if ch.isalnum()) or 'card'
+        slug = ''.join(ch for ch in str(cfg.get('company', stem)).lower() if ch.isalnum()) or 'card'
         out = Path(a.out) if a.out else HERE / 'out' / f'{slug}-cta-{cfg["format"]}-{fps}fps.mp4'
         out.parent.mkdir(parents=True, exist_ok=True)
 

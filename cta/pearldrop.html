@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pearldrop End Card</title>
+<style>
+/* Self-hosted so the MP4 render is deterministic (render.py waits on them). Same faces as the site. */
+@font-face{font-family:"Space Grotesk";src:url("fonts/space-grotesk-500-latin.woff2") format("woff2");font-weight:500;font-display:block}
+@font-face{font-family:"Space Grotesk";src:url("fonts/space-grotesk-600-latin.woff2") format("woff2");font-weight:600;font-display:block}
+@font-face{font-family:"Space Grotesk";src:url("fonts/space-grotesk-700-latin.woff2") format("woff2");font-weight:700;font-display:block}
+@font-face{font-family:"Inter";src:url("fonts/inter-400-latin.woff2") format("woff2");font-weight:400;font-display:block}
+@font-face{font-family:"Inter";src:url("fonts/inter-500-latin.woff2") format("woff2");font-weight:500;font-display:block}
+
+/* Layout: a workbench — the card is the hero, transport under it, controls in a side rail.
+   The card itself follows the site look (CLAUDE.md): one hue, many depths — a bright sky
+   field under a navy scrim, neon cyan only for edges, glow and the uplight. */
+:root{
+  --ui-bg:#eef2f7; --ui-panel:#ffffff; --ui-fg:#0a1428; --ui-dim:#56637a;
+  --ui-line:#d6deea; --ui-field:#f5f8fc; --ui-accent:#0378cf; --ui-focus:#0378cf;
+  --f-display:"Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --f-body:"Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --ui-bg:#050b1f; --ui-panel:#0a1430; --ui-fg:#e6f0ff; --ui-dim:#8ea3c4;
+  --ui-line:#18264a; --ui-field:#060e24; --ui-accent:#00dcff; --ui-focus:#00dcff; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --ui-bg:#050b1f; --ui-panel:#0a1430; --ui-fg:#e6f0ff; --ui-dim:#8ea3c4;
+  --ui-line:#18264a; --ui-field:#060e24; --ui-accent:#00dcff; --ui-focus:#00dcff; color-scheme:dark }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--ui-bg);color:var(--ui-fg);font:14px/1.45 var(--f-body);-webkit-font-smoothing:antialiased}
+
+/* ---------- editor chrome ---------- */
+.app{display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:100vh}
+.bench{min-width:0;display:flex;flex-direction:column;gap:14px;padding:20px 24px}
+.bench-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.bench-head h1{margin:0;font:700 24px/1.1 var(--f-display);letter-spacing:-.02em}
+.bench-head p{margin:0;color:var(--ui-dim);font:500 12px/1.4 var(--f-display);letter-spacing:.08em;text-transform:uppercase}
+.viewport{flex:1;min-height:0;display:grid;place-items:center}
+.stage-wrap{position:relative;overflow:hidden;border-radius:6px;box-shadow:0 0 0 1px var(--ui-line),0 24px 60px -30px rgba(3,8,24,.45)}
+.transport{display:flex;align-items:center;gap:14px;background:var(--ui-panel);border:1px solid var(--ui-line);border-radius:8px;padding:10px 14px}
+.transport button{flex:none}
+.scrub{flex:1;min-width:0;accent-color:var(--ui-accent)}
+.readout{font:500 12px/1 var(--f-display);color:var(--ui-dim);font-variant-numeric:tabular-nums;white-space:nowrap}
+.readout b{color:var(--ui-fg);font-weight:600}
+.btn{appearance:none;border:1px solid var(--ui-line);background:var(--ui-field);color:var(--ui-fg);font:600 13px/1 var(--f-display);padding:9px 13px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{border-color:var(--ui-dim)}
+.btn.primary{background:var(--ui-fg);color:var(--ui-panel);border-color:var(--ui-fg)}
+.btn:focus-visible,.field input:focus-visible,.field textarea:focus-visible,.field select:focus-visible,.scrub:focus-visible{outline:2px solid var(--ui-focus);outline-offset:2px}
+.btn svg{width:12px;height:12px}
+
+.rail{background:var(--ui-panel);border-left:1px solid var(--ui-line);padding:20px 20px 32px;display:flex;flex-direction:column;gap:22px;overflow-y:auto;max-height:100vh;position:sticky;top:0}
+.rail h2{margin:0 0 10px;font:600 11px/1 var(--f-display);letter-spacing:.16em;text-transform:uppercase;color:var(--ui-dim)}
+.group{display:flex;flex-direction:column;gap:10px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field label{font-size:12px;color:var(--ui-dim)}
+.field input[type=text],.field textarea,.field select{width:100%;border:1px solid var(--ui-line);background:var(--ui-field);color:var(--ui-fg);font:14px/1.35 var(--f-body);padding:8px 10px;border-radius:6px}
+.field textarea{resize:vertical;min-height:76px}
+.field input[type=color]{width:100%;height:36px;border:1px solid var(--ui-line);background:var(--ui-field);padding:3px;border-radius:6px;cursor:pointer}
+.check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ui-fg)}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.json{font:12px/1.4 ui-monospace,Menlo,monospace!important;min-height:120px}
+.note{margin:0;color:var(--ui-dim);font-size:12px}
+.note code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:var(--ui-fg)}
+.toast{font:600 12px var(--f-display);color:var(--ui-accent);min-height:1em}
+
+@media (max-width:900px){
+  .app{grid-template-columns:1fr}
+  .rail{position:static;max-height:none;border-left:0;border-top:1px solid var(--ui-line)}
+  .bench{padding:16px}
+}
+
+/* ---------- the card (card pixels; the stage is scaled to fit) ---------- */
+.stage{
+  --sky:#0378cf; --neon:#00dcff; --scrim:#030818;
+  --sky-hi:color-mix(in srgb,var(--sky) 55%,#cfe9ff);
+  --haze:#cce3f9; --ice:#a8d8ff; --ground-hi:#0a1c50; --ground-lo:#050b1f;
+  position:absolute;left:0;top:0;transform-origin:0 0;overflow:hidden;background:#fff;color:#fff;font-family:var(--f-body);
+  --px:112px;--py:88px;--h1:138px;--sub:30px;--kick:19px;
+  --cta-h:108px;--cta-fs:32px;--c-lab:15px;--c-val:28px;--c-cols:4;--mid-gap:60px;--proof:20px;
+}
+.stage.fmt-square{--px:72px;--py:64px;--h1:92px;--sub:24px;--kick:14px;--cta-h:84px;--cta-fs:25px;--c-lab:12px;--c-val:23px;--c-cols:2;--mid-gap:40px;--proof:14px}
+.stage.fmt-feed{--px:76px;--py:72px;--h1:100px;--sub:26px;--kick:15px;--cta-h:88px;--cta-fs:26px;--c-lab:12px;--c-val:24px;--c-cols:2;--mid-gap:48px;--proof:15px}
+.stage.fmt-portrait{--px:84px;--py:96px;--h1:122px;--sub:31px;--kick:17px;--cta-h:104px;--cta-fs:30px;--c-lab:13px;--c-val:27px;--c-cols:2;--mid-gap:64px;--proof:16px}
+
+/* act one, on white: the drop and its ripples */
+.drop{position:absolute;left:0;top:0;transform-origin:50% 50%}
+.drop svg{display:block;width:100%;height:100%}
+.ripple{position:absolute;left:0;top:0;border-radius:50%;border:3px solid var(--sky)}
+.ripple.r2{border-color:var(--neon)}
+
+/* act two: the blue world, opened by an iris from the pearl */
+.world{position:absolute;inset:0;overflow:hidden;clip-path:circle(0 at 50% 50%)}
+.ground{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 40%, var(--ground-hi) 0%, var(--ground-lo) 70%)}
+.sky{position:absolute;inset:-8%;transform-origin:78% 20%;background:
+  radial-gradient(42% 52% at 80% 16%, color-mix(in srgb,var(--sky-hi) 85%,transparent) 0%, transparent 70%),
+  radial-gradient(70% 85% at 76% 22%, var(--sky) 0%, color-mix(in srgb,var(--sky) 70%,transparent) 34%, transparent 72%)}
+.haze{position:absolute;border-radius:50%;background:radial-gradient(closest-side, color-mix(in srgb,var(--haze) 60%,transparent), color-mix(in srgb,var(--haze) 18%,transparent) 55%, transparent)}
+.h-a{width:58%;height:22%;left:52%;top:10%}
+.h-b{width:40%;height:15%;left:66%;top:30%;opacity:.8}
+.h-c{width:34%;height:12%;left:40%;top:3%;opacity:.6}
+.echo{position:absolute;border-radius:50%;border:1.5px solid color-mix(in srgb,var(--ice) 26%,transparent)}
+.vignette{position:absolute;inset:0;background:
+  radial-gradient(120% 120% at 50% 120%, color-mix(in srgb,var(--neon) 16%,transparent), transparent 55%),
+  radial-gradient(140% 120% at 50% 45%, transparent 55%, rgba(5,11,31,.55) 100%),
+  linear-gradient(180deg, rgba(5,11,31,.35) 0%, transparent 18%, transparent 78%, rgba(5,11,31,.45) 100%)}
+.scrim{position:absolute;inset:0;background:
+  linear-gradient(95deg, color-mix(in srgb,var(--scrim) 80%,transparent) 0%, color-mix(in srgb,var(--scrim) 42%,transparent) 22%, transparent 50%),
+  linear-gradient(0deg, color-mix(in srgb,var(--scrim) 70%,transparent) 0%, color-mix(in srgb,var(--scrim) 18%,transparent) 24%, transparent 46%)}
+.iris-edge{position:absolute;left:0;top:0;border-radius:50%;border:3px solid var(--neon);
+  box-shadow:0 0 18px color-mix(in srgb,var(--neon) 75%,transparent),0 0 60px color-mix(in srgb,var(--neon) 40%,transparent),inset 0 0 30px color-mix(in srgb,var(--neon) 35%,transparent)}
+
+.content{position:absolute;inset:0;padding:var(--py) var(--px);display:grid;grid-template-rows:auto 1fr auto}
+.top{display:flex;justify-content:space-between;align-items:center;gap:24px}
+.slot{flex:none}
+.proof{display:flex;align-items:center;gap:.8em;font:500 var(--proof)/1 var(--f-display);letter-spacing:.06em;color:var(--ice);white-space:nowrap}
+.stars{display:flex;gap:.22em}
+.stars svg{width:1.05em;height:1.05em;fill:var(--neon);filter:drop-shadow(0 0 6px color-mix(in srgb,var(--neon) 70%,transparent))}
+
+.middle{align-self:end;padding-bottom:var(--mid-gap)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:48px;margin-top:calc(var(--h1)*.26)}
+.fmt-square .row,.fmt-feed .row,.fmt-portrait .row{grid-template-columns:minmax(0,1fr);gap:calc(var(--mid-gap)*.75)}
+.kicker{display:inline-flex;align-items:center;gap:12px;font:600 var(--kick)/1 var(--f-display);letter-spacing:.2em;text-transform:uppercase;color:var(--ice);margin-bottom:calc(var(--h1)*.22)}
+.kdot{width:.5em;height:.5em;border-radius:50%;background:var(--neon);box-shadow:0 0 12px color-mix(in srgb,var(--neon) 80%,transparent),0 0 30px color-mix(in srgb,var(--neon) 45%,transparent)}
+.h1{margin:0;font:700 var(--h1)/.94 var(--f-display);letter-spacing:-.035em;color:#fff;text-wrap:balance;text-shadow:0 4px 40px rgba(0,0,0,.35)}
+.h1 .line{display:block}
+.h1 .line.acc{color:var(--neon);text-shadow:0 0 22px color-mix(in srgb,var(--neon) 55%,transparent),0 0 60px color-mix(in srgb,var(--neon) 30%,transparent)}
+.h1 .w{display:inline-block;vertical-align:top;padding:.04em .06em .12em 0;margin:-.04em -.06em -.12em 0}
+.h1 .wi{display:inline-block;transform-origin:0 100%}
+.sub{margin:0;max-width:25em;font:400 var(--sub)/1.45 var(--f-body);color:rgba(255,255,255,.82);text-wrap:pretty}
+
+.cta{position:relative;display:inline-flex;align-items:center;gap:calc(var(--cta-h)*.3);height:var(--cta-h);padding:0 calc(var(--cta-h)*.11) 0 calc(var(--cta-h)*.44);justify-self:end;white-space:nowrap}
+.fmt-square .cta,.fmt-feed .cta,.fmt-portrait .cta{justify-self:start}
+.cta-bg{position:absolute;inset:0;border-radius:999px;background:var(--neon);overflow:hidden;
+  box-shadow:0 0 26px color-mix(in srgb,var(--neon) 50%,transparent),0 0 70px color-mix(in srgb,var(--neon) 25%,transparent)}
+.cta-glint{position:absolute;top:0;bottom:0;width:38%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.7),transparent);transform:skewX(-20deg)}
+.cta-label{position:relative;font:600 var(--cta-fs)/1 var(--f-display);letter-spacing:-.01em;color:#04101f}
+.cta-disc{position:relative;width:calc(var(--cta-h)*.78);height:calc(var(--cta-h)*.78);border-radius:50%;background:#04101f;display:grid;place-items:center;overflow:hidden}
+.cta-disc svg{width:40%;height:40%;stroke:var(--neon);stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+.bottom{position:relative;display:grid;grid-template-columns:repeat(var(--c-cols),minmax(0,1fr));gap:calc(var(--c-val)*1.05) 40px;padding-top:calc(var(--c-val)*1.15)}
+.crule{position:absolute;left:0;right:0;top:0;height:2px;transform-origin:0 50%;
+  background:linear-gradient(90deg,var(--neon),color-mix(in srgb,var(--ice) 30%,transparent) 40%,color-mix(in srgb,var(--ice) 14%,transparent));
+  box-shadow:0 0 12px color-mix(in srgb,var(--neon) 40%,transparent)}
+.c{min-width:0}
+.c .lab{display:block;font:600 var(--c-lab)/1 var(--f-display);letter-spacing:.2em;text-transform:uppercase;color:var(--ice);opacity:.85;margin-bottom:calc(var(--c-val)*.45)}
+.c .valw{display:block;overflow:hidden;padding-bottom:.12em}
+.c .val{display:block;font:500 var(--c-val)/1.2 var(--f-display);letter-spacing:-.01em;color:#fff;overflow-wrap:anywhere}
+
+/* the logo: rebuilt as layers to animate, then handed over to the real artwork */
+.lockup{position:absolute;left:0;top:0;transform-origin:0 0}
+.pearl{position:absolute;left:0;top:0}
+.pearl svg,.pearl img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.pearl svg circle,.pearl svg g.ly{transform-box:fill-box;transform-origin:50% 50%}
+.wordmark{position:absolute;overflow:hidden}
+.lt{position:absolute;inset:0}
+.lt img{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+/* ---------- render mode: just the card, 1:1, for render.py ---------- */
+body.render{background:#fff}
+body.render .bench-head,body.render .transport,body.render .rail{display:none}
+body.render .app{display:block;min-height:0}
+body.render .bench{padding:0}
+body.render .stage-wrap{box-shadow:none;border-radius:0}
+</style>
+</head>
+<body>
+<div class="app">
+  <section class="bench">
+    <header class="bench-head">
+      <h1>Pearldrop end card</h1>
+      <p id="spec">1920 × 1080 · 5.00 s · 25 fps</p>
+    </header>
+
+    <div class="viewport" id="viewport">
+      <div class="stage-wrap" id="wrap">
+        <div class="stage" id="stage" aria-label="Animated Pearldrop call-to-action card">
+          <div class="ripple" id="rip0"></div><div class="ripple r2" id="rip1"></div><div class="ripple" id="rip2"></div>
+          <div class="drop" id="drop"><svg viewBox="0 0 40 56" aria-hidden="true">
+            <defs><linearGradient id="dropG" x1="0" y1="0" x2=".4" y2="1"><stop offset="0" stop-color="#60afe8"/><stop offset=".55" stop-color="#0a8cf0"/><stop offset="1" stop-color="#0b48b4"/></linearGradient></defs>
+            <path d="M20 1C20 1 38 24 38 36A18 18 0 0 1 2 36C2 24 20 1 20 1Z" fill="url(#dropG)"/>
+            <ellipse cx="13" cy="36" rx="4" ry="6.5" fill="#fff" opacity=".55"/></svg></div>
+
+          <div class="world" id="world">
+            <div class="ground"></div>
+            <div class="sky" id="sky"></div>
+            <div class="haze h-a" id="hazeA"></div><div class="haze h-b" id="hazeB"></div><div class="haze h-c" id="hazeC"></div>
+            <div class="echo" id="echo0"></div><div class="echo" id="echo1"></div><div class="echo" id="echo2"></div>
+            <div class="vignette"></div>
+            <div class="scrim"></div>
+            <div class="content" id="content">
+              <div class="top">
+                <div class="slot" id="slot"></div>
+                <div class="proof" id="proof"><span class="stars" id="stars"></span><span id="proofTx"></span></div>
+              </div>
+              <div class="middle">
+                <div class="kicker" id="kicker"><span class="kdot"></span><span id="kickerTx"></span></div>
+                <h2 class="h1" id="h1"></h2>
+                <div class="row">
+                  <p class="sub" id="sub"></p>
+                  <div class="cta" id="cta">
+                    <div class="cta-bg" id="ctaBg"><div class="cta-glint" id="ctaGlint"></div></div>
+                    <span class="cta-label" id="ctaLabel"></span>
+                    <span class="cta-disc" id="ctaDisc"><svg viewBox="0 0 24 24" id="ctaArrow"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+                  </div>
+                </div>
+              </div>
+              <div class="bottom" id="contacts"><div class="crule" id="crule"></div></div>
+            </div>
+          </div>
+          <div class="iris-edge" id="irisEdge"></div>
+
+          <div class="lockup" id="lockup" role="img" aria-label="pearldrop">
+            <div class="pearl" id="pearl">
+              <svg viewBox="0 0 668 668" id="pearlSvg" aria-hidden="true">
+                <defs>
+                  <radialGradient id="pSph" cx="47%" cy="46%" r="54%"><stop offset="0" stop-color="#0a86ec"/><stop offset=".72" stop-color="#0864d6"/><stop offset=".9" stop-color="#0b48b4"/><stop offset="1" stop-color="#1b2a7a"/></radialGradient>
+                  <radialGradient id="pDeep" cx="50%" cy="58%" r="55%"><stop offset="0" stop-color="#05c6f8"/><stop offset=".6" stop-color="#04b2f4"/><stop offset=".86" stop-color="#0392ec"/><stop offset="1" stop-color="#0474e0"/></radialGradient>
+                  <linearGradient id="pPale" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b9e2f9"/><stop offset=".2" stop-color="#c3e5fa"/><stop offset=".45" stop-color="#93e0fb"/><stop offset="1" stop-color="#72e3fd"/></linearGradient>
+                  <linearGradient id="pCyan" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3aebff"/><stop offset=".6" stop-color="#35e8fe"/><stop offset="1" stop-color="#2fe2fe"/></linearGradient>
+                  <radialGradient id="pInner" cx="40%" cy="50%" r="60%"><stop offset="0" stop-color="#05d4fd"/><stop offset="1" stop-color="#06c0f8"/></radialGradient>
+                  <clipPath id="pClipS"><circle cx="334" cy="334" r="334"/></clipPath>
+                  <clipPath id="pClipM"><circle cx="333" cy="276" r="250"/></clipPath>
+                </defs>
+                <g clip-path="url(#pClipS)">
+                  <circle class="pl" cx="334" cy="334" r="334" fill="url(#pSph)"/>
+                  <circle class="pl" cx="278" cy="368" r="280" fill="#8ccff4"/>
+                  <circle class="pl" cx="296" cy="364" r="262" fill="url(#pPale)"/>
+                  <circle class="pl" cx="333" cy="276" r="250" fill="url(#pDeep)"/>
+                  <g class="pl ly" clip-path="url(#pClipM)"><circle cx="296" cy="364" r="262" fill="url(#pCyan)"/></g>
+                  <circle class="pl" cx="400" cy="340" r="127" fill="url(#pInner)"/>
+                  <circle class="pl" cx="338" cy="340" r="62" fill="#057ee9"/>
+                  <circle class="pl" cx="362" cy="333" r="26" fill="#fafeff"/>
+                </g>
+              </svg>
+              <img id="pearlImg" src="pearldrop/pearl.png" alt="">
+            </div>
+            <div class="wordmark" id="wordmark"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="transport">
+      <button class="btn primary" id="play" type="button" aria-label="Play"></button>
+      <button class="btn" id="replay" type="button">Replay</button>
+      <input class="scrub" id="scrub" type="range" min="0" max="5000" step="1" value="0" aria-label="Timeline position">
+      <span class="readout"><b id="secs">0.00</b> s · frame <b id="frame">000</b></span>
+    </div>
+  </section>
+
+  <aside class="rail" aria-label="Edit the card">
+    <div class="group">
+      <h2>Message</h2>
+      <div class="field"><label for="f-kicker">Kicker</label><input id="f-kicker" type="text" data-k="kicker"></div>
+      <div class="field"><label for="f-headline">Headline</label><input id="f-headline" type="text" data-k="headline"></div>
+      <div class="field"><label for="f-accent">Headline, glowing line</label><input id="f-accent" type="text" data-k="accent"></div>
+      <div class="field"><label for="f-sub">Supporting line</label><textarea id="f-sub" data-k="sub"></textarea></div>
+      <div class="field"><label for="f-cta">Button</label><input id="f-cta" type="text" data-k="cta"></div>
+      <div class="field"><label for="f-proof">Proof line (empty to hide)</label><input id="f-proof" type="text" data-k="proof"></div>
+    </div>
+    <div class="group">
+      <h2>Contact</h2>
+      <div class="field"><label for="f-phone">Telephone</label><input id="f-phone" type="text" data-k="phone"></div>
+      <div class="field"><label for="f-email">Email</label><input id="f-email" type="text" data-k="email"></div>
+      <div class="field"><label for="f-web">Web</label><input id="f-web" type="text" data-k="web"></div>
+      <div class="field"><label for="f-studio">Studio</label><input id="f-studio" type="text" data-k="studio"></div>
+    </div>
+    <div class="group">
+      <h2>Look</h2>
+      <div class="row3">
+        <div class="field"><label for="f-sky">Sky</label><input id="f-sky" type="color" data-k="sky"></div>
+        <div class="field"><label for="f-neon">Neon</label><input id="f-neon" type="color" data-k="neon"></div>
+        <div class="field"><label for="f-scrim">Scrim</label><input id="f-scrim" type="color" data-k="scrim"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label for="f-format">Format</label>
+          <select id="f-format" data-k="format">
+            <option value="landscape">16:9 · 1920×1080</option>
+            <option value="square">1:1 · 1080×1080</option>
+            <option value="feed">4:5 · 1080×1350</option>
+            <option value="portrait">9:16 · 1080×1920</option>
+          </select>
+        </div>
+        <div class="field"><label for="f-fps">Frame rate</label>
+          <select id="f-fps" data-k="fps">
+            <option value="25">25 fps</option>
+            <option value="30">30 fps</option>
+            <option value="50">50 fps</option>
+            <option value="60">60 fps</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="group">
+      <h2>Settings</h2>
+      <div class="actions">
+        <button class="btn" id="copy" type="button">Copy settings</button>
+        <button class="btn" id="apply" type="button">Apply pasted</button>
+        <button class="btn" id="reset" type="button">Reset</button>
+      </div>
+      <div class="field"><label for="json">Settings JSON</label><textarea class="json" id="json" spellcheck="false"></textarea></div>
+      <span class="toast" id="toast" role="status"></span>
+      <p class="note">To export an MP4, save this JSON as <code>cta/pearldrop.json</code> and run <code>python3 cta/render.py --page pearldrop.html</code>.</p>
+    </div>
+  </aside>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var DURATION = 5000;
+  var FORMATS = { landscape:[1920,1080], square:[1080,1080], feed:[1080,1350], portrait:[1080,1920] };
+  /* pearl diameter: on white (intro) and parked top-left (final) */
+  var PEARL = { landscape:[256,92], square:[150,70], feed:[160,74], portrait:[176,84] };
+  /* the lockup, in pearl diameters, measured off the master artwork (538px pearl) */
+  var LOCK = { w:1989/538, wmLeft:596/538, wmTop:86/538, wmW:1393/538, wmH:346/538 };
+  /* letter edges inside wordmark.png (1393px wide): p e a r l d r o p */
+  var LETTERS = [0,169,341,529,659,724,914,1038,1219,1393];
+  var DEFAULTS = {
+    kicker:"Video · Animation · Photography",
+    headline:"Let’s make something", accent:"head-turning.",
+    sub:"Video, animation and photography that makes people stop, look, and remember your brand.",
+    cta:"Start your project",
+    proof:"Every client review, five stars",
+    phone:"020 3286 3852", email:"denise@pearldrop.com", web:"pearldrop.com", studio:"Stevenage, Hertfordshire",
+    sky:"#0378cf", neon:"#00dcff", scrim:"#030818",
+    format:"landscape", fps:"25"
+  };
+  var STORE = "pearldrop-cta-v1";
+  var RENDER = /[?&]render\b/.test(location.search);
+  if (RENDER) document.body.classList.add("render");
+
+  var cfg = load();
+  var $ = function(id){ return document.getElementById(id); };
+  var stage=$("stage"), wrap=$("wrap");
+
+  /* ---------- easing + timing ---------- */
+  var clamp = function(x){ return x<0?0:x>1?1:x; };
+  function back(s){ return function(x){ var c3=s+1; return 1+c3*Math.pow(x-1,3)+s*Math.pow(x-1,2); }; }
+  var E = {
+    lin:function(x){return x;},
+    inCubic:function(x){return x*x*x;},
+    outCubic:function(x){return 1-Math.pow(1-x,3);},
+    inOutCubic:function(x){return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;},
+    inOutQuart:function(x){return x<.5?8*x*x*x*x:1-Math.pow(-2*x+2,4)/2;},
+    outExpo:function(x){return x>=1?1:1-Math.pow(2,-10*x);},
+    inOutExpo:function(x){return x<=0?0:x>=1?1:x<.5?Math.pow(2,20*x-10)/2:(2-Math.pow(2,-20*x+10))/2;},
+    outBack:back(1.3), outBackBig:back(2.2)
+  };
+  function k(t,start,dur,ease){ return (ease||E.outExpo)(clamp((t-start)/dur)); }
+  function lerp(a,b,x){ return a+(b-a)*x; }
+  function px(n){ return n.toFixed(2)+"px"; }
+
+  /* ---------- build ---------- */
+  var els = {}, G = {};
+  function el(tag,cls,text){ var n=document.createElement(tag); if(cls)n.className=cls; if(text!=null)n.textContent=text; return n; }
+  function words(s){ return String(s).trim().split(/\s+/).filter(Boolean); }
+  var STAR='<svg viewBox="0 0 24 24"><path d="M12 2.6l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.4l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg>';
+
+  function build(){
+    var fmt = FORMATS[cfg.format] ? cfg.format : "landscape", f=FORMATS[fmt];
+    stage.className = "stage fmt-"+fmt;
+    stage.style.width=f[0]+"px"; stage.style.height=f[1]+"px";
+    ["sky","neon","scrim"].forEach(function(k){ stage.style.setProperty("--"+k, cfg[k]); });
+
+    $("kickerTx").textContent=cfg.kicker; $("kicker").style.display=String(cfg.kicker).trim()?"":"none";
+    var h1=$("h1"); h1.textContent=""; els.words=[];
+    [[cfg.headline,"line"],[cfg.accent,"line acc"]].forEach(function(p){
+      if(!String(p[0]).trim()) return;
+      var line=el("span",p[1]);
+      words(p[0]).forEach(function(w,i){
+        if(i) line.appendChild(document.createTextNode(" "));
+        var o=el("span","w"), inner=el("span","wi",w); o.appendChild(inner); line.appendChild(o); els.words.push(inner);
+      });
+      h1.appendChild(line);
+    });
+    $("sub").textContent=cfg.sub;
+    $("ctaLabel").textContent=cfg.cta;
+    $("proofTx").textContent=cfg.proof;
+    $("proof").style.visibility=String(cfg.proof).trim()?"":"hidden";
+    $("stars").innerHTML=STAR+STAR+STAR+STAR+STAR; els.stars=Array.from($("stars").children);
+
+    var box=$("contacts"); Array.from(box.querySelectorAll(".c")).forEach(function(n){n.remove();}); els.cols=[];
+    [["Call",cfg.phone],["Email",cfg.email],["Web",cfg.web],["Studio",cfg.studio]].forEach(function(p){
+      if(!String(p[1]).trim()) return;
+      var c=el("div","c"), lab=el("span","lab",p[0]), vw=el("span","valw"), v=el("span","val",p[1]);
+      vw.appendChild(v); c.appendChild(lab); c.appendChild(vw); box.appendChild(c); els.cols.push({lab:lab,val:v});
+    });
+
+    /* logo, built at its big intro size so it stays crisp */
+    var D=PEARL[fmt][0], Df=PEARL[fmt][1];
+    var lock=$("lockup"); lock.style.width=px(D*LOCK.w); lock.style.height=px(D);
+    var pearl=$("pearl"); pearl.style.width=pearl.style.height=px(D);
+    var wm=$("wordmark");
+    wm.style.left=px(D*LOCK.wmLeft); wm.style.top=px(D*LOCK.wmTop); wm.style.width=px(D*LOCK.wmW); wm.style.height=px(D*LOCK.wmH);
+    if(!wm.children.length){
+      for(var i=0;i<9;i++){
+        var lt=el("div","lt"), im=el("img"); im.src="pearldrop/wordmark.png"; im.alt="";
+        var L=LETTERS[i]/1393*100, R=100-LETTERS[i+1]/1393*100;
+        lt.style.clipPath="inset(-10% "+R+"% -10% "+L+"%)";
+        lt.appendChild(im); wm.appendChild(lt);
+      }
+    }
+    els.letters=Array.from(wm.children);
+    els.layers=Array.from(document.querySelectorAll("#pearlSvg .pl"));
+    $("slot").style.width=px(Df*LOCK.w); $("slot").style.height=px(Df);
+
+    $("spec").textContent=f[0]+" × "+f[1]+" · 5.00 s · "+cfg.fps+" fps";
+    fit(); measure(); render(T);
+  }
+
+  function offsetIn(node){ var x=0,y=0; while(node && node!==stage){ x+=node.offsetLeft; y+=node.offsetTop; node=node.offsetParent; } return {x:x,y:y}; }
+  function measure(){
+    var fmt = FORMATS[cfg.format] ? cfg.format : "landscape", f=FORMATS[fmt];
+    var D=PEARL[fmt][0], Df=PEARL[fmt][1], LW=D*LOCK.w;
+    var s=offsetIn($("slot"));
+    G = { W:f[0], H:f[1], D:D, x0:(f[0]-LW)/2, y0:(f[1]-D)/2 - f[1]*0.02, x1:s.x, y1:s.y, s1:Df/D };
+    G.cx0=G.x0+D/2; G.cy0=G.y0+D/2;
+    // echo rings: the logo's off-centre circles, writ large in the sky
+    var R=Math.max(f[0],f[1]);
+    [[.78,.26,.34],[.74,.30,.52],[.70,.34,.72]].forEach(function(e,i){
+      var n=$("echo"+i), d=R*e[2]; n.style.width=n.style.height=px(d);
+      n.style.left=px(f[0]*e[0]-d/2); n.style.top=px(f[1]*e[1]-d/2);
+    });
+    var dr=$("drop"); dr.style.width=px(D*.13); dr.style.height=px(D*.13*1.4);
+  }
+
+  /* ---------- the timeline: every property is a pure function of t (ms) ---------- */
+  var LAYER_T = [800,900,960,1030,1110,1200,1290,1390];
+  function render(t){
+    var x,i,D=G.D;
+    // 0.30–0.80  a drop falls onto the white page
+    var kd=clamp((t-300)/500), dr=$("drop");
+    dr.style.opacity = (t>=300 && t<800) ? 1 : 0;
+    var dy=lerp(-D*.4, G.cy0, E.inCubic(kd));
+    dr.style.transform="translate("+px(G.cx0)+","+px(dy)+") translate(-50%,-62%) scale("+(1-.18*kd)+","+(1+.35*kd)+")";
+    // 0.80+  it lands: ripples, off-centre like the rings in the logo
+    for(i=0;i<3;i++){
+      var r=$("rip"+i), st=800+i*140, kr=k(t,st,1300,E.outCubic), d=lerp(D*.25, D*(1.55+.5*i), kr);
+      var ox=D*.05*i, oy=-D*.035*i;
+      r.style.width=r.style.height=px(d);
+      r.style.transform="translate("+px(G.cx0+ox*kr-d/2)+","+px(G.cy0+oy*kr-d/2)+")";
+      r.style.opacity = t<st ? 0 : Math.pow(1-kr,.8)*(i===1?.9:.7);
+      r.style.borderWidth = px(lerp(4,1,kr));
+    }
+    // 0.80–1.90  the pearl grows out of the splash, layer by layer, and swirls into register
+    els.layers.forEach(function(l,i){
+      var kl=k(t,LAYER_T[i], i===7?520:700, i===7?E.outBackBig:E.outBack);
+      var s0 = i===0 ? .12 : 0;
+      l.style.transform="scale("+Math.max(0,lerp(s0,1,kl))+")";
+      l.style.opacity = t<LAYER_T[i] ? 0 : 1;
+    });
+    var rot=lerp(-140,0,k(t,800,1150,E.outExpo));
+    $("pearlSvg").style.transform="rotate("+rot+"deg)";
+    var hand=k(t,1750,250,E.lin); $("pearlImg").style.opacity=hand; $("pearlImg").style.transform="rotate("+rot+"deg)";
+    // 1.40–2.30  the letters drop in, one at a time, and land with a bounce
+    els.letters.forEach(function(lt,i){
+      var s=1400+i*55, kl=k(t,s,620,E.outBackBig);
+      lt.style.transform="translateY("+((1-kl)*-118)+"%)";
+      lt.style.opacity = clamp((t-s)/90);
+    });
+    // 2.35–3.35  the logo parks top-left while the blue world irises open out of the pearl
+    var km=k(t,2400,950,E.inOutExpo);
+    var lx=lerp(G.x0,G.x1,km), ly=lerp(G.y0,G.y1,km), ls=lerp(1,G.s1,km);
+    $("lockup").style.transform="translate("+px(lx)+","+px(ly)+") scale("+ls+")";
+    var cx=lx+ls*D/2, cy=ly+ls*D/2;
+    var Rmax=Math.hypot(Math.max(cx,G.W-cx),Math.max(cy,G.H-cy))+40;
+    var kw=k(t,2350,1000,E.inOutQuart), R = t<2350 ? 0 : lerp(ls*D*.48,Rmax,kw);
+    $("world").style.clipPath="circle("+px(R)+" at "+px(cx)+" "+px(cy)+")";
+    var ie=$("irisEdge"); ie.style.width=ie.style.height=px(R*2);
+    ie.style.transform="translate("+px(cx-R)+","+px(cy-R)+")";
+    ie.style.opacity = t<2350 ? 0 : Math.sin(Math.PI*kw)*.95;
+    // the sky settles in behind it
+    x=k(t,2350,2650,E.outCubic);
+    $("sky").style.transform="scale("+lerp(1.14,1,x)+")";
+    $("hazeA").style.transform="translateX("+px(lerp(140,0,x))+")";
+    $("hazeB").style.transform="translateX("+px(lerp(220,0,x))+")";
+    $("hazeC").style.transform="translateX("+px(lerp(90,0,x))+")";
+    for(i=0;i<3;i++){ var ke=k(t,2550+i*120,1900,E.outExpo), e=$("echo"+i); e.style.transform="scale("+lerp(.6,1,ke)+")"; e.style.opacity=ke; }
+    // 2.95+  the message
+    x=k(t,2950,800,E.outExpo); var kk=$("kicker"); kk.style.opacity=x; kk.style.transform="translateX("+px((1-x)*-24)+")";
+    var n=els.words.length, ws=n>1?Math.min(75,700/(n-1)):0;
+    els.words.forEach(function(w,i){
+      var y=k(t,3000+i*ws,950,E.outExpo);
+      w.style.transform="translateY("+((1-y)*112)+"%) rotate("+((1-y)*6)+"deg)";
+      // mask only the bottom edge while it rises; once landed, let the glow breathe
+      w.parentNode.style.clipPath = y>=.999 ? "none" : "inset(-60% -40% 0 -40%)";
+    });
+    x=k(t,3400,900,E.outExpo); var sb=$("sub"); sb.style.opacity=x; sb.style.transform="translateY("+px((1-x)*26)+")";
+    // proof: five stars pop in
+    x=k(t,3300,700,E.outCubic); $("proofTx").style.opacity=x; $("proofTx").style.transform="translateX("+px((1-x)*16)+")";
+    els.stars.forEach(function(s,i){ var y=k(t,3250+i*70,550,E.outBackBig); s.style.transform="scale("+Math.max(0,y)+")"; });
+    // 3.50+  contact rule draws, details follow
+    x=k(t,3500,1000,E.inOutCubic); $("crule").style.transform="scaleX("+x+")";
+    els.cols.forEach(function(c,i){
+      var y=k(t,3700+i*100,850,E.outExpo);
+      c.lab.style.opacity=y*.85; c.val.style.transform="translateY("+((1-y)*105)+"%)";
+    });
+    // 3.55+  the button: wipes on, lands, one glint
+    x=k(t,3550,750,E.inOutExpo); $("ctaBg").style.clipPath="inset(0 "+((1-x)*100)+"% 0 0 round 999px)";
+    $("ctaBg").style.opacity = t<3550?0:1;
+    x=k(t,3800,750,E.outExpo); var cl=$("ctaLabel"); cl.style.opacity=x; cl.style.transform="translateX("+px((1-x)*-18)+")";
+    x=k(t,3900,650,E.outBack); $("ctaDisc").style.transform="scale("+Math.max(0,x)+")";
+    x=k(t,4000,700,E.outExpo); $("ctaArrow").style.transform="translateX("+((1-x)*-140)+"%)";
+    x=k(t,4350,650,E.inOutCubic); $("ctaGlint").style.transform="translateX("+lerp(-150,330,x)+"%) skewX(-20deg)";
+  }
+
+  /* ---------- fit the stage to the bench ---------- */
+  function fit(){
+    var f=FORMATS[cfg.format]||FORMATS.landscape;
+    if(RENDER){ wrap.style.width=f[0]+"px"; wrap.style.height=f[1]+"px"; stage.style.transform="none"; return; }
+    var vp=$("viewport"), narrow=window.innerWidth<=900;
+    var aw=vp.clientWidth, ah=narrow? window.innerHeight*0.7 : Math.max(240, window.innerHeight-170);
+    var sc=Math.min(aw/f[0], ah/f[1]);
+    wrap.style.width=Math.floor(f[0]*sc)+"px"; wrap.style.height=Math.floor(f[1]*sc)+"px";
+    stage.style.transform="scale("+sc+")";
+  }
+
+  /* ---------- transport ---------- */
+  var T=0, playing=false, t0=0, raf=0;
+  var scrub=$("scrub"), playBtn=$("play");
+  var ICON_PLAY='<svg viewBox="0 0 12 12"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg>Play';
+  var ICON_PAUSE='<svg viewBox="0 0 12 12"><path d="M2 1h3v10H2zM7 1h3v10H7z" fill="currentColor"/></svg>Pause';
+  function seek(t){
+    T=Math.max(0,Math.min(DURATION,t)); render(T);
+    scrub.value=Math.round(T);
+    $("secs").textContent=(T/1000).toFixed(2);
+    $("frame").textContent=String(Math.round(T/1000*cfg.fps)).padStart(3,"0");
+  }
+  function tick(now){ var t=now-t0; if(t>=DURATION){ seek(DURATION); stop(); return; } seek(t); raf=requestAnimationFrame(tick); }
+  function play(){ if(T>=DURATION) T=0; playing=true; t0=performance.now()-T; playBtn.innerHTML=ICON_PAUSE; playBtn.setAttribute("aria-label","Pause"); cancelAnimationFrame(raf); raf=requestAnimationFrame(tick); }
+  function stop(){ playing=false; cancelAnimationFrame(raf); playBtn.innerHTML=ICON_PLAY; playBtn.setAttribute("aria-label","Play"); }
+  playBtn.onclick=function(){ playing?stop():play(); };
+  $("replay").onclick=function(){ seek(0); play(); };
+  scrub.oninput=function(){ stop(); seek(+scrub.value); };
+  document.addEventListener("keydown",function(e){
+    if(e.code==="Space" && !/INPUT|TEXTAREA|SELECT|BUTTON/.test(e.target.tagName)){ e.preventDefault(); playing?stop():play(); }
+  });
+
+  /* ---------- editor ---------- */
+  function load(){ var c={}; try{ c=JSON.parse(localStorage.getItem(STORE)||"{}")||{}; }catch(e){} return Object.assign({},DEFAULTS,c); }
+  function save(){ try{ localStorage.setItem(STORE,JSON.stringify(cfg)); }catch(e){} }
+  function syncFields(){
+    document.querySelectorAll("[data-k]").forEach(function(f){ f.value=cfg[f.dataset.k]; });
+    $("json").value=JSON.stringify(cfg,null,2);
+  }
+  function toast(msg){ var n=$("toast"); n.textContent=msg; clearTimeout(toast.t); toast.t=setTimeout(function(){n.textContent="";},2400); }
+  document.querySelectorAll("[data-k]").forEach(function(f){
+    f.addEventListener(f.type==="color"||f.tagName==="SELECT"?"change":"input",function(){
+      cfg[f.dataset.k]=f.value; save(); $("json").value=JSON.stringify(cfg,null,2); build();
+    });
+    if(f.type==="color") f.addEventListener("input",function(){ cfg[f.dataset.k]=f.value; build(); });
+  });
+  $("copy").onclick=function(){
+    var txt=JSON.stringify(cfg,null,2), ta=$("json"); ta.value=txt;
+    var fallback=function(){ ta.focus(); ta.select(); toast("Selected. Press Ctrl/Cmd+C to copy."); };
+    try{ navigator.clipboard.writeText(txt).then(function(){toast("Settings copied.");},fallback); }catch(e){ fallback(); }
+  };
+  $("apply").onclick=function(){
+    try{ cfg=Object.assign({},DEFAULTS,JSON.parse($("json").value)); save(); syncFields(); build(); seek(DURATION); toast("Settings applied."); }
+    catch(e){ toast("That isn’t valid JSON. Check for a missing quote or comma."); }
+  };
+  $("reset").onclick=function(){ cfg=Object.assign({},DEFAULTS); save(); syncFields(); build(); seek(0); play(); toast("Back to the defaults."); };
+
+  /* ---------- hooks for render.py ---------- */
+  window.CTA = {
+    duration: DURATION, formats: FORMATS, ready: false,
+    set: function(c){ cfg=Object.assign({},DEFAULTS,c||{}); build(); seek(0); return FORMATS[cfg.format]||FORMATS.landscape; },
+    seek: function(t){ stop(); seek(t); },
+    config: function(){ return Object.assign({},cfg); }
+  };
+
+  if(window.ResizeObserver) new ResizeObserver(fit).observe($("viewport"));
+  addEventListener("resize",fit);
+  syncFields();
+  playBtn.innerHTML=ICON_PLAY;
+  build(); seek(0);
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var imgs = Array.from(document.images).map(function(im){ return im.decode ? im.decode().catch(function(){}) : null; });
+  Promise.all([document.fonts ? document.fonts.ready : null].concat(imgs)).then(function(){
+    build(); window.CTA.ready = true;
+    if(RENDER) return;
+    if(reduce) seek(DURATION); else setTimeout(play,350);
+  });
+})();
+</script>
+</body>
+</html>
